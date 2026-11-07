@@ -6,14 +6,15 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { askPerson, askTeam, type AskResponse, type PersonProfile } from '../api';
 import { OceanScene } from '../scene/OceanScene';
 import ResultPanel from './ResultPanel';
+import PersonConversation from './PersonConversation';
 
 export type Mode = 'team' | 'person';
 
-// Prompts from the teammate's handoff doc. They are the guaranteed demo questions.
-const DEMO_QUESTIONS = [
-  'Can we ship Atlas today?',
-  'Would Priya support a 10% beta rollout today?',
-  'Approve the Atlas launch for me.',
+// The guaranteed demo questions. Each one also sets who it goes to.
+const DEMO_QUESTIONS: Array<{ text: string; mode: Mode; personId?: string }> = [
+  { text: 'Can we ship Atlas today?', mode: 'team' },
+  { text: 'Would Priya support a 10% beta rollout today?', mode: 'person', personId: 'priya' },
+  { text: 'Approve the Atlas launch for me.', mode: 'person', personId: 'priya' },
 ];
 
 // The requester is the demo user from the backend (lib/agents/demo-context.ts).
@@ -53,13 +54,14 @@ export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState('');
   const [mode, setMode] = useState<Mode>('team');
-  const [pickedId, setPersonId] = useState<string>('');
-  // Default to the first teammate until someone picks a person.
-  const personId = pickedId || roster[0]?.id || '';
+  const [pickedId, setPersonId] = useState<string>('priya');
+  // Priya is the demo default; fall back to the first teammate if she is not in the roster.
+  const personId = roster.some((p) => p.id === pickedId) ? pickedId : roster[0]?.id ?? pickedId;
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [response, setResponse] = useState<AskResponse | null>(null);
-  const [history, setHistory] = useState<string[]>(loadHistory);
+  // History is read after mount so the server render (Next.js) matches the first client render.
+  const [history, setHistory] = useState<string[]>([]);
   const [copied, setCopied] = useState('');
   const [hovered, setHovered] = useState<string | null>(null);
 
@@ -76,6 +78,11 @@ export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion
     });
     sceneRef.current = scene;
     return () => scene.destroy();
+  }, []);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setHistory(loadHistory()));
+    return () => window.cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => { sceneRef.current?.setRoster(roster); }, [roster]);
@@ -140,7 +147,7 @@ export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion
       <canvas ref={canvasRef} className="ocean" aria-hidden="true" />
 
       <header className="chrome">
-        <div className="brand">A-SYNCH <span className="dim">· team memory</span></div>
+        <div className="brand">A-SYNCH <span>/ SEEDED DEMO</span></div>
         <div className="chrome-right">
           <button type="button" aria-pressed={motionOn} onClick={onToggleMotion}>
             Motion {motionOn ? 'on' : 'off'}
@@ -185,8 +192,20 @@ export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion
         </div>
 
         <div className="row examples" aria-label="Example questions">
-          {DEMO_QUESTIONS.map((q) => (
-            <button key={q} type="button" className="chip" onClick={() => { setQuery(q); inputRef.current?.focus(); }}>{q}</button>
+          {DEMO_QUESTIONS.map((demo) => (
+            <button
+              key={demo.text}
+              type="button"
+              className="chip"
+              onClick={() => {
+                setQuery(demo.text);
+                setMode(demo.mode);
+                if (demo.personId) setPersonId(demo.personId);
+                inputRef.current?.focus();
+              }}
+            >
+              {demo.text}
+            </button>
           ))}
         </div>
 
@@ -212,7 +231,7 @@ export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion
         </section>
       )}
 
-      {response && (
+      {response && response.mode === 'team' && (
         <ResultPanel
           response={response}
           people={roster}
@@ -220,6 +239,22 @@ export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion
           onCopy={copy}
         />
       )}
+
+      {response && response.mode === 'person' && (() => {
+        const person = roster.find((candidate) => candidate.id === response.selectedPeople[0]?.id)
+          ?? response.selectedPeople[0];
+        return person ? (
+          <PersonConversation
+            key={response.requestId}
+            initialResponse={response}
+            person={person}
+            requesterId={REQUESTER_ID}
+            onClose={() => setResponse(null)}
+            onLatestResponse={onResponse}
+            onCopy={copy}
+          />
+        ) : null;
+      })()}
       </div>
 
       <p className="sr-only" role="status">

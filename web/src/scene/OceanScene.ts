@@ -8,7 +8,7 @@
 // - Jellyfish swim by pulsing: the bell contracts, pushes up, then glides and sinks.
 import type { PersonProfile } from '../api';
 import { availabilityToStatus } from '../api';
-import { outcropFor, type OutcropId } from '../data';
+import { homeOffsetFor, outcropFor, type OutcropId } from '../data';
 import { current, makeStalk, stepStalk, type Stalk, type Vec } from '../sim/world';
 import { drawCoral, drawKelp } from '../sim/draw';
 import { drawFishBody, drawTinyFish, INK, NAVY, CYAN, RED, SLATE } from './fish';
@@ -145,7 +145,7 @@ export class OceanScene {
     this.fish = people.map((p, i) => {
       const old = prev.get(p.id);
       const home = { ...homes[outcropFor(p.id)] };
-      home.x += ((i % 3) - 1) * 50;
+      home.x += homeOffsetFor(p.id);
       const status = availabilityToStatus(p.availability);
       const base: Swimmer = old ?? {
         id: p.id, name: p.name, role: p.role, label: p.availabilityLabel, color: p.accent, status, kind: 'twin',
@@ -209,9 +209,9 @@ export class OceanScene {
       makeStalk(this.W * 0.95, this.seabedY, 15, (this.H * 0.45) / 14, -1),
     ];
     const homes = this.homes();
-    this.fish.forEach((f, i) => {
+    this.fish.forEach((f) => {
       const h = { ...homes[outcropFor(f.id)] };
-      h.x += ((i % 3) - 1) * 50;
+      h.x += homeOffsetFor(f.id);
       f.home = h;
     });
     this.seeker = {

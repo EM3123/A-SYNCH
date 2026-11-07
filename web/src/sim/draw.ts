@@ -12,7 +12,7 @@ const MONO = "'JetBrains Mono', ui-monospace, monospace";
 
 export interface Hit { x: number; y: number; r: number; kind: 'fish' | 'frond'; id: string }
 
-// Tint navy toward a species color. Used for fish bodies: navy with a hint of the twin's hue.
+// Tint navy toward a species color. Used for fish bodies: navy with a hint of the agent's hue.
 export function tint(hex: string, amt: number): string {
   const n = parseInt(hex.slice(1), 16);
   const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
@@ -224,7 +224,7 @@ export function drawFish(ctx: CanvasRenderingContext2D, f: Fish, showLabel: bool
   ctx.stroke();
 
   // Species stripes
-  if (f.kind === 'twin') {
+  if (f.kind === 'agent') {
     ctx.strokeStyle = f.color;
     ctx.lineWidth = 1.4;
     for (const i of [4, 6]) {
@@ -271,7 +271,7 @@ export function drawFish(ctx: CanvasRenderingContext2D, f: Fish, showLabel: bool
 
   // Overlays drawn in world space, unaffected by facing.
   if (f.status === 'focus') {
-    // Deep-work shield: a slow dashed octagon and a red indicator. The twin answers instead of the human.
+    // Deep-work shield: a slow dashed octagon and a red indicator. The context agent is available instead.
     ctx.save();
     ctx.translate(f.pos.x, f.pos.y);
     ctx.rotate(Math.sin(f.phase * 0.05) * 0.05);
@@ -311,9 +311,9 @@ export function drawFish(ctx: CanvasRenderingContext2D, f: Fish, showLabel: bool
     ctx.font = `10px ${MONO}`;
     ctx.fillStyle = INK;
     ctx.textAlign = 'center';
-    ctx.fillText(`${f.id}.twin`.toUpperCase(), f.pos.x, f.pos.y - 44);
+    ctx.fillText(`${f.id}.agent`.toUpperCase(), f.pos.x, f.pos.y - 44);
     ctx.fillStyle = SLATE;
-    const label = f.status === 'available' ? 'AVAILABLE' : f.status === 'focus' ? 'DEEP WORK · TWIN ANSWERS' : 'AWAY · TWIN ACTIVE';
+    const label = f.status === 'available' ? 'AVAILABLE' : f.status === 'focus' ? 'DEEP WORK · AGENT READY' : 'AWAY · AGENT READY';
     ctx.fillText(label, f.pos.x, f.pos.y - 31);
     ctx.textAlign = 'left';
   }
@@ -453,7 +453,7 @@ export function drawFarm(
   // Title, quiet and editorial
   ctx.fillStyle = INK;
   ctx.font = `28px ${SERIF}`;
-  ctx.fillText(`Workflow plot · ${owner}`, title.x, title.y);
+  ctx.fillText(owner ? `Workflow plot · ${owner}` : 'Workflow plot', title.x, title.y);
   ctx.font = `10px ${MONO}`;
   ctx.fillStyle = SLATE;
   ctx.fillText('TOP = ORIGIN · TIME FLOWS DOWN · LEFT = REASONING · RIGHT = ARTIFACTS', title.x, title.y + 22);
@@ -475,7 +475,10 @@ export function drawFarm(
   ctx.fillText(`[ROOT] ${root}`, top.x + 18, top.y + 18);
 
   fronds.forEach((f, i) => {
-    const attach = spine.pts[Math.min(spine.pts.length - 1, 3 + i * 4)];
+    const firstNode = 2;
+    const lastNode = Math.max(firstNode, spine.pts.length - 4);
+    const progress = fronds.length <= 1 ? 0 : i / (fronds.length - 1);
+    const attach = spine.pts[Math.round(firstNode + progress * (lastNode - firstNode))];
     const d = f.side === 'left' ? -1 : 1;
     const tipX = attach.x + d * 150;
     const tipY = attach.y + 52;
@@ -546,4 +549,3 @@ export function drawCaught(ctx: CanvasRenderingContext2D, at: Vec, name: string,
   ctx.fillStyle = SLATE;
   ctx.fillText(reason, at.x, at.y + 36);
 }
-

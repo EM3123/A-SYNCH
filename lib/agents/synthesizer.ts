@@ -79,6 +79,54 @@ function fallbackBrief(options: {
     };
   }
 
+  if (isPriyaConversation && /\b(block|blocked|blocking|remain|remaining|left|next)\b/.test(lower)) {
+    return {
+      title: "What remains before rollout",
+      answer:
+        "Two things remain. For a reversible design-partner beta, Sam must fix the failing accessibility check and merge rollout control PR #219, then Priya must confirm the rollout. General availability additionally waits on the ATLAS-38 security review and enterprise SSO verification.",
+      status: "Beta has one engineering dependency and one human decision",
+      claims: [
+        {
+          text: "The percentage rollout control is not merged because one accessibility check is failing.",
+          evidenceIds: ["gh-pr-219"],
+          trust: "confirmed",
+        },
+        {
+          text: "General availability remains blocked by security review and enterprise SSO verification.",
+          evidenceIds: ["jira-atlas-38"],
+          trust: "confirmed",
+        },
+      ],
+      relevantPeople: people,
+      decisionTree: [
+        {
+          label: "Fix accessibility check and merge PR #219",
+          state: "next",
+          reason: "The rollout control makes the beta reversible.",
+        },
+        {
+          label: "Ask Priya to confirm the beta",
+          state: "blocked",
+          reason: "A context agent cannot grant launch approval.",
+        },
+        {
+          label: "Complete security and SSO review for GA",
+          state: "blocked",
+          reason: "ATLAS-38 and enterprise verification are still open.",
+        },
+      ],
+      nextStep: "Sam fixes the accessibility check and merges PR #219; then send Priya the rollout brief for confirmation.",
+      ownerId: "sam",
+      downstreamBlockers: ["Three design partners are waiting for beta access"],
+      conflicts: [],
+      trust: {
+        decision: "confirmed",
+        reasons: ["The remaining dependencies are backed by current project records"],
+        requiresHuman: true,
+      },
+    };
+  }
+
   if (isPriyaConversation || /10%|would priya|priya support/.test(lower)) {
     return {
       title: "Priya's stated rollout perspective",

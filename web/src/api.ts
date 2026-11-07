@@ -25,7 +25,7 @@ async function request<T>(path: string, init?: RequestInit, timeoutMs = 20000): 
     throw new BackendError(
       err instanceof DOMException && err.name === 'AbortError'
         ? 'The backend took too long to answer.'
-        : 'The backend is not running. Start it with pnpm dev in the backend folder.',
+        : 'The app server is not running. Run pnpm dev from the repository root.',
       null,
     );
   } finally {

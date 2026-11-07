@@ -29,11 +29,16 @@ export default function Root() {
   const [roster, setRoster] = useState<PersonProfile[]>([]);
   const [rosterError, setRosterError] = useState<string | null>(null);
   const [response, setResponse] = useState<AskResponse | null>(null);
-  const systemReduce = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const [motionOn, setMotionOn] = useState<boolean>(() => {
-    const saved = readMotion();
-    return saved === null ? !systemReduce : saved;
-  });
+  const [motionOn, setMotionOn] = useState(true);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      const saved = readMotion();
+      const systemReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      setMotionOn(saved === null ? !systemReduce : saved);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
 
   useEffect(() => {
     let alive = true;

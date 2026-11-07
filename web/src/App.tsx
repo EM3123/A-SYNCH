@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState, type MouseEvent as ReactMouseEvent } from 'react';
 import './App.css';
 import { availabilityToStatus, type AskResponse, type Evidence, type PersonProfile } from './api';
-import { outcropFor, outcropLabels, type OutcropId } from './data';
+import { homeOffsetFor, outcropFor, outcropLabels, type OutcropId } from './data';
 import { WATER, makeStalk, stepStalk, stepFish, stepBubbles, reefHomes, type Fish, type Stalk, type Bubble, type Pop, type Vec } from './sim/world';
 import { drawWater, drawCoral, drawKelp, drawBubbles, drawFish, drawFarm, type Hit, type Frond } from './sim/draw';
 
@@ -38,11 +38,12 @@ interface Sim {
 function makeOcean(W: number, H: number, roster: PersonProfile[]): Sim {
   const homes = reefHomes(W, H);
   const fish: Fish[] = roster.map((p, i) => {
-    const home = homes[outcropFor(p.id)];
-    const pos: Vec = { x: home.x + (i % 3 - 1) * 46, y: home.y - 60 - (i % 2) * 34 };
+    const outcrop = homes[outcropFor(p.id)];
+    const home: Vec = { x: outcrop.x + homeOffsetFor(p.id), y: outcrop.y - 58 };
+    const pos: Vec = { ...home };
     return {
       id: p.id, name: p.name, role: p.role, color: p.accent, status: availabilityToStatus(p.availability),
-      kind: 'twin', home: { ...home }, pos, vel: { x: i % 2 ? 8 : -8, y: 0 }, phase: i, hooked: false,
+      kind: 'agent', home: { ...home }, pos, vel: { x: i % 2 ? 8 : -8, y: 0 }, phase: i, hooked: false,
     };
   });
   const floor = H - 30;
@@ -271,7 +272,7 @@ export default function App({ roster, rosterError, lastResponse, reduceMotion, o
       <canvas ref={canvasRef} className="ocean" onClick={onCanvasClick} aria-hidden="true" />
 
       <header className="chrome">
-        <div className="brand">A-SYNCH</div>
+        <div className="brand">A-SYNCH <span>/ SEEDED DEMO</span></div>
         <nav aria-label="Places">
           <button aria-pressed={view === 'reef'} onClick={() => setTargetView('reef')}>Surface &amp; reef</button>
           <button aria-pressed={view === 'farm'} onClick={() => setTargetView('farm')}>Seaweed farm</button>
