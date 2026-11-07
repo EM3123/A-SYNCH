@@ -1,0 +1,869 @@
+[
+  {
+    "id": "elena",
+    "name": "Elena Vasquez",
+    "role": "CEO",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "company strategy",
+      "fundraising",
+      "enterprise customers"
+    ],
+    "topics": [
+      "board",
+      "company",
+      "customers",
+      "enterprise",
+      "fundraising",
+      "roadmap",
+      "strategy",
+      "updates"
+    ],
+    "accent": "#8B5CF6"
+  },
+  {
+    "id": "marcus",
+    "name": "Marcus Webb",
+    "role": "CTO",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "architecture",
+      "hiring",
+      "platform strategy"
+    ],
+    "topics": [
+      "architecture",
+      "decisions",
+      "engineering",
+      "hiring",
+      "org",
+      "platform",
+      "strategy"
+    ],
+    "accent": "#3B82F6"
+  },
+  {
+    "id": "priya",
+    "name": "Priya Shah",
+    "role": "Director, Product & Engineering (Atlas)",
+    "availability": "busy",
+    "availabilityLabel": "Executive QBR until 4:30 PM ET",
+    "expertise": [
+      "launch strategy",
+      "product tradeoffs",
+      "release management"
+    ],
+    "topics": [
+      "approval",
+      "approvals",
+      "approve",
+      "atlas",
+      "availability",
+      "beta",
+      "ga",
+      "general",
+      "launch",
+      "management",
+      "policy",
+      "principle",
+      "priya",
+      "product",
+      "release",
+      "roadmap",
+      "rollout",
+      "ship",
+      "strategy",
+      "support",
+      "tradeoffs"
+    ],
+    "accent": "#F59E0B"
+  },
+  {
+    "id": "kwame",
+    "name": "Kwame Asante",
+    "role": "Engineering Manager, Atlas",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "sprint planning",
+      "people management",
+      "delivery"
+    ],
+    "topics": [
+      "atlas",
+      "call",
+      "delivery",
+      "management",
+      "people",
+      "plan",
+      "planning",
+      "schedule",
+      "sprint",
+      "team"
+    ],
+    "accent": "#EF4444"
+  },
+  {
+    "id": "alex",
+    "name": "Alex Chen",
+    "role": "Senior Backend Engineer",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "Go",
+      "API design",
+      "Postgres",
+      "testing"
+    ],
+    "topics": [
+      "alex",
+      "api",
+      "atlas",
+      "backend",
+      "deploy",
+      "design",
+      "endpoint",
+      "export",
+      "performance",
+      "postgres",
+      "readiness",
+      "ready",
+      "ship",
+      "staging",
+      "suite",
+      "test",
+      "testing",
+      "tests"
+    ],
+    "accent": "#10B981"
+  },
+  {
+    "id": "tomas",
+    "name": "Tomás Herrera",
+    "role": "Backend Engineer",
+    "availability": "away",
+    "availabilityLabel": "Out of office until Jan 11",
+    "expertise": [
+      "Kafka",
+      "event pipelines",
+      "metering ingestion"
+    ],
+    "topics": [
+      "atlas",
+      "consumer",
+      "event",
+      "events",
+      "ingestion",
+      "integration",
+      "kafka",
+      "metering",
+      "pipelines",
+      "usage"
+    ],
+    "accent": "#EC4899"
+  },
+  {
+    "id": "wei",
+    "name": "Wei Zhang",
+    "role": "Backend Engineer",
+    "availability": "away",
+    "availabilityLabel": "Out sick today",
+    "expertise": [
+      "Go",
+      "Kafka",
+      "data correctness"
+    ],
+    "topics": [
+      "correctness",
+      "data",
+      "dedupe",
+      "job",
+      "kafka",
+      "rollup",
+      "tables",
+      "usage"
+    ],
+    "accent": "#14B8A6"
+  },
+  {
+    "id": "grace",
+    "name": "Grace Kim",
+    "role": "Backend Engineer (new hire)",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "Python",
+      "Go (learning)",
+      "APIs"
+    ],
+    "topics": [
+      "apis",
+      "learning",
+      "python"
+    ],
+    "accent": "#6366F1"
+  },
+  {
+    "id": "sam",
+    "name": "Sam Rivera",
+    "role": "Senior Frontend Engineer",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "React",
+      "TypeScript",
+      "feature flags",
+      "accessibility"
+    ],
+    "topics": [
+      "accessibility",
+      "app",
+      "atlas",
+      "beta",
+      "controls",
+      "feature",
+      "flags",
+      "frontend",
+      "kill",
+      "react",
+      "rollout",
+      "sam",
+      "ship",
+      "switch",
+      "typescript",
+      "ui",
+      "web"
+    ],
+    "accent": "#F97316"
+  },
+  {
+    "id": "nadia",
+    "name": "Nadia Rahman",
+    "role": "Frontend Engineer",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "React",
+      "charts",
+      "data viz"
+    ],
+    "topics": [
+      "atlas",
+      "charts",
+      "csv",
+      "dashboards",
+      "data",
+      "export",
+      "react",
+      "viz"
+    ],
+    "accent": "#84CC16"
+  },
+  {
+    "id": "leo",
+    "name": "Leo Brooks",
+    "role": "Design Systems Engineer",
+    "availability": "busy",
+    "availabilityLabel": "Design system sync until 2:45 PM ET",
+    "expertise": [
+      "design systems",
+      "accessibility",
+      "CSS"
+    ],
+    "topics": [
+      "a11y",
+      "accessibility",
+      "checks",
+      "corvid",
+      "css",
+      "design",
+      "kit",
+      "systems"
+    ],
+    "accent": "#8B5CF6"
+  },
+  {
+    "id": "devon",
+    "name": "Devon Price",
+    "role": "Staff SRE (Platform lead)",
+    "availability": "busy",
+    "availabilityLabel": "Incident review: INC-2291 and INC-2294 until 3:00 PM ET",
+    "expertise": [
+      "Kubernetes",
+      "Postgres ops",
+      "incident response"
+    ],
+    "topics": [
+      "clusters",
+      "deploy",
+      "incident",
+      "kubernetes",
+      "ops",
+      "pipeline",
+      "postgres",
+      "process",
+      "prod",
+      "response",
+      "staging"
+    ],
+    "accent": "#3B82F6"
+  },
+  {
+    "id": "hana",
+    "name": "Hana Sato",
+    "role": "SRE",
+    "availability": "away",
+    "availabilityLabel": "PTO, back Nov 16",
+    "expertise": [
+      "observability",
+      "Grafana",
+      "alerting"
+    ],
+    "topics": [
+      "alerting",
+      "alerts",
+      "atlas",
+      "dashboards",
+      "grafana",
+      "observability",
+      "slo"
+    ],
+    "accent": "#F59E0B"
+  },
+  {
+    "id": "ravi",
+    "name": "Ravi Iyer",
+    "role": "Infrastructure Engineer",
+    "availability": "away",
+    "availabilityLabel": "Outside working hours",
+    "expertise": [
+      "Terraform",
+      "networking",
+      "CI runners"
+    ],
+    "topics": [
+      "modules",
+      "networking",
+      "runners",
+      "terraform"
+    ],
+    "accent": "#EF4444"
+  },
+  {
+    "id": "jordan",
+    "name": "Jordan Okafor",
+    "role": "Security Engineer",
+    "availability": "busy",
+    "availabilityLabel": "Incident review: INC-2291 and INC-2294 until 3:00 PM ET",
+    "expertise": [
+      "appsec",
+      "threat modeling",
+      "pen testing"
+    ],
+    "topics": [
+      "approval",
+      "appsec",
+      "atlas",
+      "ga",
+      "jordan",
+      "launch",
+      "modeling",
+      "off",
+      "pen",
+      "review",
+      "risk",
+      "security",
+      "sign",
+      "sso",
+      "testing",
+      "threat"
+    ],
+    "accent": "#10B981"
+  },
+  {
+    "id": "ingrid",
+    "name": "Ingrid Larsen",
+    "role": "Identity & Access Engineer",
+    "availability": "away",
+    "availabilityLabel": "Offline after 11 AM ET (Copenhagen working hours)",
+    "expertise": [
+      "SAML",
+      "OIDC",
+      "Okta",
+      "Azure AD"
+    ],
+    "topics": [
+      "atlas",
+      "azure",
+      "enterprise",
+      "oidc",
+      "okta",
+      "saml",
+      "sso",
+      "verification"
+    ],
+    "accent": "#EC4899"
+  },
+  {
+    "id": "fatima",
+    "name": "Fatima Noor",
+    "role": "QA Lead",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "test strategy",
+      "release QA",
+      "Playwright"
+    ],
+    "topics": [
+      "checklist",
+      "playwright",
+      "regression",
+      "release",
+      "strategy",
+      "suite",
+      "test"
+    ],
+    "accent": "#14B8A6"
+  },
+  {
+    "id": "ben",
+    "name": "Ben Carter",
+    "role": "QA Engineer",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "Playwright",
+      "load testing",
+      "k6"
+    ],
+    "topics": [
+      "atlas",
+      "load",
+      "playwright",
+      "testing",
+      "tests"
+    ],
+    "accent": "#6366F1"
+  },
+  {
+    "id": "chloe",
+    "name": "Chloe Martin",
+    "role": "Senior Product Designer",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "interaction design",
+      "Figma",
+      "prototyping"
+    ],
+    "topics": [
+      "atlas",
+      "control",
+      "design",
+      "figma",
+      "interaction",
+      "prototyping",
+      "rollout"
+    ],
+    "accent": "#F97316"
+  },
+  {
+    "id": "omar",
+    "name": "Omar Haddad",
+    "role": "UX Researcher",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "interviews",
+      "usability testing"
+    ],
+    "topics": [
+      "design",
+      "interviews",
+      "partner",
+      "research",
+      "testing",
+      "usability"
+    ],
+    "accent": "#84CC16"
+  },
+  {
+    "id": "sofia",
+    "name": "Sofia Rossi",
+    "role": "Data Engineer",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "dbt",
+      "Snowflake",
+      "rollups"
+    ],
+    "topics": [
+      "atlas",
+      "dbt",
+      "models",
+      "rollup",
+      "rollups",
+      "snowflake",
+      "sql",
+      "warehouse"
+    ],
+    "accent": "#8B5CF6"
+  },
+  {
+    "id": "kenji",
+    "name": "Kenji Mori",
+    "role": "Analytics Engineer",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "SQL",
+      "Looker",
+      "metrics definitions"
+    ],
+    "topics": [
+      "definitions",
+      "doc",
+      "looker",
+      "metric",
+      "metrics",
+      "sql"
+    ],
+    "accent": "#3B82F6"
+  },
+  {
+    "id": "ethan",
+    "name": "Ethan Walsh",
+    "role": "Product Manager, Billing",
+    "availability": "busy",
+    "availabilityLabel": "Incident review: INC-2291 and INC-2294 until 3:00 PM ET",
+    "expertise": [
+      "pricing",
+      "metering",
+      "invoicing"
+    ],
+    "topics": [
+      "based",
+      "billing",
+      "invoicing",
+      "metering",
+      "pricing",
+      "usage"
+    ],
+    "accent": "#F59E0B"
+  },
+  {
+    "id": "lucas",
+    "name": "Lucas Moreau",
+    "role": "Backend Engineer, Billing",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "Kafka",
+      "Go",
+      "metering"
+    ],
+    "topics": [
+      "events",
+      "kafka",
+      "metering",
+      "schema",
+      "service",
+      "topic",
+      "usage"
+    ],
+    "accent": "#EF4444"
+  },
+  {
+    "id": "maya",
+    "name": "Maya Patel",
+    "role": "Customer Lead, Design Partner Program",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "customer discovery",
+      "beta programs"
+    ],
+    "topics": [
+      "atlas",
+      "beta",
+      "customer",
+      "customers",
+      "design",
+      "discovery",
+      "impact",
+      "launch",
+      "maya",
+      "onboarding",
+      "partner",
+      "partners",
+      "program",
+      "programs"
+    ],
+    "accent": "#10B981"
+  },
+  {
+    "id": "laura",
+    "name": "Laura Bennett",
+    "role": "Customer Success Manager",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "account management",
+      "renewals"
+    ],
+    "topics": [
+      "account",
+      "management",
+      "northwind",
+      "renewals"
+    ],
+    "accent": "#EC4899"
+  },
+  {
+    "id": "diego",
+    "name": "Diego Alvarez",
+    "role": "Customer Success Manager",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "onboarding",
+      "integrations"
+    ],
+    "topics": [
+      "account",
+      "integrations",
+      "kestrel",
+      "lumen",
+      "onboarding"
+    ],
+    "accent": "#14B8A6"
+  },
+  {
+    "id": "aisha",
+    "name": "Aisha Mohammed",
+    "role": "Head of Support",
+    "availability": "busy",
+    "availabilityLabel": "Incident review: INC-2291 and INC-2294 until 3:00 PM ET",
+    "expertise": [
+      "support operations",
+      "escalations"
+    ],
+    "topics": [
+      "customer",
+      "escalations",
+      "operations",
+      "queue",
+      "support"
+    ],
+    "accent": "#6366F1"
+  },
+  {
+    "id": "mateo",
+    "name": "Mateo Silva",
+    "role": "Support Engineer",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "debugging",
+      "SQL",
+      "customer tickets"
+    ],
+    "topics": [
+      "customer",
+      "debugging",
+      "sql",
+      "tickets",
+      "tier"
+    ],
+    "accent": "#F97316"
+  },
+  {
+    "id": "ryan",
+    "name": "Ryan O'Connor",
+    "role": "Enterprise Account Executive",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "enterprise sales",
+      "negotiation"
+    ],
+    "topics": [
+      "deal",
+      "enterprise",
+      "freight",
+      "halvorsen",
+      "negotiation",
+      "sales"
+    ],
+    "accent": "#84CC16"
+  },
+  {
+    "id": "megan",
+    "name": "Megan Liu",
+    "role": "Sales Engineer",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "demos",
+      "security questionnaires",
+      "SSO setup"
+    ],
+    "topics": [
+      "demos",
+      "eval",
+      "halvorsen",
+      "questionnaires",
+      "security",
+      "setup",
+      "sso",
+      "technical"
+    ],
+    "accent": "#8B5CF6"
+  },
+  {
+    "id": "rebecca",
+    "name": "Rebecca Stone",
+    "role": "General Counsel",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "contracts",
+      "privacy law",
+      "DPAs"
+    ],
+    "topics": [
+      "agreements",
+      "contracts",
+      "design",
+      "dpas",
+      "law",
+      "partner",
+      "privacy"
+    ],
+    "accent": "#3B82F6"
+  },
+  {
+    "id": "victor",
+    "name": "Victor Petrov",
+    "role": "Compliance Manager",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "SOC 2",
+      "access reviews",
+      "vendor risk"
+    ],
+    "topics": [
+      "access",
+      "evidence",
+      "quarterly",
+      "review",
+      "reviews",
+      "risk",
+      "soc",
+      "vendor"
+    ],
+    "accent": "#F59E0B"
+  },
+  {
+    "id": "jasmine",
+    "name": "Jasmine Taylor",
+    "role": "Product Marketing Manager",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "launch messaging",
+      "positioning"
+    ],
+    "topics": [
+      "atlas",
+      "comms",
+      "launch",
+      "messaging",
+      "positioning"
+    ],
+    "accent": "#EF4444"
+  },
+  {
+    "id": "noah",
+    "name": "Noah Fischer",
+    "role": "Content Marketer",
+    "availability": "away",
+    "availabilityLabel": "PTO this week",
+    "expertise": [
+      "blog",
+      "release notes"
+    ],
+    "topics": [
+      "blog",
+      "changelog",
+      "notes",
+      "release"
+    ],
+    "accent": "#10B981"
+  },
+  {
+    "id": "olivia",
+    "name": "Olivia Grant",
+    "role": "People Ops Partner",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "benefits",
+      "leave",
+      "onboarding"
+    ],
+    "topics": [
+      "benefits",
+      "hire",
+      "leave",
+      "new",
+      "onboarding",
+      "tracking"
+    ],
+    "accent": "#EC4899"
+  },
+  {
+    "id": "sanjay",
+    "name": "Sanjay Mehta",
+    "role": "Finance Lead",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "forecasting",
+      "revenue recognition"
+    ],
+    "topics": [
+      "arr",
+      "forecast",
+      "forecasting",
+      "recognition",
+      "revenue"
+    ],
+    "accent": "#14B8A6"
+  },
+  {
+    "id": "isabel",
+    "name": "Isabel Cruz",
+    "role": "Technical Writer",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": [
+      "API docs",
+      "guides"
+    ],
+    "topics": [
+      "api",
+      "atlas",
+      "beta",
+      "docs",
+      "guide",
+      "guides"
+    ],
+    "accent": "#6366F1"
+  }
+]

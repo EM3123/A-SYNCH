@@ -1,0 +1,401 @@
+[
+  {
+    "thread": "T002",
+    "ts": "2026-10-26T09:40:00-04:00",
+    "author": "kwame",
+    "authorName": "Kwame Asante",
+    "isExternal": false,
+    "text": "Sprint 22 kicks off today. Goal: everything a design-partner beta needs. Board: ATLAS-30 epic. Highlights:\n• ATLAS-37 API v1 (Alex)\n• ATLAS-36 rollout controls UI (Sam)\n• ATLAS-38 security review (Jordan)\n• ATLAS-40 load test (Ben)\n• ATLAS-41 SSO verification (Ingrid) — GA scope, not beta\nPlease keep tickets current; Priya reads the board, not my summaries.",
+    "reactions": {
+      "eyes": 6
+    },
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T002",
+    "ts": "2026-10-26T09:44:00-04:00",
+    "author": "alex",
+    "authorName": "Alex Chen",
+    "isExternal": false,
+    "text": "API v1 is mostly endpoints + tests now. Pagination (PR #207) should land tomorrow.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T002",
+    "ts": "2026-10-26T09:51:00-04:00",
+    "author": "sam",
+    "authorName": "Sam Rivera",
+    "isExternal": false,
+    "text": "Rollout controls: kill switch flag `atlas.enabled` is PR #212, the percentage slider UI is the bigger piece (ATLAS-36). Design from Chloe expected Wednesday.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T004",
+    "ts": "2026-10-26T14:22:00-04:00",
+    "author": "wei",
+    "authorName": "Wei Zhang",
+    "isExternal": false,
+    "text": "Q for whoever knows the metering consumer: Tomás's handoff doc says 'bucket by UTC — TODO before DST'. Does anyone know if that TODO was done? Tomás is out until Jan.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T004",
+    "ts": "2026-10-26T14:40:00-04:00",
+    "author": "lucas",
+    "authorName": "Lucas Moreau",
+    "isExternal": false,
+    "text": "Not done as far as I know. The consumer still keys hourly buckets on workspace local time. I own the topic schema, not the consumer.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T004",
+    "ts": "2026-10-26T14:42:00-04:00",
+    "author": "wei",
+    "authorName": "Wei Zhang",
+    "isExternal": false,
+    "text": "Ok. DST ends Sunday Nov 1. I'll make a ticket but it's not in this sprint.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T004",
+    "ts": "2026-10-26T15:05:00-04:00",
+    "author": "kwame",
+    "authorName": "Kwame Asante",
+    "isExternal": false,
+    "text": "Make the ticket and tag it `data-correctness`. Let's look at it Wednesday.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T006",
+    "ts": "2026-10-27T16:02:00-04:00",
+    "author": "alex",
+    "authorName": "Alex Chen",
+    "isExternal": false,
+    "text": "PR #207 pagination merged. Cursor-based, 500 max page size. Docs ticket for Isabel.",
+    "reactions": {
+      "tada": 5
+    },
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T006",
+    "ts": "2026-10-27T16:10:00-04:00",
+    "author": "isabel",
+    "authorName": "Isabel Cruz",
+    "isExternal": false,
+    "text": "Got it, adding to the API guide draft.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T009",
+    "ts": "2026-10-28T15:10:00-04:00",
+    "author": "ben",
+    "authorName": "Ben Carter",
+    "isExternal": false,
+    "text": "Load test plan for ATLAS-40 is up: 200 concurrent users, mix of 7/30/90-day dashboard queries, 30 minutes, against staging. Running Friday morning.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T009",
+    "ts": "2026-10-28T15:18:00-04:00",
+    "author": "alex",
+    "authorName": "Alex Chen",
+    "isExternal": false,
+    "text": "90-day queries are the scary ones. Rollups help but we don't cache yet.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T010",
+    "ts": "2026-10-28T17:20:00-04:00",
+    "author": "wei",
+    "authorName": "Wei Zhang",
+    "isExternal": false,
+    "text": "PR #209 rollup tables merged. Hourly + daily rollups per workspace. Backfill finished on staging.",
+    "reactions": {
+      "tada": 3
+    },
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T011",
+    "ts": "2026-10-29T13:05:00-04:00",
+    "author": "sam",
+    "authorName": "Sam Rivera",
+    "isExternal": false,
+    "text": "PR #212 merged: `atlas.enabled` (kill switch) and `atlas.rollout_pct` flags live in LaunchDarkly for staging + prod, default off.",
+    "reactions": {
+      "rocket": 4
+    },
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T011",
+    "ts": "2026-10-29T13:20:00-04:00",
+    "author": "devon",
+    "authorName": "Devon Price",
+    "isExternal": false,
+    "text": "Nice. I'll add a runbook step for flipping the kill switch during an incident. ATLAS-49 to verify it end to end on staging.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T012",
+    "ts": "2026-10-29T17:44:00-04:00",
+    "author": "alex",
+    "authorName": "Alex Chen",
+    "isExternal": false,
+    "text": "Opened PR #214 — Atlas API v1. It's big (~3.4k lines), sorry. Endpoints: workspaces, usage, dashboards, exports. 162 tests so far. Reviews from Wei + Grace-when-she-starts welcome.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T015",
+    "ts": "2026-10-30T12:40:00-04:00",
+    "author": "ben",
+    "authorName": "Ben Carter",
+    "isExternal": false,
+    "text": "ATLAS-40 load test results:\n• 7-day: p95 140 ms, p99 260 ms\n• 30-day: p95 210 ms, p99 420 ms\n• 90-day: p95 610 ms, p99 1.4 s :warning:\n• Error rate 0.02%\nFull report in the ticket. 90-day is over our 800 ms p99 target.",
+    "reactions": {
+      "eyes": 7
+    },
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T015",
+    "ts": "2026-10-30T12:52:00-04:00",
+    "author": "alex",
+    "authorName": "Alex Chen",
+    "isExternal": false,
+    "text": "Expected. Opened ATLAS-47 for a query cache on 90-day ranges. Won't land before beta.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T015",
+    "ts": "2026-10-30T13:15:00-04:00",
+    "author": "priya",
+    "authorName": "Priya Shah",
+    "isExternal": false,
+    "text": "Decision: beta limits date ranges to 30 days. 90-day ships with GA once ATLAS-47 lands. Chloe/Nadia, please make the picker reflect that.",
+    "reactions": {
+      "white_check_mark": 6
+    },
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T015",
+    "ts": "2026-10-30T13:18:00-04:00",
+    "author": "nadia",
+    "authorName": "Nadia Rahman",
+    "isExternal": false,
+    "text": "On it, I'll cap the picker behind the flag.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T016",
+    "ts": "2026-10-30T16:30:00-04:00",
+    "author": "nadia",
+    "authorName": "Nadia Rahman",
+    "isExternal": false,
+    "text": "PR #211 CSV export UI merged. Exports use the workspace's timezone for timestamps.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T026",
+    "ts": "2026-11-03T14:05:00-05:00",
+    "author": "grace",
+    "authorName": "Grace Kim",
+    "isExternal": false,
+    "text": "Dumb question: is the source of truth for usage numbers the `usage_events` table or the rollups? The API seems to read rollups but the incident channel talks about raw events.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T026",
+    "ts": "2026-11-03T14:12:00-05:00",
+    "author": "alex",
+    "authorName": "Alex Chen",
+    "isExternal": false,
+    "text": "Not dumb! Raw events in `usage_events` are the source of truth. Rollups are derived hourly/daily for speed and the API reads them. If they ever disagree, raw events win and we re-run the rollup.",
+    "reactions": {
+      "pray": 1
+    },
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T026",
+    "ts": "2026-11-03T14:20:00-05:00",
+    "author": "sofia",
+    "authorName": "Sofia Rossi",
+    "isExternal": false,
+    "text": "+1. And the warehouse (Snowflake) copies raw events nightly, so analytics numbers lag by up to a day.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T025",
+    "ts": "2026-11-04T09:15:00-05:00",
+    "author": "devon",
+    "authorName": "Devon Price",
+    "isExternal": false,
+    "text": ":warning: Staging deploys are stuck: a migration from PR #214's branch took an ACCESS EXCLUSIVE lock on `usage_rollups` and the deploy job timed out. Rolling back. INC-2294 (Sev3, staging only).",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T025",
+    "ts": "2026-11-04T09:22:00-05:00",
+    "author": "alex",
+    "authorName": "Alex Chen",
+    "isExternal": false,
+    "text": "My bad, that migration adds an index without CONCURRENTLY. Will fix in the PR.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T025",
+    "ts": "2026-11-04T09:58:00-05:00",
+    "author": "devon",
+    "authorName": "Devon Price",
+    "isExternal": false,
+    "text": "Staging back up after 41 minutes. I'm adding a CI check that rejects non-concurrent index creation on big tables (PR #222).",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T027",
+    "ts": "2026-11-04T15:30:00-05:00",
+    "author": "grace",
+    "authorName": "Grace Kim",
+    "isExternal": false,
+    "text": "My first PR is merged :tada: #225 adds request ids to API error responses.",
+    "reactions": {
+      "tada": 14
+    },
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T025",
+    "ts": "2026-11-05T14:00:00-05:00",
+    "author": "devon",
+    "authorName": "Devon Price",
+    "isExternal": false,
+    "text": "PR #222 merged. Migrations that lock tables over 1M rows now fail CI.",
+    "reactions": {
+      "raised_hands": 5
+    },
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T033",
+    "ts": "2026-11-05T16:40:00-05:00",
+    "author": "devon",
+    "authorName": "Devon Price",
+    "isExternal": false,
+    "text": "ATLAS-49 done: flipped `atlas.enabled` off on staging during a synthetic load run. Atlas UI and API returned 404 within 9 seconds across all pods. Kill switch works. Runbook updated.",
+    "reactions": {
+      "white_check_mark": 7
+    },
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T036",
+    "ts": "2026-11-06T11:42:00-05:00",
+    "author": "alex",
+    "authorName": "Alex Chen",
+    "isExternal": false,
+    "text": "PR #214 Atlas API v1 merged :tada: 184/184 tests passing, including the 14 cross-tenant tests from #216.",
+    "reactions": {
+      "tada": 15,
+      "rocket": 9
+    },
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T036",
+    "ts": "2026-11-06T11:45:00-05:00",
+    "author": "kwame",
+    "authorName": "Kwame Asante",
+    "isExternal": false,
+    "text": "Huge. Thanks Alex and reviewers.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T036",
+    "ts": "2026-11-06T12:58:00-05:00",
+    "author": "alex",
+    "authorName": "Alex Chen",
+    "isExternal": false,
+    "text": "Staging deploy done. p95 API latency 180 ms on the standard dashboard mix. 30-day queries p99 390 ms. 90-day p99 still ~1.1 s with Grace's partial cache, but that's capped off for beta.",
+    "reactions": {
+      "eyes": 4
+    },
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T037",
+    "ts": "2026-11-06T13:20:00-05:00",
+    "author": "sam",
+    "authorName": "Sam Rivera",
+    "isExternal": false,
+    "text": "Fixing the last accessibility check on PR #219: keyboard focus order on the rollout slider (focus jumps to the kill switch). The rollout control is not merged yet; I expect to merge around 3 PM PT-ish... sorry, 3 PM ET, once Leo re-reviews.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  },
+  {
+    "thread": "T037",
+    "ts": "2026-11-06T13:31:00-05:00",
+    "author": "leo",
+    "authorName": "Leo Brooks",
+    "isExternal": false,
+    "text": "I can re-review at 2:45 ET, I have a design system sync until then.",
+    "reactions": {},
+    "channel": "atlas-dev",
+    "channelId": "C03ADV"
+  }
+]

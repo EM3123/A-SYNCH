@@ -1,0 +1,35 @@
+[
+  {
+    "thread": "T052",
+    "ts": "2026-11-05T12:10:00-05:00",
+    "author": "ryan",
+    "authorName": "Ryan O'Connor",
+    "isExternal": false,
+    "text": "Priya — Halvorsen needs a GA date in writing by next week or they go with a competitor. Can I tell them Dec 1?",
+    "reactions": {},
+    "channel": "D10",
+    "channelId": "D10"
+  },
+  {
+    "thread": "T052",
+    "ts": "2026-11-05T12:48:00-05:00",
+    "author": "priya",
+    "authorName": "Priya Shah",
+    "isExternal": false,
+    "text": "No. I can't commit to a GA date until enterprise SSO verification on Nov 10. I'll give you a date after that. Please don't put Dec 1 in writing.",
+    "reactions": {},
+    "channel": "D10",
+    "channelId": "D10"
+  },
+  {
+    "thread": "T052",
+    "ts": "2026-11-05T12:50:00-05:00",
+    "author": "ryan",
+    "authorName": "Ryan O'Connor",
+    "isExternal": false,
+    "text": "Ok... I may have already mentioned Dec 1 in an email. I'll walk it back to 'December, pending SSO verification'.",
+    "reactions": {},
+    "channel": "D10",
+    "channelId": "D10"
+  }
+]

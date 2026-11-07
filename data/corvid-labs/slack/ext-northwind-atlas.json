@@ -1,0 +1,46 @@
+[
+  {
+    "thread": "T030",
+    "ts": "2026-11-04T15:20:00-05:00",
+    "author": "ext-hollis",
+    "authorName": "Dana Hollis",
+    "isExternal": true,
+    "text": "Thanks for the quick fix on the Nov 1 usage numbers. Are we still on for beta this week? My team has been asking.",
+    "reactions": {},
+    "channel": "ext-northwind-atlas",
+    "channelId": "C14NWD"
+  },
+  {
+    "thread": "T030",
+    "ts": "2026-11-04T15:35:00-05:00",
+    "author": "maya",
+    "authorName": "Maya Patel",
+    "isExternal": false,
+    "text": "We're close! I'll confirm timing by Friday. Nothing changes on your side: Jae just needs to add users once we turn it on.",
+    "reactions": {},
+    "channel": "ext-northwind-atlas",
+    "channelId": "C14NWD"
+  },
+  {
+    "thread": "T030",
+    "ts": "2026-11-04T15:50:00-05:00",
+    "author": "ext-park",
+    "authorName": "Jae Park",
+    "isExternal": true,
+    "text": "14 users ready to go. We'll use email login for the beta and switch to Okta SSO later, right?",
+    "reactions": {},
+    "channel": "ext-northwind-atlas",
+    "channelId": "C14NWD"
+  },
+  {
+    "thread": "T030",
+    "ts": "2026-11-04T16:02:00-05:00",
+    "author": "alex",
+    "authorName": "Alex Chen",
+    "isExternal": false,
+    "text": "Right. SSO comes with general availability. Beta uses email + password with MFA.",
+    "reactions": {},
+    "channel": "ext-northwind-atlas",
+    "channelId": "C14NWD"
+  }
+]

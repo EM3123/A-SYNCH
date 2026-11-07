@@ -1,0 +1,68 @@
+[
+  {
+    "thread": "T043",
+    "ts": "2026-11-02T15:10:00-05:00",
+    "author": "grace",
+    "authorName": "Grace Kim",
+    "isExternal": false,
+    "text": "Hey Alex, who should I ask about the metering consumer? The design doc says Tomás but his Slack says OOO.",
+    "reactions": {},
+    "channel": "D01",
+    "channelId": "D01"
+  },
+  {
+    "thread": "T043",
+    "ts": "2026-11-02T15:14:00-05:00",
+    "author": "alex",
+    "authorName": "Alex Chen",
+    "isExternal": false,
+    "text": "Tomás is on leave until January. Wei has his handoff doc and is the de facto owner now. For the Kafka topic schema it's Lucas on billing.",
+    "reactions": {},
+    "channel": "D01",
+    "channelId": "D01"
+  },
+  {
+    "thread": "T043",
+    "ts": "2026-11-02T15:15:00-05:00",
+    "author": "grace",
+    "authorName": "Grace Kim",
+    "isExternal": false,
+    "text": "Got it, thanks. Also who decides whether we launch? I keep seeing Kwame and Priya both.",
+    "reactions": {},
+    "channel": "D01",
+    "channelId": "D01"
+  },
+  {
+    "thread": "T043",
+    "ts": "2026-11-02T15:20:00-05:00",
+    "author": "alex",
+    "authorName": "Alex Chen",
+    "isExternal": false,
+    "text": "Priya approves launch stages (beta, widening, GA). Kwame runs the sprint and can hit the kill switch in an emergency without asking anyone. Jordan signs off on security.",
+    "reactions": {},
+    "channel": "D01",
+    "channelId": "D01"
+  },
+  {
+    "thread": "T043",
+    "ts": "2026-11-05T17:02:00-05:00",
+    "author": "grace",
+    "authorName": "Grace Kim",
+    "isExternal": false,
+    "text": "Is it normal that the 90-day query takes 1.4 s locally too?",
+    "reactions": {},
+    "channel": "D01",
+    "channelId": "D01"
+  },
+  {
+    "thread": "T043",
+    "ts": "2026-11-05T17:06:00-05:00",
+    "author": "alex",
+    "authorName": "Alex Chen",
+    "isExternal": false,
+    "text": "Yes, that's ATLAS-47. Beta caps at 30 days. Our cache PR (#217) is the fix for GA.",
+    "reactions": {},
+    "channel": "D01",
+    "channelId": "D01"
+  }
+]

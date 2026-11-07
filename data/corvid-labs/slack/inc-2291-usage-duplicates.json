@@ -1,0 +1,118 @@
+[
+  {
+    "thread": "T021",
+    "ts": "2026-11-02T10:11:00-05:00",
+    "author": "wei",
+    "authorName": "Wei Zhang",
+    "isExternal": false,
+    "text": ":rotating_light: INC-2291 (Sev2) declared. Duplicate usage events for the repeated 1–2 AM hour on Nov 1 (DST fallback). Consumer keys hourly buckets on local time, so the hour was written twice. IC: Wei. Comms: Aisha.",
+    "reactions": {},
+    "channel": "inc-2291-usage-duplicates",
+    "channelId": "C07INC"
+  },
+  {
+    "thread": "T021",
+    "ts": "2026-11-02T10:40:00-05:00",
+    "author": "mateo",
+    "authorName": "Mateo Silva",
+    "isExternal": false,
+    "text": "Raw events confirm: 41 workspaces affected, all in US timezones. Double-counted volume is about 6.1% of Nov 1 total usage for those workspaces.",
+    "reactions": {},
+    "channel": "inc-2291-usage-duplicates",
+    "channelId": "C07INC"
+  },
+  {
+    "thread": "T021",
+    "ts": "2026-11-02T10:52:00-05:00",
+    "author": "ethan",
+    "authorName": "Ethan Walsh",
+    "isExternal": false,
+    "text": "Billing impact: October invoices closed Oct 31 so they're clean. November invoices would include the duplicates if we don't fix before Dec 1.",
+    "reactions": {},
+    "channel": "inc-2291-usage-duplicates",
+    "channelId": "C07INC"
+  },
+  {
+    "thread": "T021",
+    "ts": "2026-11-02T11:05:00-05:00",
+    "author": "lucas",
+    "authorName": "Lucas Moreau",
+    "isExternal": false,
+    "text": "I can freeze the Nov 1 aggregates in billing until the backfill lands.",
+    "reactions": {},
+    "channel": "inc-2291-usage-duplicates",
+    "channelId": "C07INC"
+  },
+  {
+    "thread": "T021",
+    "ts": "2026-11-02T11:30:00-05:00",
+    "author": "wei",
+    "authorName": "Wei Zhang",
+    "isExternal": false,
+    "text": "Plan: (1) dedupe key on (workspace, event_id) instead of (workspace, local_hour), (2) re-run Nov 1 backfill, (3) Lucas recomputes billing aggregates. ETA Wednesday.",
+    "reactions": {},
+    "channel": "inc-2291-usage-duplicates",
+    "channelId": "C07INC"
+  },
+  {
+    "thread": "T021",
+    "ts": "2026-11-02T11:45:00-05:00",
+    "author": "aisha",
+    "authorName": "Aisha Mohammed",
+    "isExternal": false,
+    "text": "Customer comms: 'We found and are fixing a display issue that double-counted one hour on Nov 1. You will not be billed for duplicates.' Sending to the 41 workspace admins at 1 PM unless anyone objects.",
+    "reactions": {},
+    "channel": "inc-2291-usage-duplicates",
+    "channelId": "C07INC"
+  },
+  {
+    "thread": "T021",
+    "ts": "2026-11-02T12:10:00-05:00",
+    "author": "priya",
+    "authorName": "Priya Shah",
+    "isExternal": false,
+    "text": "No objection. This also means nobody turns Atlas on for a customer until the dedupe and backfill land. Data correctness first.",
+    "reactions": {
+      "white_check_mark": 5
+    },
+    "channel": "inc-2291-usage-duplicates",
+    "channelId": "C07INC"
+  },
+  {
+    "thread": "T021",
+    "ts": "2026-11-04T13:35:00-05:00",
+    "author": "wei",
+    "authorName": "Wei Zhang",
+    "isExternal": false,
+    "text": "PR #221 (dedupe on event_id) merged and Nov 1 backfill re-run. Spot-checked Northwind: 1–2 AM hour now matches raw events.",
+    "reactions": {
+      "tada": 8
+    },
+    "channel": "inc-2291-usage-duplicates",
+    "channelId": "C07INC"
+  },
+  {
+    "thread": "T021",
+    "ts": "2026-11-05T10:15:00-05:00",
+    "author": "lucas",
+    "authorName": "Lucas Moreau",
+    "isExternal": false,
+    "text": "Billing aggregates recomputed for all 41 workspaces. Totals match raw events. Unfreezing.",
+    "reactions": {},
+    "channel": "inc-2291-usage-duplicates",
+    "channelId": "C07INC"
+  },
+  {
+    "thread": "T021",
+    "ts": "2026-11-05T10:30:00-05:00",
+    "author": "aisha",
+    "authorName": "Aisha Mohammed",
+    "isExternal": false,
+    "text": "Closing INC-2291. Postmortem Monday Nov 9, Wei to draft. SUP-1180 resolved with Northwind.",
+    "reactions": {
+      "white_check_mark": 6
+    },
+    "channel": "inc-2291-usage-duplicates",
+    "channelId": "C07INC"
+  }
+]

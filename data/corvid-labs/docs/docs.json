@@ -1,0 +1,30 @@
+[
+  {
+    "id": "DOC-LP1",
+    "title": "Launch plan v1 (SUPERSEDED)",
+    "owner": "jasmine",
+    "updated": "2026-10-20",
+    "summary": "Targets Nov 20 general launch with SSO. Superseded on Oct 21: do not use externally. Replaced by: beta early November for design partners; GA TBD after SSO verification."
+  },
+  {
+    "id": "DOC-BG1",
+    "title": "Atlas beta guide (draft)",
+    "owner": "isabel",
+    "updated": "2026-11-03",
+    "summary": "Email and password with MFA for beta. Date ranges capped at 30 days. SSO arrives with GA. Kill switch and allowlist explained."
+  },
+  {
+    "id": "DOC-ONB1",
+    "title": "Engineering onboarding",
+    "owner": "olivia",
+    "updated": "2026-10-01",
+    "summary": "Okta groups for staging read-only access; corvid db connect staging. Requests approved by the team lead."
+  },
+  {
+    "id": "DOC-OKR1",
+    "title": "Q4 OKRs: Corvid",
+    "owner": "elena",
+    "updated": "2026-10-02",
+    "summary": "Ship Atlas design-partner beta; close Q4 at 100%+ of plan; keep SOC 2 evidence current."
+  }
+]

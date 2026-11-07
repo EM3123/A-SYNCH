@@ -1,0 +1,24 @@
+[
+  {
+    "thread": "T047",
+    "ts": "2026-11-06T13:22:00-05:00",
+    "author": "sam",
+    "authorName": "Sam Rivera",
+    "isExternal": false,
+    "text": "Leo, the slider focus order: focus goes slider → kill switch → allowlist. Should be slider → allowlist → kill switch section. Fix pushed, can you re-review?",
+    "reactions": {},
+    "channel": "D05",
+    "channelId": "D05"
+  },
+  {
+    "thread": "T047",
+    "ts": "2026-11-06T13:30:00-05:00",
+    "author": "leo",
+    "authorName": "Leo Brooks",
+    "isExternal": false,
+    "text": "Yes at 2:45 ET. If axe is green I'll approve.",
+    "reactions": {},
+    "channel": "D05",
+    "channelId": "D05"
+  }
+]

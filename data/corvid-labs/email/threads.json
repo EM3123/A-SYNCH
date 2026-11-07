@@ -1,0 +1,732 @@
+[
+  {
+    "id": "em-halvorsen-ga-date",
+    "subject": "Re: Atlas GA timing for Halvorsen",
+    "participants": [
+      "ryan",
+      "megan",
+      "priya",
+      "elena",
+      "ext-lindqvist",
+      "ext-adeyemi"
+    ],
+    "messages": [
+      {
+        "from": "erik.lindqvist@halvorsenfreight.com",
+        "fromName": "Erik Lindqvist",
+        "to": [
+          "ryan@corvidlabs.io"
+        ],
+        "cc": [],
+        "sentAt": "2026-11-04T09:12:00-05:00",
+        "body": "Ryan, our CISO (Tolu) needs written confirmation that SSO for Atlas is available at GA and a date. We cannot sign the $240k order without it. What's the date?"
+      },
+      {
+        "from": "ryan@corvidlabs.io",
+        "fromName": "Ryan O'Connor",
+        "to": [
+          "erik.lindqvist@halvorsenfreight.com"
+        ],
+        "cc": [
+          "megan@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-04T11:30:00-05:00",
+        "body": "Erik, Atlas GA is targeted for the start of Q4, with enterprise SSO included. We'll confirm the exact date shortly."
+      },
+      {
+        "from": "megan@corvidlabs.io",
+        "fromName": "Megan Liu",
+        "to": [
+          "ryan@corvidlabs.io"
+        ],
+        "cc": [
+          "priya@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-05T08:20:00-05:00",
+        "body": "Ryan, we need to be careful. Enterprise SSO verification is Nov 10. Priya hasn't signed off on a GA date. Can we not put a date in writing?"
+      },
+      {
+        "from": "ryan@corvidlabs.io",
+        "fromName": "Ryan O'Connor",
+        "to": [
+          "megan@corvidlabs.io"
+        ],
+        "cc": [
+          "priya@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-05T08:31:00-05:00",
+        "body": "Halvorsen's CISO needs something in writing this week. I'll send 'December, pending SSO verification.'"
+      },
+      {
+        "from": "erik.lindqvist@halvorsenfreight.com",
+        "fromName": "Erik Lindqvist",
+        "to": [
+          "ryan@corvidlabs.io"
+        ],
+        "cc": [],
+        "sentAt": "2026-11-05T15:45:00-05:00",
+        "body": "Thanks. We'll tell our board that GA is December 1 with SSO and approve the PO on that basis. Please confirm Dec 1 in writing by Monday."
+      },
+      {
+        "from": "priya@corvidlabs.io",
+        "fromName": "Priya Shah",
+        "to": [
+          "ryan@corvidlabs.io"
+        ],
+        "cc": [
+          "elena@corvidlabs.io",
+          "megan@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-05T16:02:00-05:00",
+        "body": "Ryan, please do not confirm December 1 to Halvorsen. Nothing on the GA date is decided until after the Nov 10 SSO verification. Please also send Erik a correction on the 'Q4' wording today."
+      }
+    ]
+  },
+  {
+    "id": "em-lumen-dpa",
+    "subject": "Atlas beta DPA addendum - redlines and countersignature",
+    "participants": [
+      "rebecca",
+      "victor",
+      "maya",
+      "diego",
+      "ext-brandt",
+      "ext-osei"
+    ],
+    "messages": [
+      {
+        "from": "mbrandt@lumenhealth.com",
+        "fromName": "Miriam Brandt",
+        "to": [
+          "rebecca@corvidlabs.io"
+        ],
+        "cc": [
+          "kofi.osei@lumenhealth.com"
+        ],
+        "sentAt": "2026-10-29T09:40:00-04:00",
+        "body": "Attached are Lumen's redlines to the design partner DPA addendum. Key changes: data retention 30 days (not 90), deletion within 72h of request, and a sub-processor notice clause."
+      },
+      {
+        "from": "rebecca@corvidlabs.io",
+        "fromName": "Rebecca Stone",
+        "to": [
+          "mbrandt@lumenhealth.com"
+        ],
+        "cc": [
+          "maya@corvidlabs.io",
+          "victor@corvidlabs.io"
+        ],
+        "sentAt": "2026-10-29T14:10:00-04:00",
+        "body": "Thanks Miriam. We accept 30-day retention and the 72h deletion. Sub-processor notice is fine with 14 days' notice. Our redline is attached."
+      },
+      {
+        "from": "victor@corvidlabs.io",
+        "fromName": "Victor Petrov",
+        "to": [
+          "rebecca@corvidlabs.io"
+        ],
+        "cc": [],
+        "sentAt": "2026-10-30T10:02:00-04:00",
+        "body": "Note for the file: retention is per-workspace config (Alex confirmed). I've logged it against SOC 2 CC6.5."
+      },
+      {
+        "from": "mbrandt@lumenhealth.com",
+        "fromName": "Miriam Brandt",
+        "to": [
+          "rebecca@corvidlabs.io"
+        ],
+        "cc": [],
+        "sentAt": "2026-11-05T17:20:00-05:00",
+        "body": "We're happy with the redlines. Final version is in DocuSign for countersignature. Our CEO will sign Monday morning."
+      },
+      {
+        "from": "maya@corvidlabs.io",
+        "fromName": "Maya Patel",
+        "to": [
+          "rebecca@corvidlabs.io"
+        ],
+        "cc": [
+          "diego@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-06T10:28:00-05:00",
+        "body": "Rebecca, Kofi is asking again whether Lumen can go on Friday. What do I tell him?"
+      },
+      {
+        "from": "rebecca@corvidlabs.io",
+        "fromName": "Rebecca Stone",
+        "to": [
+          "maya@corvidlabs.io"
+        ],
+        "cc": [
+          "diego@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-06T10:45:00-05:00",
+        "body": "Tell him Monday. No Lumen data flow until the DPA is countersigned on our side and theirs. Northwind and Kestrel are fine to start once Priya gives go."
+      }
+    ]
+  },
+  {
+    "id": "em-sec-112",
+    "subject": "SEC-112 - cross-tenant export access, Atlas beta blocker",
+    "participants": [
+      "jordan",
+      "alex",
+      "priya",
+      "marcus",
+      "kwame",
+      "aisha"
+    ],
+    "messages": [
+      {
+        "from": "jordan@corvidlabs.io",
+        "fromName": "Jordan Okafor",
+        "to": [
+          "alex@corvidlabs.io"
+        ],
+        "cc": [
+          "priya@corvidlabs.io",
+          "marcus@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-03T08:44:00-05:00",
+        "body": "Alex, found a cross-tenant issue in GET /v1/exports/{id}. The list endpoint checks workspace ownership, the fetch doesn't. Repro attached. Please fix before any beta. Full writeup in SEC-112."
+      },
+      {
+        "from": "alex@corvidlabs.io",
+        "fromName": "Alex Chen",
+        "to": [
+          "jordan@corvidlabs.io"
+        ],
+        "cc": [
+          "priya@corvidlabs.io",
+          "marcus@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-03T08:59:00-05:00",
+        "body": "Confirmed, that's on me. Fixing today with a cross-tenant test on every endpoint."
+      },
+      {
+        "from": "priya@corvidlabs.io",
+        "fromName": "Priya Shah",
+        "to": [
+          "all-atlas-leads@corvidlabs.io"
+        ],
+        "cc": [],
+        "sentAt": "2026-11-03T09:02:00-05:00",
+        "body": "Treat Atlas as blocked until SEC-112 is fixed AND retested by Jordan. Kwame, please pause any flag changes for design partners."
+      },
+      {
+        "from": "kwame@corvidlabs.io",
+        "fromName": "Kwame Asante",
+        "to": [
+          "priya@corvidlabs.io"
+        ],
+        "cc": [],
+        "sentAt": "2026-11-03T09:06:00-05:00",
+        "body": "Pausing. Nothing was enabled for any customer; the bug was staging only."
+      },
+      {
+        "from": "jordan@corvidlabs.io",
+        "fromName": "Jordan Okafor",
+        "to": [
+          "priya@corvidlabs.io"
+        ],
+        "cc": [
+          "marcus@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-05T10:35:00-05:00",
+        "body": "Retested on staging: fixed. Cross-tenant tests now cover all 14 endpoints and pass. For the record: the remaining ATLAS-38 items (export audit log, ATLAS-50, and SSO verification, ATLAS-41) are GA requirements, not beta requirements. Security has no objection to a flag-gated beta."
+      },
+      {
+        "from": "priya@corvidlabs.io",
+        "fromName": "Priya Shah",
+        "to": [
+          "jordan@corvidlabs.io"
+        ],
+        "cc": [],
+        "sentAt": "2026-11-05T10:52:00-05:00",
+        "body": "Thanks Jordan. Noted. I'll decide go/no-go on Friday after the Nov 6 review."
+      }
+    ]
+  },
+  {
+    "id": "em-inc-2291-customer",
+    "subject": "Usage numbers for Nov 1 - what we found and what changed",
+    "participants": [
+      "aisha",
+      "laura",
+      "ext-hollis",
+      "wei",
+      "ethan"
+    ],
+    "messages": [
+      {
+        "from": "dana.hollis@northwind-logistics.com",
+        "fromName": "Dana Hollis",
+        "to": [
+          "laura@corvidlabs.io"
+        ],
+        "cc": [],
+        "sentAt": "2026-11-02T09:33:00-05:00",
+        "body": "Laura, our ops dashboard shows roughly double usage for 1–2 AM on Nov 1. Are we going to be billed for that?"
+      },
+      {
+        "from": "laura@corvidlabs.io",
+        "fromName": "Laura Bennett",
+        "to": [
+          "dana.hollis@northwind-logistics.com"
+        ],
+        "cc": [
+          "aisha@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-02T10:10:00-05:00",
+        "body": "Dana, thanks for flagging it. We've found the cause: a daylight-saving display issue that counted one hour twice. You will not be billed for the duplicate. We're correcting the numbers and will confirm by Wednesday."
+      },
+      {
+        "from": "dana.hollis@northwind-logistics.com",
+        "fromName": "Dana Hollis",
+        "to": [
+          "laura@corvidlabs.io"
+        ],
+        "cc": [],
+        "sentAt": "2026-11-02T10:18:00-05:00",
+        "body": "Appreciate the quick response. Please copy our finance team (Jae Park) on the corrected report."
+      },
+      {
+        "from": "aisha@corvidlabs.io",
+        "fromName": "Aisha Mohammed",
+        "to": [
+          "laura@corvidlabs.io"
+        ],
+        "cc": [],
+        "sentAt": "2026-11-05T11:00:00-05:00",
+        "body": "Corrected report for Northwind is ready. Duplicates removed from Nov 1. Total for the hour matches raw events. SUP-1180 closed."
+      }
+    ]
+  },
+  {
+    "id": "em-launch-date-internal",
+    "subject": "Atlas launch plan v1 - Nov 20 target (OUTDATED?)",
+    "participants": [
+      "jasmine",
+      "priya",
+      "kwame",
+      "fatima",
+      "maya"
+    ],
+    "messages": [
+      {
+        "from": "jasmine@corvidlabs.io",
+        "fromName": "Jasmine Taylor",
+        "to": [
+          "priya@corvidlabs.io"
+        ],
+        "cc": [
+          "kwame@corvidlabs.io",
+          "fatima@corvidlabs.io",
+          "maya@corvidlabs.io"
+        ],
+        "sentAt": "2026-10-20T16:00:00-04:00",
+        "body": "Attaching the launch plan. It targets a Nov 20 general launch with SSO. Can you confirm before we tell sales?"
+      },
+      {
+        "from": "priya@corvidlabs.io",
+        "fromName": "Priya Shah",
+        "to": [
+          "jasmine@corvidlabs.io"
+        ],
+        "cc": [
+          "kwame@corvidlabs.io",
+          "fatima@corvidlabs.io",
+          "maya@corvidlabs.io"
+        ],
+        "sentAt": "2026-10-21T09:30:00-04:00",
+        "body": "Nov 20 was the plan before SSO verification was scheduled. Don't use it externally. I'll rewrite the plan once the design partner beta is running."
+      },
+      {
+        "from": "jasmine@corvidlabs.io",
+        "fromName": "Jasmine Taylor",
+        "to": [
+          "priya@corvidlabs.io"
+        ],
+        "cc": [],
+        "sentAt": "2026-10-21T09:34:00-04:00",
+        "body": "Got it. Should I mark the doc as superseded?"
+      },
+      {
+        "from": "priya@corvidlabs.io",
+        "fromName": "Priya Shah",
+        "to": [
+          "jasmine@corvidlabs.io"
+        ],
+        "cc": [],
+        "sentAt": "2026-10-21T09:40:00-04:00",
+        "body": "Yes please. Replace with 'Beta: early November for design partners. GA: TBD after SSO verification.'"
+      }
+    ]
+  },
+  {
+    "id": "em-beta-go-nogo",
+    "subject": "Atlas beta go/no-go checklist - Friday Nov 6",
+    "participants": [
+      "priya",
+      "kwame",
+      "fatima",
+      "jordan",
+      "maya",
+      "devon",
+      "alex",
+      "sam"
+    ],
+    "messages": [
+      {
+        "from": "fatima@corvidlabs.io",
+        "fromName": "Fatima Noor",
+        "to": [
+          "priya@corvidlabs.io"
+        ],
+        "cc": [
+          "kwame@corvidlabs.io",
+          "jordan@corvidlabs.io",
+          "maya@corvidlabs.io",
+          "devon@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-04T16:50:00-05:00",
+        "body": "Beta release checklist (ATLAS-30) attached. 7 of 9 items done. Open: PR #219 merged, your go/no-go."
+      },
+      {
+        "from": "priya@corvidlabs.io",
+        "fromName": "Priya Shah",
+        "to": [
+          "fatima@corvidlabs.io"
+        ],
+        "cc": [
+          "kwame@corvidlabs.io",
+          "jordan@corvidlabs.io",
+          "maya@corvidlabs.io",
+          "devon@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-04T17:15:00-05:00",
+        "body": "Go/no-go Friday after QBR, if #219 is merged and everything is green. Beta is only Northwind and Kestrel by allowlist. Lumen waits for the countersigned DPA."
+      },
+      {
+        "from": "devon@corvidlabs.io",
+        "fromName": "Devon Price",
+        "to": [
+          "priya@corvidlabs.io"
+        ],
+        "cc": [],
+        "sentAt": "2026-11-05T14:02:00-05:00",
+        "body": "Kill switch verified on staging (ATLAS-49). Off returns 404 across pods within 9 seconds. Runbook updated."
+      },
+      {
+        "from": "jordan@corvidlabs.io",
+        "fromName": "Jordan Okafor",
+        "to": [
+          "priya@corvidlabs.io"
+        ],
+        "cc": [],
+        "sentAt": "2026-11-05T15:11:00-05:00",
+        "body": "Security clear for flag-gated beta, provided export audit log (ATLAS-50) is tracked for GA."
+      },
+      {
+        "from": "sam@corvidlabs.io",
+        "fromName": "Sam Rivera",
+        "to": [
+          "priya@corvidlabs.io"
+        ],
+        "cc": [
+          "leo@corvidlabs.io",
+          "chloe@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-06T13:20:00-05:00",
+        "body": "PR #219 has one a11y failure left: keyboard focus order on the rollout slider. Fix pushed. Leo is re-reviewing at 2:45 ET."
+      },
+      {
+        "from": "priya@corvidlabs.io",
+        "fromName": "Priya Shah",
+        "to": [
+          "all@corvidlabs.io"
+        ],
+        "cc": [],
+        "sentAt": "2026-11-06T13:24:00-05:00",
+        "body": "Reminder: I'm in QBR until 4:30 ET. Nothing goes to customers until I say go in this thread."
+      }
+    ]
+  },
+  {
+    "id": "em-harness-sso-skew",
+    "subject": "ATLAS-44 Azure AD SAML clock skew - impact on Nov 10 verification",
+    "participants": [
+      "ingrid",
+      "jordan",
+      "priya",
+      "kwame"
+    ],
+    "messages": [
+      {
+        "from": "ingrid@corvidlabs.io",
+        "fromName": "Ingrid Larsen",
+        "to": [
+          "jordan@corvidlabs.io"
+        ],
+        "cc": [
+          "priya@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-05T09:12:00-05:00",
+        "body": "Azure AD sends assertions with NotBefore a few seconds ahead of our clock. We allow zero skew, so ~8% of Azure AD logins fail. Okta tenants are fine. Fix is 90-second skew tolerance, PR #223."
+      },
+      {
+        "from": "jordan@corvidlabs.io",
+        "fromName": "Jordan Okafor",
+        "to": [
+          "ingrid@corvidlabs.io"
+        ],
+        "cc": [
+          "priya@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-05T09:30:00-05:00",
+        "body": "90s is standard for SAML. Reviewing today. If #223 lands before Nov 10, I think verification is fine. If not, verification fails and GA moves."
+      },
+      {
+        "from": "priya@corvidlabs.io",
+        "fromName": "Priya Shah",
+        "to": [
+          "ingrid@corvidlabs.io"
+        ],
+        "cc": [
+          "jordan@corvidlabs.io",
+          "kwame@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-05T09:41:00-05:00",
+        "body": "Please make #223 the top priority. If verification doesn't pass by Nov 14, I'm considering moving GA to Q1."
+      },
+      {
+        "from": "ingrid@corvidlabs.io",
+        "fromName": "Ingrid Larsen",
+        "to": [
+          "priya@corvidlabs.io"
+        ],
+        "cc": [
+          "jordan@corvidlabs.io",
+          "kwame@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-05T09:50:00-05:00",
+        "body": "Understood. Will have it merged by Monday at the latest."
+      }
+    ]
+  },
+  {
+    "id": "em-cs-process",
+    "subject": "Escalation handoff rules during INC-2291",
+    "participants": [
+      "aisha",
+      "laura",
+      "diego",
+      "mateo",
+      "kwame"
+    ],
+    "messages": [
+      {
+        "from": "aisha@corvidlabs.io",
+        "fromName": "Aisha Mohammed",
+        "to": [
+          "laura@corvidlabs.io"
+        ],
+        "cc": [
+          "diego@corvidlabs.io",
+          "mateo@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-02T11:48:00-05:00",
+        "body": "During INC-2291, route all customer usage questions to Mateo, and send me the summary. Do not promise credits without finance approval (Ethan)."
+      },
+      {
+        "from": "laura@corvidlabs.io",
+        "fromName": "Laura Bennett",
+        "to": [
+          "aisha@corvidlabs.io"
+        ],
+        "cc": [
+          "diego@corvidlabs.io",
+          "mateo@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-02T11:52:00-05:00",
+        "body": "Got it. Northwind's Dana asked about credits. I told her billing is correcting usage and she won't be charged for duplicates. No credit promised."
+      }
+    ]
+  },
+  {
+    "id": "em-benefits-leave",
+    "subject": "Tomás - parental leave handoff",
+    "participants": [
+      "olivia",
+      "kwame",
+      "marcus"
+    ],
+    "messages": [
+      {
+        "from": "olivia@corvidlabs.io",
+        "fromName": "Olivia Grant",
+        "to": [
+          "kwame@corvidlabs.io"
+        ],
+        "cc": [
+          "marcus@corvidlabs.io"
+        ],
+        "sentAt": "2026-10-19T09:00:00-04:00",
+        "body": "Tomás starts parental leave today, returns Jan 11. Please share project handoff notes with the team only. Personal details are not for distribution."
+      },
+      {
+        "from": "kwame@corvidlabs.io",
+        "fromName": "Kwame Asante",
+        "to": [
+          "olivia@corvidlabs.io"
+        ],
+        "cc": [
+          "marcus@corvidlabs.io"
+        ],
+        "sentAt": "2026-10-19T09:15:00-04:00",
+        "body": "Got it. Wei is his backup on the metering consumer. Tickets moved."
+      }
+    ]
+  },
+  {
+    "id": "em-q4-planning",
+    "subject": "Q4 planning - Atlas headcount",
+    "participants": [
+      "elena",
+      "marcus",
+      "priya",
+      "sanjay"
+    ],
+    "messages": [
+      {
+        "from": "elena@corvidlabs.io",
+        "fromName": "Elena Vasquez",
+        "to": [
+          "marcus@corvidlabs.io"
+        ],
+        "cc": [
+          "priya@corvidlabs.io",
+          "sanjay@corvidlabs.io"
+        ],
+        "sentAt": "2026-10-22T13:10:00-04:00",
+        "body": "Q4 headcount: I'm approving two more backend hires and one SRE, contingent on GA revenue forecast. Priya, is the Atlas team sized right?"
+      },
+      {
+        "from": "priya@corvidlabs.io",
+        "fromName": "Priya Shah",
+        "to": [
+          "elena@corvidlabs.io"
+        ],
+        "cc": [
+          "marcus@corvidlabs.io",
+          "sanjay@corvidlabs.io"
+        ],
+        "sentAt": "2026-10-22T14:02:00-04:00",
+        "body": "Two backend and one SRE is right. Grace started Nov 2. The second backend role is for billing metering support post-GA."
+      },
+      {
+        "from": "sanjay@corvidlabs.io",
+        "fromName": "Sanjay Mehta",
+        "to": [
+          "elena@corvidlabs.io"
+        ],
+        "cc": [
+          "marcus@corvidlabs.io",
+          "priya@corvidlabs.io"
+        ],
+        "sentAt": "2026-10-22T15:30:00-04:00",
+        "body": "Forecast assumes Atlas GA by Dec 15 with Halvorsen signed. Slip to Q1 moves ~$60k of Q4 recognized revenue. I'll update the model."
+      }
+    ]
+  },
+  {
+    "id": "em-customer-feedback",
+    "subject": "Design partner interview synthesis - Northwind, Kestrel, Lumen",
+    "participants": [
+      "omar",
+      "chloe",
+      "priya",
+      "maya"
+    ],
+    "messages": [
+      {
+        "from": "omar@corvidlabs.io",
+        "fromName": "Omar Haddad",
+        "to": [
+          "chloe@corvidlabs.io"
+        ],
+        "cc": [
+          "priya@corvidlabs.io",
+          "maya@corvidlabs.io"
+        ],
+        "sentAt": "2026-10-28T17:00:00-04:00",
+        "body": "Synthesis of 6 design partner interviews. Top issue: ops leads need to know 'who has access right now'. Second: they want to pause a rollout instantly. Third: they trust numbers only if they can see the raw events."
+      },
+      {
+        "from": "chloe@corvidlabs.io",
+        "fromName": "Chloe Martin",
+        "to": [
+          "omar@corvidlabs.io"
+        ],
+        "cc": [
+          "priya@corvidlabs.io",
+          "maya@corvidlabs.io"
+        ],
+        "sentAt": "2026-10-28T17:10:00-04:00",
+        "body": "Thanks. Allowlist table and kill switch are already in the design. I'll add a 'raw events' link to the usage view."
+      },
+      {
+        "from": "maya@corvidlabs.io",
+        "fromName": "Maya Patel",
+        "to": [
+          "priya@corvidlabs.io"
+        ],
+        "cc": [
+          "omar@corvidlabs.io",
+          "chloe@corvidlabs.io"
+        ],
+        "sentAt": "2026-10-29T09:00:00-04:00",
+        "body": "Kestrel explicitly asked for email login for beta and Okta SSO at GA. Northwind same. Lumen is OK with either."
+      }
+    ]
+  },
+  {
+    "id": "em-travel-offsite",
+    "subject": "Eng offsite - Nov 19-20 (Pittsburgh)",
+    "participants": [
+      "olivia",
+      "marcus",
+      "kwame",
+      "devon",
+      "priya"
+    ],
+    "messages": [
+      {
+        "from": "olivia@corvidlabs.io",
+        "fromName": "Olivia Grant",
+        "to": [
+          "marcus@corvidlabs.io"
+        ],
+        "cc": [
+          "kwame@corvidlabs.io",
+          "devon@corvidlabs.io",
+          "priya@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-03T10:00:00-05:00",
+        "body": "Eng offsite Nov 19–20 at the Strip District office. Please confirm attendance by Nov 10. Some of the remote folks will join by video."
+      },
+      {
+        "from": "devon@corvidlabs.io",
+        "fromName": "Devon Price",
+        "to": [
+          "olivia@corvidlabs.io"
+        ],
+        "cc": [
+          "marcus@corvidlabs.io"
+        ],
+        "sentAt": "2026-11-03T10:10:00-05:00",
+        "body": "I'll be there. Please make sure a video option works for Ravi and Hana."
+      }
+    ]
+  }
+]

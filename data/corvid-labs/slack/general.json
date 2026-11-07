@@ -1,0 +1,56 @@
+[
+  {
+    "thread": "T001",
+    "ts": "2026-10-26T09:02:00-04:00",
+    "author": "elena",
+    "authorName": "Elena Vasquez",
+    "isExternal": false,
+    "text": "Morning all :wave: Quick reminder that Q4 planning docs are due Friday. Big focus for the quarter is getting Atlas into design partners' hands. Thanks to everyone pushing on it.",
+    "reactions": {
+      "heart": 12,
+      "rocket": 7
+    },
+    "channel": "general",
+    "channelId": "C01GEN"
+  },
+  {
+    "thread": "T013",
+    "ts": "2026-10-29T16:05:00-04:00",
+    "author": "elena",
+    "authorName": "Elena Vasquez",
+    "isExternal": false,
+    "text": "All-hands recap: Q3 closed at 104% of plan :tada:. Atlas design-partner beta targeted for early November; GA date TBD once enterprise SSO is verified. Recording in the drive.",
+    "reactions": {
+      "tada": 21
+    },
+    "channel": "general",
+    "channelId": "C01GEN"
+  },
+  {
+    "thread": "T019",
+    "ts": "2026-11-02T09:05:00-05:00",
+    "author": "olivia",
+    "authorName": "Olivia Grant",
+    "isExternal": false,
+    "text": "Please welcome Grace Kim, who joins the Atlas backend team today! :wave: Grace comes from a fintech startup where she built payment APIs in Python. Her onboarding buddy is Alex.",
+    "reactions": {
+      "wave": 24,
+      "tada": 10
+    },
+    "channel": "general",
+    "channelId": "C01GEN"
+  },
+  {
+    "thread": "T019",
+    "ts": "2026-11-02T09:20:00-05:00",
+    "author": "grace",
+    "authorName": "Grace Kim",
+    "isExternal": false,
+    "text": "Thanks everyone! Excited to be here. Please be patient with my Go :sweat_smile:",
+    "reactions": {
+      "heart": 8
+    },
+    "channel": "general",
+    "channelId": "C01GEN"
+  }
+]

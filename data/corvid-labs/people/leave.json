@@ -1,0 +1,50 @@
+[
+  {
+    "personId": "tomas",
+    "type": "parental-leave",
+    "start": "2026-10-19",
+    "end": "2027-01-11",
+    "publicLabel": "Out of office until Jan 11",
+    "backupId": "wei",
+    "visibleDetailTo": [
+      "olivia",
+      "kwame",
+      "tomas"
+    ]
+  },
+  {
+    "personId": "hana",
+    "type": "pto",
+    "start": "2026-11-05",
+    "end": "2026-11-13",
+    "publicLabel": "PTO, back Nov 16",
+    "backupId": "devon",
+    "visibleDetailTo": [
+      "*"
+    ]
+  },
+  {
+    "personId": "wei",
+    "type": "sick",
+    "start": "2026-11-06",
+    "end": "2026-11-06",
+    "publicLabel": "Out sick today",
+    "backupId": "alex",
+    "visibleDetailTo": [
+      "olivia",
+      "kwame",
+      "wei"
+    ]
+  },
+  {
+    "personId": "noah",
+    "type": "pto",
+    "start": "2026-11-02",
+    "end": "2026-11-06",
+    "publicLabel": "PTO this week",
+    "backupId": "jasmine",
+    "visibleDetailTo": [
+      "*"
+    ]
+  }
+]

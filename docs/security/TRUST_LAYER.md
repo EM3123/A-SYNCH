@@ -43,14 +43,14 @@ ASYNCH_AUDIT=1 pnpm smoke:backend   # also prints the audit trace
 
 ## Changing the demo data
 
-Everything is JSON in `data/atlas/`; no code changes needed.
+The Trust Layer data is built from the Corvid Labs corpus in `data/corvid-labs/`. Edit the sources there and rerun `python3 data/corvid-labs/generator/build_trust.py`, or edit `data/corvid-labs/trust/*.json` directly.
 
-- `people.json`: the five teammates.
-- `expertise.json`: who knows what (feeds the router).
-- `evidence.json`: GitHub, Jira, Slack and meeting records. `permittedUsers: ["*"]` = everyone.
-- `trust-metadata.json`: per record, the facts it asserts (`assertions`, used to spot conflicts), `sensitiveTerms` for restricted records, and `approvalRecord: true` for a real sign-off.
+- `trust/people.json`: the 38 employees (the five demo people keep their ids).
+- `trust/expertise.json`: who knows what (feeds the router).
+- `trust/evidence.json`: records from Slack, email, Jira, GitHub, meetings and docs. `permittedUsers: ["*"]` = everyone; private channels, DMs and restricted notes list who can open them.
+- `trust/core-evidence.json` and `trust/trust-metadata.json`: the storyline records the demo answers cite. Assertions here drive conflict detection.
 
-After editing, run `pnpm eval`. The data tests will tell you if a record is missing metadata or an owner.
+After editing, run `pnpm eval`. The data tests catch duplicate ids, unknown owners, bad timestamps, and metadata that points at missing records.
 
 ## Audit trace
 

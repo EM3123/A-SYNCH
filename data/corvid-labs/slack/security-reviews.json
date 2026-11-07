@@ -1,0 +1,92 @@
+[
+  {
+    "thread": "T023",
+    "ts": "2026-11-03T08:41:00-05:00",
+    "author": "jordan",
+    "authorName": "Jordan Okafor",
+    "isExternal": false,
+    "text": ":red_circle: SEC-112 (critical): `GET /v1/exports/{id}` doesn't check that the export belongs to the caller's workspace. With a guessed id you can download another workspace's CSV. Staging only so far, Atlas isn't on in prod. This blocks ANY Atlas exposure, beta included, until fixed.",
+    "reactions": {},
+    "channel": "security-reviews",
+    "channelId": "C09SEC"
+  },
+  {
+    "thread": "T023",
+    "ts": "2026-11-03T08:55:00-05:00",
+    "author": "alex",
+    "authorName": "Alex Chen",
+    "isExternal": false,
+    "text": "Ugh, that's mine. The ownership check is in the list endpoint but not the fetch. Fixing today.",
+    "reactions": {},
+    "channel": "security-reviews",
+    "channelId": "C09SEC"
+  },
+  {
+    "thread": "T023",
+    "ts": "2026-11-03T09:02:00-05:00",
+    "author": "priya",
+    "authorName": "Priya Shah",
+    "isExternal": false,
+    "text": "Thanks Jordan. Treat Atlas as fully blocked until SEC-112 is fixed and retested.",
+    "reactions": {},
+    "channel": "security-reviews",
+    "channelId": "C09SEC"
+  },
+  {
+    "thread": "T023",
+    "ts": "2026-11-03T09:20:00-05:00",
+    "author": "marcus",
+    "authorName": "Marcus Webb",
+    "isExternal": false,
+    "text": "Agree. Alex, please add a test that tries cross-workspace access on every endpoint, not just exports.",
+    "reactions": {},
+    "channel": "security-reviews",
+    "channelId": "C09SEC"
+  },
+  {
+    "thread": "T023",
+    "ts": "2026-11-04T16:12:00-05:00",
+    "author": "alex",
+    "authorName": "Alex Chen",
+    "isExternal": false,
+    "text": "PR #216 merged: ownership check on export fetch + a cross-tenant test for all 14 endpoints. All passing.",
+    "reactions": {},
+    "channel": "security-reviews",
+    "channelId": "C09SEC"
+  },
+  {
+    "thread": "T029",
+    "ts": "2026-11-05T09:10:00-05:00",
+    "author": "ingrid",
+    "authorName": "Ingrid Larsen",
+    "isExternal": false,
+    "text": "ATLAS-44: Azure AD SAML assertions fail ~8% of logins with `NotBefore` errors. Azure's clock runs a few seconds ahead of ours and we allow zero skew. Okta tenant is fine. Fix is a 90-second skew tolerance (PR #223, open). Needs Jordan's review since it's auth.",
+    "reactions": {},
+    "channel": "security-reviews",
+    "channelId": "C09SEC"
+  },
+  {
+    "thread": "T029",
+    "ts": "2026-11-05T09:30:00-05:00",
+    "author": "jordan",
+    "authorName": "Jordan Okafor",
+    "isExternal": false,
+    "text": "90s is standard. I'll review today. This doesn't affect beta (beta is email + password + MFA), only SSO verification on Nov 10.",
+    "reactions": {},
+    "channel": "security-reviews",
+    "channelId": "C09SEC"
+  },
+  {
+    "thread": "T023",
+    "ts": "2026-11-05T10:32:00-05:00",
+    "author": "jordan",
+    "authorName": "Jordan Okafor",
+    "isExternal": false,
+    "text": "Retested SEC-112 on staging: fixed. Cross-tenant tests pass. Remaining ATLAS-38 items are GA-only: enterprise SSO verification (ATLAS-41) and export audit log (ATLAS-50). Security does NOT block a flag-gated design-partner beta anymore.",
+    "reactions": {
+      "white_check_mark": 4
+    },
+    "channel": "security-reviews",
+    "channelId": "C09SEC"
+  }
+]

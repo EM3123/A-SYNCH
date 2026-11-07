@@ -1,0 +1,103 @@
+{
+  "personId": "megan",
+  "name": "Megan Liu",
+  "timezone": "America/Chicago",
+  "events": [
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-02T12:00:00-06:00",
+      "end": "2026-11-02T12:45:00-06:00",
+      "tz": "America/Chicago",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-03T12:00:00-06:00",
+      "end": "2026-11-03T12:45:00-06:00",
+      "tz": "America/Chicago",
+      "visibility": "public"
+    },
+    {
+      "title": "1:1 with Ryan O'Connor",
+      "type": "1:1",
+      "start": "2026-11-03T14:00:00-06:00",
+      "end": "2026-11-03T14:30:00-06:00",
+      "tz": "America/Chicago",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-04T12:00:00-06:00",
+      "end": "2026-11-04T12:45:00-06:00",
+      "tz": "America/Chicago",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-05T12:00:00-06:00",
+      "end": "2026-11-05T12:45:00-06:00",
+      "tz": "America/Chicago",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-06T12:00:00-06:00",
+      "end": "2026-11-06T12:45:00-06:00",
+      "tz": "America/Chicago",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-09T12:00:00-06:00",
+      "end": "2026-11-09T12:45:00-06:00",
+      "tz": "America/Chicago",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-10T12:00:00-06:00",
+      "end": "2026-11-10T12:45:00-06:00",
+      "tz": "America/Chicago",
+      "visibility": "public"
+    },
+    {
+      "title": "1:1 with Ryan O'Connor",
+      "type": "1:1",
+      "start": "2026-11-10T14:00:00-06:00",
+      "end": "2026-11-10T14:30:00-06:00",
+      "tz": "America/Chicago",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-11T12:00:00-06:00",
+      "end": "2026-11-11T12:45:00-06:00",
+      "tz": "America/Chicago",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-12T12:00:00-06:00",
+      "end": "2026-11-12T12:45:00-06:00",
+      "tz": "America/Chicago",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-13T12:00:00-06:00",
+      "end": "2026-11-13T12:45:00-06:00",
+      "tz": "America/Chicago",
+      "visibility": "public"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "thread": "T045",
+    "ts": "2026-11-02T16:05:00-05:00",
+    "author": "ryan",
+    "authorName": "Ryan O'Connor",
+    "isExternal": false,
+    "text": "I told Erik at Halvorsen we're on track for GA Dec 1 with SSO. That's what the old launch plan said and it's what keeps them warm.",
+    "reactions": {},
+    "channel": "D03",
+    "channelId": "D03"
+  },
+  {
+    "thread": "T045",
+    "ts": "2026-11-02T16:12:00-05:00",
+    "author": "megan",
+    "authorName": "Megan Liu",
+    "isExternal": false,
+    "text": "Hmm, the launch plan v1 said Nov 20, and that's been out of date for weeks. I'd check with Priya before putting Dec 1 in writing.",
+    "reactions": {},
+    "channel": "D03",
+    "channelId": "D03"
+  },
+  {
+    "thread": "T045",
+    "ts": "2026-11-02T16:13:00-05:00",
+    "author": "ryan",
+    "authorName": "Ryan O'Connor",
+    "isExternal": false,
+    "text": "Already in the email, it'll be fine",
+    "reactions": {},
+    "channel": "D03",
+    "channelId": "D03"
+  }
+]

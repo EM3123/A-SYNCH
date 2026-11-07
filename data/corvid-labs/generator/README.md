@@ -1,0 +1,1 @@
+Generator for the Corvid Labs corpus. Run `python3 export.py` from this folder to rebuild `../` (paths are relative to this folder; the export writes to `out/`, so copy `out/corvid-labs-context/*` into `data/corvid-labs/` if you regenerate). Requires Python 3.9+ (zoneinfo).

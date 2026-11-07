@@ -1,0 +1,107 @@
+[
+  {
+    "thread": "T024",
+    "ts": "2026-11-03T09:05:00-05:00",
+    "author": "priya",
+    "authorName": "Priya Shah",
+    "isExternal": false,
+    "text": "Heads up: Atlas is blocked by a security finding found this morning. No beta until it's fixed and retested. More when I know more.",
+    "reactions": {
+      "eyes": 9
+    },
+    "channel": "atlas-launch",
+    "channelId": "C04ALN"
+  },
+  {
+    "thread": "T024",
+    "ts": "2026-11-03T09:12:00-05:00",
+    "author": "maya",
+    "authorName": "Maya Patel",
+    "isExternal": false,
+    "text": "Ok. I'll let design partners know we're aiming for later this week instead of Wednesday, no details.",
+    "reactions": {},
+    "channel": "atlas-launch",
+    "channelId": "C04ALN"
+  },
+  {
+    "thread": "T024",
+    "ts": "2026-11-05T11:02:00-05:00",
+    "author": "priya",
+    "authorName": "Priya Shah",
+    "isExternal": false,
+    "text": "Update: the security finding is fixed and retested (thanks Alex, Jordan). The remaining security items are GA-only. Beta is back on track pending PR #219 and my go/no-go.",
+    "reactions": {
+      "tada": 11
+    },
+    "channel": "atlas-launch",
+    "channelId": "C04ALN"
+  },
+  {
+    "thread": "T031",
+    "ts": "2026-11-05T13:40:00-05:00",
+    "author": "jasmine",
+    "authorName": "Jasmine Taylor",
+    "isExternal": false,
+    "text": "Launch comms question: I'd love to send the 'Introducing Atlas' email to all customers Monday and post the blog. Is that ok if beta goes out Friday?",
+    "reactions": {},
+    "channel": "atlas-launch",
+    "channelId": "C04ALN"
+  },
+  {
+    "thread": "T031",
+    "ts": "2026-11-05T13:52:00-05:00",
+    "author": "maya",
+    "authorName": "Maya Patel",
+    "isExternal": false,
+    "text": "Hmm, beta is only Northwind, Lumen and Kestrel. Wouldn't a blast to everyone create a ton of 'how do I get it' tickets?",
+    "reactions": {},
+    "channel": "atlas-launch",
+    "channelId": "C04ALN"
+  },
+  {
+    "thread": "T031",
+    "ts": "2026-11-05T14:00:00-05:00",
+    "author": "jasmine",
+    "authorName": "Jasmine Taylor",
+    "isExternal": false,
+    "text": "Fair. I'll draft both versions and ask Priya.",
+    "reactions": {},
+    "channel": "atlas-launch",
+    "channelId": "C04ALN"
+  },
+  {
+    "thread": "T039",
+    "ts": "2026-11-06T11:54:00-05:00",
+    "author": "maya",
+    "authorName": "Maya Patel",
+    "isExternal": false,
+    "text": "Design partner readiness:\n• Northwind: 14 users, ready, agreement signed\n• Kestrel: 22 users, ready, agreement signed\n• Lumen: 8 users, ready, but DPA countersignature pending (expected Monday)\nAll three accepted beta limits: no enterprise SSO, 30-day date ranges, reversible rollout.",
+    "reactions": {
+      "white_check_mark": 5
+    },
+    "channel": "atlas-launch",
+    "channelId": "C04ALN"
+  },
+  {
+    "thread": "T039",
+    "ts": "2026-11-06T12:20:00-05:00",
+    "author": "fatima",
+    "authorName": "Fatima Noor",
+    "isExternal": false,
+    "text": "Beta release checklist (ATLAS-30): 7/9 done. Open: PR #219 merged, Priya's go/no-go.",
+    "reactions": {},
+    "channel": "atlas-launch",
+    "channelId": "C04ALN"
+  },
+  {
+    "thread": "T039",
+    "ts": "2026-11-06T12:25:00-05:00",
+    "author": "kwame",
+    "authorName": "Kwame Asante",
+    "isExternal": false,
+    "text": "If #219 merges at 3, we could turn on Northwind + Kestrel by allowlist today. Priya is in QBR until 4:30 though.",
+    "reactions": {},
+    "channel": "atlas-launch",
+    "channelId": "C04ALN"
+  }
+]
