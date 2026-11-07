@@ -17,5 +17,5 @@ export {
   findApprovalClaims,
   findLeaks,
 } from "@/lib/trust/checks";
-export { ATLAS_PEOPLE, ATLAS_EVIDENCE, getExpertise, getMetadata } from "@/lib/trust/context";
+export { CORVID_PEOPLE, CORVID_EVIDENCE, getExpertise, getMetadata } from "@/lib/trust/context";
 export { DEMO_NOW, FRESHNESS_HOURS, trustNow } from "@/lib/trust/policy";

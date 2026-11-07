@@ -122,7 +122,13 @@ export async function askAsynch(
     personId: input.personId,
     sources,
   });
-  securityEvents.push(...verified.securityEvents);
+  for (const event of verified.securityEvents) {
+    const duplicate = securityEvents.some((seen) => seen.type === event.type && seen.evidenceId === event.evidenceId);
+    if (!duplicate) securityEvents.push(event);
+  }
+  // Show every record the answer cites, even when the router did not return it.
+  const shownIds = new Set(sources.map((item) => item.id));
+  sources.push(...verified.citedSources.filter((item) => !shownIds.has(item.id)));
   if (process.env.ASYNCH_AUDIT === "1") {
     console.info(`[A-SYNCH trust] ${JSON.stringify(verified.audit)}`);
   }

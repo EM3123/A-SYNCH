@@ -1,0 +1,444 @@
+{
+  "elena": {
+    "selectionReason": "Owns: company roadmap",
+    "knowsAbout": [
+      "company strategy",
+      "fundraising",
+      "enterprise customers"
+    ],
+    "owns": [
+      "company roadmap",
+      "board updates"
+    ]
+  },
+  "marcus": {
+    "selectionReason": "Owns: engineering org",
+    "knowsAbout": [
+      "architecture",
+      "hiring",
+      "platform strategy"
+    ],
+    "owns": [
+      "engineering org",
+      "architecture decisions"
+    ]
+  },
+  "priya": {
+    "selectionReason": "Owns Atlas launch stages and final confirmation",
+    "knowsAbout": [
+      "launch principles",
+      "beta vs GA tradeoffs",
+      "release approval",
+      "launch sequence"
+    ],
+    "owns": [
+      "Atlas launch approval (beta and GA)",
+      "GA date decision"
+    ]
+  },
+  "kwame": {
+    "selectionReason": "Owns: Atlas sprint plan",
+    "knowsAbout": [
+      "sprint planning",
+      "people management",
+      "delivery"
+    ],
+    "owns": [
+      "Atlas sprint plan",
+      "Atlas on-call schedule",
+      "Atlas team 1:1s"
+    ]
+  },
+  "alex": {
+    "selectionReason": "Owns the Atlas backend, API v1, staging deploys and performance",
+    "knowsAbout": [
+      "Atlas API",
+      "backend tests",
+      "staging deploys",
+      "90-day query performance",
+      "usage rollups"
+    ],
+    "owns": [
+      "Backend readiness",
+      "Performance decisions (ATLAS-40, ATLAS-47)"
+    ]
+  },
+  "tomas": {
+    "selectionReason": "Owns: usage-events consumer",
+    "knowsAbout": [
+      "Kafka",
+      "event pipelines",
+      "metering ingestion"
+    ],
+    "owns": [
+      "usage-events consumer",
+      "metering → Atlas integration"
+    ]
+  },
+  "wei": {
+    "selectionReason": "Owns: usage dedupe job",
+    "knowsAbout": [
+      "Go",
+      "Kafka",
+      "data correctness"
+    ],
+    "owns": [
+      "usage dedupe job",
+      "rollup tables"
+    ]
+  },
+  "grace": {
+    "selectionReason": "Knows about Python, Go (learning)",
+    "knowsAbout": [
+      "Python",
+      "Go (learning)",
+      "APIs"
+    ],
+    "owns": []
+  },
+  "sam": {
+    "selectionReason": "Owns rollout controls, the kill switch and the accessibility check for PR #219",
+    "knowsAbout": [
+      "percentage rollout control",
+      "kill switch flags",
+      "frontend accessibility",
+      "CSV export UI"
+    ],
+    "owns": [
+      "Rollout control (PR #219)",
+      "Kill switch verification (ATLAS-49)"
+    ]
+  },
+  "nadia": {
+    "selectionReason": "Owns: Atlas dashboards",
+    "knowsAbout": [
+      "React",
+      "charts",
+      "data viz"
+    ],
+    "owns": [
+      "Atlas dashboards",
+      "CSV export UI"
+    ]
+  },
+  "leo": {
+    "selectionReason": "Owns: Corvid UI kit",
+    "knowsAbout": [
+      "design systems",
+      "accessibility",
+      "CSS"
+    ],
+    "owns": [
+      "Corvid UI kit",
+      "a11y CI checks"
+    ]
+  },
+  "devon": {
+    "selectionReason": "Owns: staging + prod clusters",
+    "knowsAbout": [
+      "Kubernetes",
+      "Postgres ops",
+      "incident response"
+    ],
+    "owns": [
+      "staging + prod clusters",
+      "deploy pipeline",
+      "incident process"
+    ]
+  },
+  "hana": {
+    "selectionReason": "Owns: Atlas dashboards in Grafana",
+    "knowsAbout": [
+      "observability",
+      "Grafana",
+      "alerting"
+    ],
+    "owns": [
+      "Atlas dashboards in Grafana",
+      "SLO alerts"
+    ]
+  },
+  "ravi": {
+    "selectionReason": "Owns: CI runners",
+    "knowsAbout": [
+      "Terraform",
+      "networking",
+      "CI runners"
+    ],
+    "owns": [
+      "CI runners",
+      "Terraform modules"
+    ]
+  },
+  "jordan": {
+    "selectionReason": "Owns the security review, SSO verification gates and export audit requirements",
+    "knowsAbout": [
+      "security review ATLAS-38",
+      "SAML and SSO verification",
+      "export audit log",
+      "launch risk"
+    ],
+    "owns": [
+      "Security sign-off for general availability",
+      "SSO verification gate (ATLAS-41)"
+    ]
+  },
+  "ingrid": {
+    "selectionReason": "Owns: enterprise SSO",
+    "knowsAbout": [
+      "SAML",
+      "OIDC",
+      "Okta",
+      "Azure AD"
+    ],
+    "owns": [
+      "enterprise SSO",
+      "ATLAS-41 SSO verification"
+    ]
+  },
+  "fatima": {
+    "selectionReason": "Owns: release checklist",
+    "knowsAbout": [
+      "test strategy",
+      "release QA",
+      "Playwright"
+    ],
+    "owns": [
+      "release checklist",
+      "regression suite"
+    ]
+  },
+  "ben": {
+    "selectionReason": "Owns: Atlas load tests",
+    "knowsAbout": [
+      "Playwright",
+      "load testing",
+      "k6"
+    ],
+    "owns": [
+      "Atlas load tests"
+    ]
+  },
+  "chloe": {
+    "selectionReason": "Owns: Atlas UX",
+    "knowsAbout": [
+      "interaction design",
+      "Figma",
+      "prototyping"
+    ],
+    "owns": [
+      "Atlas UX",
+      "rollout control design"
+    ]
+  },
+  "omar": {
+    "selectionReason": "Owns: design partner research",
+    "knowsAbout": [
+      "interviews",
+      "usability testing"
+    ],
+    "owns": [
+      "design partner research"
+    ]
+  },
+  "sofia": {
+    "selectionReason": "Owns: warehouse models",
+    "knowsAbout": [
+      "dbt",
+      "Snowflake",
+      "rollups"
+    ],
+    "owns": [
+      "warehouse models",
+      "Atlas rollup SQL"
+    ]
+  },
+  "kenji": {
+    "selectionReason": "Owns: metric definitions doc",
+    "knowsAbout": [
+      "SQL",
+      "Looker",
+      "metrics definitions"
+    ],
+    "owns": [
+      "metric definitions doc"
+    ]
+  },
+  "ethan": {
+    "selectionReason": "Owns: usage-based billing",
+    "knowsAbout": [
+      "pricing",
+      "metering",
+      "invoicing"
+    ],
+    "owns": [
+      "usage-based billing"
+    ]
+  },
+  "lucas": {
+    "selectionReason": "Owns: metering service",
+    "knowsAbout": [
+      "Kafka",
+      "Go",
+      "metering"
+    ],
+    "owns": [
+      "metering service",
+      "usage-events topic schema"
+    ]
+  },
+  "maya": {
+    "selectionReason": "Owns design partner commitments and customer timing",
+    "knowsAbout": [
+      "design partners",
+      "Lumen and Northwind commitments",
+      "beta limits accepted"
+    ],
+    "owns": [
+      "Design partner communication",
+      "Partner onboarding timing"
+    ]
+  },
+  "laura": {
+    "selectionReason": "Owns: Northwind account",
+    "knowsAbout": [
+      "account management",
+      "renewals"
+    ],
+    "owns": [
+      "Northwind account"
+    ]
+  },
+  "diego": {
+    "selectionReason": "Owns: Lumen account",
+    "knowsAbout": [
+      "onboarding",
+      "integrations"
+    ],
+    "owns": [
+      "Lumen account",
+      "Kestrel account"
+    ]
+  },
+  "aisha": {
+    "selectionReason": "Owns: support queue",
+    "knowsAbout": [
+      "support operations",
+      "escalations"
+    ],
+    "owns": [
+      "support queue",
+      "customer escalations"
+    ]
+  },
+  "mateo": {
+    "selectionReason": "Owns: tier-2 tickets",
+    "knowsAbout": [
+      "debugging",
+      "SQL",
+      "customer tickets"
+    ],
+    "owns": [
+      "tier-2 tickets"
+    ]
+  },
+  "ryan": {
+    "selectionReason": "Owns: Halvorsen Freight deal",
+    "knowsAbout": [
+      "enterprise sales",
+      "negotiation"
+    ],
+    "owns": [
+      "Halvorsen Freight deal"
+    ]
+  },
+  "megan": {
+    "selectionReason": "Owns: Halvorsen technical eval",
+    "knowsAbout": [
+      "demos",
+      "security questionnaires",
+      "SSO setup"
+    ],
+    "owns": [
+      "Halvorsen technical eval"
+    ]
+  },
+  "rebecca": {
+    "selectionReason": "Owns: design partner agreements",
+    "knowsAbout": [
+      "contracts",
+      "privacy law",
+      "DPAs"
+    ],
+    "owns": [
+      "design partner agreements",
+      "DPAs"
+    ]
+  },
+  "victor": {
+    "selectionReason": "Owns: SOC 2 evidence",
+    "knowsAbout": [
+      "SOC 2",
+      "access reviews",
+      "vendor risk"
+    ],
+    "owns": [
+      "SOC 2 evidence",
+      "quarterly access review"
+    ]
+  },
+  "jasmine": {
+    "selectionReason": "Owns: Atlas launch comms",
+    "knowsAbout": [
+      "launch messaging",
+      "positioning"
+    ],
+    "owns": [
+      "Atlas launch comms"
+    ]
+  },
+  "noah": {
+    "selectionReason": "Owns: changelog",
+    "knowsAbout": [
+      "blog",
+      "release notes"
+    ],
+    "owns": [
+      "changelog",
+      "blog"
+    ]
+  },
+  "olivia": {
+    "selectionReason": "Owns: leave tracking",
+    "knowsAbout": [
+      "benefits",
+      "leave",
+      "onboarding"
+    ],
+    "owns": [
+      "leave tracking",
+      "new hire onboarding"
+    ]
+  },
+  "sanjay": {
+    "selectionReason": "Owns: ARR forecast",
+    "knowsAbout": [
+      "forecasting",
+      "revenue recognition"
+    ],
+    "owns": [
+      "ARR forecast"
+    ]
+  },
+  "isabel": {
+    "selectionReason": "Owns: Atlas API docs",
+    "knowsAbout": [
+      "API docs",
+      "guides"
+    ],
+    "owns": [
+      "Atlas API docs",
+      "beta guide"
+    ]
+  }
+}

@@ -3,7 +3,7 @@
  * the same input always produces the same result.
  */
 import type { Evidence } from "@/lib/contracts";
-import { getMetadata, ATLAS_PEOPLE } from "@/lib/trust/context";
+import { getMetadata, CORVID_PEOPLE } from "@/lib/trust/context";
 import { FRESHNESS_HOURS, LEAK_OVERLAP, trustNow } from "@/lib/trust/policy";
 
 // ---------------------------------------------------------------------------
@@ -92,7 +92,7 @@ export function shortDate(iso: string): string {
 // ---------------------------------------------------------------------------
 // 4. Authority: no approving, committing, changing access or impersonating
 // ---------------------------------------------------------------------------
-const NAMES = ATLAS_PEOPLE.map((person) => person.id).join("|");
+const NAMES = CORVID_PEOPLE.map((person) => person.id).join("|");
 
 const APPROVAL_REQUEST_RULES: Array<[string, RegExp]> = [
   ["asks-to-approve", /\b(can|could|will|would|please|go ahead and)\s+(you\s+)?(approve|authori[sz]e|greenlight|green-light|sign off)\b/i],
@@ -173,7 +173,7 @@ export function supportRatio(claim: string, evidenceText: string): number {
 }
 
 export function evidenceBlob(evidence: Evidence): string {
-  const owner = ATLAS_PEOPLE.find((person) => person.id === evidence.ownerId);
+  const owner = CORVID_PEOPLE.find((person) => person.id === evidence.ownerId);
   return `${evidence.title} ${evidence.sourceLabel} ${evidence.text} ${owner?.name ?? ""}`;
 }
 
@@ -195,7 +195,7 @@ export function findLeaks(text: string, requesterId: string, allEvidence: Eviden
 // ---------------------------------------------------------------------------
 // 6. Never impersonate a person, never infer feelings or risk appetite
 // ---------------------------------------------------------------------------
-const FULL_NAMES = ATLAS_PEOPLE.flatMap((person) => [person.id, person.name.toLowerCase()]).join("|");
+const FULL_NAMES = CORVID_PEOPLE.flatMap((person) => [person.id, person.name.toLowerCase()]).join("|");
 
 const IMPERSONATION_RULES: Array<[string, RegExp]> = [
   ["claims-identity", new RegExp(`\\b(i am|i'm|this is)\\s+(${FULL_NAMES})\\b(?!'s)`, "i")],

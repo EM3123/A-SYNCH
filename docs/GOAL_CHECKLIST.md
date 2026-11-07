@@ -54,8 +54,8 @@ Last run: **Nov 7, 2026**, branch `main`. 24/24 evals passing, typecheck clean, 
 
 | # | Step | Status | Where | Notes |
 |---|---|---|---|---|
-| F1 | Collect from GitHub, Jira, Slack, notes | 🟡 | `data/atlas/*.json` (demo data, all four sources) | Real connectors not built; fixed demo data is fine for Nov 7 |
-| F2 | Index: "who knows what" map | ✅ | `data/atlas/expertise.json` → `getExpertise` in router | Data test |
+| F1 | Collect from GitHub, Jira, Slack, notes | 🟡 | `data/corvid-labs/` (Corvid Labs corpus, 38 people, all sources; Trust Layer data built into `data/corvid-labs/trust/`) | Real connectors not built; fixed demo data is fine for Nov 7 |
+| F2 | Index: "who knows what" map | ✅ | `data/corvid-labs/trust/expertise.json` → `getExpertise` in router | Data test |
 | F3 | Ask in Slack (Mode A) or by voice (Mode B) | 🟡 | Web team flow plus direct person conversation, follow-ups, and read-aloud (`/api/ask`, `/api/people/[id]/chat`) | Slack app and microphone input remain outside demo scope |
 | F4 | Route to the 2–3 most relevant agents | ✅ | `lib/agents/router.ts` | eval 1 |
 | F5 | Agents return cited evidence, not prose | ✅ | `queryContextAgent` returns `Evidence[]` | Code review |

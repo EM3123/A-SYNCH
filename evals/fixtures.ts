@@ -3,12 +3,12 @@
  * label the good ones correctly and catch the bad ones.
  */
 import type { BriefClaim, SituationBrief } from "@/lib/contracts";
-import { ATLAS_EVIDENCE, canAccess, isQuarantined } from "@/lib/trust";
+import { CORVID_EVIDENCE, canAccess, isQuarantined } from "@/lib/trust";
 
 export const REQUESTER = "daksh";
 
 /** Everything the context agents could return to the demo requester. */
-export const SOURCES = ATLAS_EVIDENCE.filter((item) => canAccess(item, REQUESTER) && !isQuarantined(item));
+export const SOURCES = CORVID_EVIDENCE.filter((item) => canAccess(item, REQUESTER) && !isQuarantined(item));
 
 export function brief(claims: BriefClaim[], overrides: Partial<SituationBrief> = {}): SituationBrief {
   return {
