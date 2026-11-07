@@ -4,6 +4,11 @@ import type { AskResponse, PersonProfile, Evidence, TrustDecision } from './cont
 
 export type { AskResponse, PersonProfile, Evidence, TrustDecision };
 
+export interface PartBConversationTurn {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
 export class BackendError extends Error {
   readonly status: number | null;
   constructor(message: string, status: number | null) {
@@ -46,6 +51,20 @@ export function askTeam(question: string, requesterId?: string): Promise<AskResp
 // Part B: talk directly to one person's context agent.
 export function askPerson(personId: string, question: string, requesterId?: string): Promise<AskResponse> {
   return request<AskResponse>(`/api/people/${encodeURIComponent(personId)}/chat`, jsonPost({ question, requesterId }));
+}
+
+// Part B: send the active conversation so follow-ups can resolve prior decisions and pronouns.
+// The server resolves requester identity; requesterId remains only for compatibility with existing callers.
+export function askPerspectivePerson(
+  personId: string,
+  question: string,
+  history: PartBConversationTurn[],
+  requesterId?: string,
+): Promise<AskResponse> {
+  return request<AskResponse>(
+    `/api/people/${encodeURIComponent(personId)}/chat`,
+    jsonPost({ question, history, requesterId }),
+  );
 }
 
 function jsonPost(body: unknown): RequestInit {
