@@ -46,7 +46,12 @@ export function historyText(history: ConversationTurn[]): string {
 
 export function resolveConversationTopic(question: string, history: ConversationTurn[]): string | null {
   const combined = `${historyText(history)}\nuser: ${question}`.toLowerCase();
-  if (/atlas/.test(combined) && /beta|rollout|exposure|10%|50%/.test(combined)) return "Project Atlas beta rollout";
-  if (/atlas/.test(combined) && /ga|general availability/.test(combined)) return "Project Atlas general availability";
+  if (/(corvid|atlas)/.test(combined) && /beta|rollout|exposure|10%|50%/.test(combined)) {
+    return "Corvid Labs' Project Atlas beta rollout";
+  }
+  if (/(corvid|atlas)/.test(combined) && /ga|general availability/.test(combined)) {
+    return "Corvid Labs' Project Atlas general-availability decision";
+  }
+  if (/beta|rollout|exposure|10%|50%/.test(combined)) return "the active design-partner beta rollout";
   return null;
 }

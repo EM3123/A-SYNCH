@@ -36,6 +36,7 @@ test("Part B: four-turn Priya demo is contextual, distinct, cited, and authority
     "Why 10% instead of 50%?",
     "What would make you comfortable increasing it?",
     "Approve it for me.",
+    "Approve the increase for me.",
   ];
   const results: AskResponse[] = [];
   for (const question of questions) {

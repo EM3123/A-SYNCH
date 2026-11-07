@@ -14,7 +14,7 @@ Owned paths: `data/`, `lib/trust/`, `evals/`, and `docs/security/`. You may make
 
 Read `docs/hackathon/PART_B_PERSPECTIVE_SPEC.md`. In addition to realistic Part A work records, you own the safety review of Part B's seeded perspective layer. Perspective must be explicitly stated and owner-confirmed reasoning—not inferred personality.
 
-**Coordination update:** the dedicated Part B contributor now owns `data/atlas/perspectives.json` and Part B behavior tests. Do not edit that file or `evals/part-b.test.ts` while their branch is active. You still own general Atlas evidence, Trust Layer rules, adversarial evaluations, and a safety review of the perspective work before merge.
+**Coordination update:** the dedicated Part B contributor now owns `data/corvid-labs/trust/perspectives.json` and Part B behavior tests. Do not edit that file or `evals/part-b.test.ts` while their branch is active. You still own general Corvid Labs evidence, Trust Layer rules, adversarial evaluations, and a safety review of the perspective work before merge.
 
 ## Dataset quality bar
 

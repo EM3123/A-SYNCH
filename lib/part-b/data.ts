@@ -1,4 +1,4 @@
-import perspectiveJson from "@/data/atlas/perspectives.json";
+import perspectiveJson from "@/data/corvid-labs/trust/perspectives.json";
 import { EVIDENCE } from "@/lib/agents/demo-context";
 import type { Evidence } from "@/lib/contracts";
 import type { PerspectiveRecord } from "@/lib/part-b/types";
@@ -76,14 +76,17 @@ export function retrievePerspective(options: {
   now?: Date;
 }) {
   const allowed = accessiblePerspectiveRecords(options).filter((record) => record.ownerApproved);
-  const chosen = options.ids?.length
+  const chosen = (options.ids?.length
     ? options.ids.map((id) => allowed.find((record) => record.id === id)).filter((record): record is PerspectiveRecord => Boolean(record))
     : allowed
         .map((record) => ({ record, score: scoreRecord(record, options.query) }))
         .filter((entry) => entry.score > 0)
         .sort((a, b) => b.score - a.score || b.record.ownerConfirmedAt.localeCompare(a.record.ownerConfirmedAt))
         .slice(0, options.limit ?? 4)
-        .map((entry) => entry.record);
+        .map((entry) => entry.record))
+    // Perspective records are retrieved content too. Never place quarantined
+    // instruction-like text into either the deterministic or live model path.
+    .filter((record) => !isQuarantined(perspectiveToEvidence(record)));
 
   const chosenEvidence = chosen.map(perspectiveToEvidence);
   const allAccessible = accessiblePerspectiveRecords({ personId: options.personId, requesterId: options.requesterId, now: options.now })

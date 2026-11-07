@@ -1,122 +1,137 @@
-// The answer, as text. Everything the AI "said" comes from brief.* fields; nothing is added here.
 import type { AskResponse, Evidence, PersonProfile } from '../api';
-import { labelText, labelHelp } from '../data';
+import { labelText } from '../data';
 
 interface Props {
   response: AskResponse;
   people: PersonProfile[];
   onAskAgain: () => void;
   onCopy: (text: string) => void;
+  onTalkToPerson: (personId: string) => void;
 }
 
-const nameOf = (people: PersonProfile[], id: string) => people.find((p) => p.id === id)?.name ?? id;
+const nameOf = (people: PersonProfile[], id: string) => people.find((person) => person.id === id)?.name ?? id;
 
-export default function ResultPanel({ response, people, onAskAgain, onCopy }: Props) {
+function sourceDate(timestamp: string) {
+  const date = new Date(timestamp);
+  return Number.isNaN(date.getTime()) ? timestamp : date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+}
+
+export default function ResultPanel({ response, people, onAskAgain, onCopy, onTalkToPerson }: Props) {
   const { brief, sources, securityEvents, meta, routingEvents } = response;
-  const byId = new Map<string, Evidence>(sources.map((s) => [s.id, s]));
-  const decision = brief.trust.decision;
+  const byId = new Map<string, Evidence>(sources.map((source) => [source.id, source]));
   const owner = nameOf(people, brief.ownerId);
+  const perspectivePerson = people.find((person) => person.id === 'priya') ?? people.find((person) => person.id === brief.ownerId);
+  const citedIds = new Set(brief.claims.flatMap((claim) => claim.evidenceIds));
+  const citedSources = sources.filter((source) => citedIds.has(source.id));
 
   return (
-    <section className="answer" aria-labelledby="answer-title">
-      <div className="answer-head">
-        <span className={`label label-${decision}`} title={labelHelp[decision]}>{labelText[decision]}</span>
-        <h2 id="answer-title" className="serif">{brief.title}</h2>
+    <section className="situation-brief" aria-labelledby="brief-title">
+      <div className="brief-topline">
+        <div className="brief-status-group">
+          <span className={`trust-badge trust-badge-${brief.trust.decision}`}>
+            <i /> {labelText[brief.trust.decision]}
+          </span>
+          <span className="brief-runtime">
+            {meta.usedFallback ? 'Verified local fallback' : `Live synthesis${meta.model ? ` · ${meta.model.split('/').pop()}` : ''}`}
+          </span>
+        </div>
+        <span className="brief-time">Built in {(meta.durationMs / 1000).toFixed(1)}s</span>
       </div>
-      <p className="dim">{labelHelp[decision]} {meta.usedFallback ? '· Demo mode' : '· Live'} · {Math.round(meta.durationMs)} ms</p>
 
-      <p className="status">{brief.status}</p>
-      {brief.answer.split('\n').map((line, i) => (
-        <p key={i} className={line.startsWith('- ') ? 'bullet' : 'body'}>{line.startsWith('- ') ? line.slice(2) : line}</p>
-      ))}
+      <div className="brief-verdict">
+        <span>Situation Brief</span>
+        <h2 id="brief-title">{brief.title}</h2>
+        <p>{brief.answer}</p>
+      </div>
 
-      {brief.trust.requiresHuman && (
-        <div className="callout" role="note">
-          <strong>Needs {owner}.</strong> {brief.trust.reasons.join(' ')}
-          <div className="row">
-            <button type="button" onClick={() => onCopy(`Hi ${owner}, ${brief.nextStep}`)}>Copy a note for {owner}</button>
-          </div>
-        </div>
-      )}
-
-      {brief.claims.length > 0 && (
+      <div className="brief-action">
         <div>
-          <h3>Claims</h3>
-          <ul className="claims">
-            {brief.claims.map((c, i) => (
-              <li key={i}>
-                <span className={`chip-trust trust-${c.trust}`}>{labelText[c.trust]}</span> {c.text}
-                <ul className="sources">
-                  {c.evidenceIds.map((id) => {
-                    const ev = byId.get(id);
-                    return ev ? (
-                      <li key={id} className={ev.stale ? 'stale' : ''}>
-                        {ev.title} <span className="dim">· {ev.sourceLabel} · {nameOf(people, ev.ownerId)}{ev.stale ? ' · out of date' : ''}</span>
-                      </li>
-                    ) : (
-                      <li key={id} className="dim">Source not available to you</li>
-                    );
-                  })}
-                </ul>
-              </li>
-            ))}
-          </ul>
+          <span>Best next move</span>
+          <strong>{brief.nextStep}</strong>
         </div>
-      )}
-
-      {brief.conflicts.length > 0 && (
-        <div>
-          <h3>Sources disagree</h3>
-          <ul>{brief.conflicts.map((c, i) => <li key={i}>{c}</li>)}</ul>
+        <div className="brief-owner">
+          <span>Current owner</span>
+          <strong>{owner}</strong>
         </div>
-      )}
+      </div>
 
       {brief.decisionTree.length > 0 && (
-        <div>
-          <h3>Next steps</h3>
-          <ol className="tree">
-            {brief.decisionTree.map((n, i) => (
-              <li key={i} className={`state-${n.state}`}>
-                <span className="dim">{n.state === 'done' ? 'Done' : n.state === 'next' ? 'Next' : 'Blocked'}</span> {n.label}
-                <span className="dim"> · {n.reason}</span>
-              </li>
+        <div className="decision-path" aria-label="Decision path">
+          {brief.decisionTree.map((node, index) => (
+            <article key={`${node.label}-${index}`} data-state={node.state}>
+              <div><i /> <span>{node.state === 'done' ? 'Verified' : node.state === 'next' ? 'Next' : 'Blocked'}</span></div>
+              <strong>{node.label}</strong>
+              <p>{node.reason}</p>
+            </article>
+          ))}
+        </div>
+      )}
+
+      <div className="brief-actions">
+        {perspectivePerson && (
+          <button type="button" className="primary-action" onClick={() => onTalkToPerson(perspectivePerson.id)}>
+            Talk it through with {perspectivePerson.name.split(' ')[0]} <span>→</span>
+          </button>
+        )}
+        <button type="button" onClick={() => onCopy(`Corvid Labs Situation Brief: ${brief.answer}\n\nNext: ${brief.nextStep}`)}>
+          Copy brief
+        </button>
+        <button type="button" onClick={onAskAgain}>Ask another</button>
+      </div>
+
+      <details className="proof-drawer">
+        <summary>
+          <span><i /> Evidence &amp; safety</span>
+          <small>{citedSources.length} cited records · {securityEvents.length || 1} guardrail check{securityEvents.length === 1 ? '' : 's'}</small>
+        </summary>
+        <div className="proof-content">
+          <div className="proof-claims">
+            <span className="proof-heading">Verified claims</span>
+            {brief.claims.map((claim, index) => (
+              <article key={`${claim.text}-${index}`}>
+                <div>
+                  <span className={`mini-trust mini-trust-${claim.trust}`}>{labelText[claim.trust]}</span>
+                  <p>{claim.text}</p>
+                </div>
+                <ul>
+                  {claim.evidenceIds.map((id) => {
+                    const source = byId.get(id);
+                    return source ? (
+                      <li key={id} className={source.stale ? 'source-stale' : ''}>
+                        <strong>{source.title}</strong>
+                        <span>{source.sourceLabel} · {sourceDate(source.timestamp)}{source.stale ? ' · stale' : ''}</span>
+                      </li>
+                    ) : <li key={id}><span>Source unavailable at your permission level</span></li>;
+                  })}
+                </ul>
+              </article>
             ))}
-          </ol>
-          <p><strong>Next step:</strong> {brief.nextStep}</p>
-        </div>
-      )}
+          </div>
 
-      {brief.downstreamBlockers.length > 0 && (
-        <div>
-          <h3>Blocked by</h3>
-          <ul>{brief.downstreamBlockers.map((b, i) => <li key={i}>{b}</li>)}</ul>
+          <aside className="proof-side">
+            <div>
+              <span className="proof-heading">Why you can trust this</span>
+              <p>The model proposed a brief. Deterministic checks verified provenance, permissions, freshness, and authority before you saw it.</p>
+            </div>
+            {brief.conflicts.length > 0 && (
+              <div>
+                <span className="proof-heading">Conflicts surfaced</span>
+                {brief.conflicts.map((conflict) => <p key={conflict}>{conflict}</p>)}
+              </div>
+            )}
+            {securityEvents.length > 0 && (
+              <div>
+                <span className="proof-heading">Guardrails triggered</span>
+                {securityEvents.map((event, index) => <p key={`${event.label}-${index}`}>{event.label}</p>)}
+              </div>
+            )}
+            <details>
+              <summary>Agent trace · {routingEvents.length} steps</summary>
+              <ol>{routingEvents.map((event, index) => <li key={`${event.label}-${index}`}>{event.label}</li>)}</ol>
+            </details>
+          </aside>
         </div>
-      )}
-
-      {brief.relevantPeople.length > 0 && (
-        <div>
-          <h3>People</h3>
-          <ul>
-            {brief.relevantPeople.map((p) => (
-              <li key={p.personId}>{nameOf(people, p.personId)} <span className="dim">· {p.reason}</span></li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {securityEvents.length > 0 && (
-        <div>
-          <h3>Security checks</h3>
-          <ul>{securityEvents.map((e, i) => <li key={i}>{e.label}</li>)}</ul>
-        </div>
-      )}
-
-      <details>
-        <summary>How this was routed ({routingEvents.length} steps)</summary>
-        <ol>{routingEvents.map((e, i) => <li key={i}>{e.label}</li>)}</ol>
       </details>
-
-      <button type="button" className="again" onClick={onAskAgain}>Ask another</button>
     </section>
   );
 }

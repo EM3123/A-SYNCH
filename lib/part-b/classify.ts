@@ -4,7 +4,9 @@ import { resolveConversationTopic } from "@/lib/part-b/history";
 
 export function classifyPerspectiveTurn(question: string, history: ConversationTurn[]): PerspectiveIntent {
   const lower = question.toLowerCase();
-  if (detectAuthorityRequest(question).length) return "authority-request";
+  const asksForAuthority = /\b(approve|authorize|green[- ]?light|sign[ -]?off|give (?:me |us )?(?:the )?go[- ]?ahead|go ahead and|ship it|commit (?:this|that|it))\b/i.test(question);
+  const asksAuthorityStatus = /\b(has|have|did|was|were|is|are|who|when|whether)\b[^?.]{0,80}\b(approved?|authorized?|green[- ]?lit|signed?[ -]?off)\b/i.test(question);
+  if (detectAuthorityRequest(question).length || (asksForAuthority && !asksAuthorityStatus)) return "authority-request";
   if (/risk[- ]averse|risk appetite|risk tolerance|personality|how (does|would) .* feel/.test(lower)) return "generalized-inference";
   if (/why\s+(10|ten)\s*%?.*(50|fifty)|why.*not\s+(50|fifty)|blast radius/.test(lower)) return "exposure-rationale";
   if (/what.*(increase|expand|scale)|make.*(increase|expand|scale)|comfortable increasing|raise (it|the rollout)/.test(lower)) {

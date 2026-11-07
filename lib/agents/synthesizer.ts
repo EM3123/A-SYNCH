@@ -176,9 +176,9 @@ function fallbackBrief(options: {
   }
 
   return {
-    title: "Project Atlas launch brief",
+    title: "Corvid Labs launch brief",
     answer:
-      "Atlas is not ready for general availability today. A limited design-partner beta can ship after the rollout control merges: the backend is ready, three customers are waiting, but frontend rollout controls and the GA security review remain open.",
+      "Corvid Labs is not ready to take Project Atlas to general availability today. A limited design-partner beta can ship after the rollout control merges: the backend is ready and three customers are waiting, while rollout controls and the GA security review remain open.",
     status: "Conditional beta path; general availability blocked",
     claims: [
       {
@@ -266,6 +266,7 @@ function buildSynthesisPrompt(options: {
   return JSON.stringify(
     {
       task: "Create one evidence-backed SituationBrief for A-SYNCH.",
+      company: "Corvid Labs",
       question: options.question,
       mode: options.mode,
       selectedPersonId: options.personId || null,
@@ -277,6 +278,7 @@ function buildSynthesisPrompt(options: {
         "Show stale conflicts rather than silently resolving them.",
         "A prediction or extrapolation must use trust=supported.",
         "A request for approval must use trust.decision=needs-human.",
+        "Use Corvid Labs as the workspace and company name. Atlas is only the internal project codename, never the identity of the organization.",
         "Return JSON only, matching the SituationBrief shape.",
       ],
     },

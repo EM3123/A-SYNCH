@@ -14,7 +14,7 @@ Then read down the table. Any row whose test fails, or whose "Where" no longer m
 
 Status key: ✅ enforced in code and tested · 🟡 partly there · ❌ not built yet · 📝 lives outside the repo (deck, pitch, process)
 
-Last run: **Nov 7, 2026**, branch `main`. 24/24 evals passing, typecheck clean, smoke passing, production UI build clean.
+Last run: **Nov 7, 2026**, branch `codex/demo-final`. 50/50 evals passing, typecheck clean, smoke passing, frontend and production Next builds clean.
 
 ---
 
@@ -38,7 +38,7 @@ Last run: **Nov 7, 2026**, branch `main`. 24/24 evals passing, typecheck clean, 
 |---|---|---|---|---|---|
 | W1 | No emotion inference | ✅ | `infers-feelings` / `infers-risk-appetite` rules | "Goal: no inferred feelings" | Vedant |
 | W2 | No passive screen or audio recording | ✅ | Nothing in the repo records; context is fixed JSON from GitHub/Jira/Slack/meeting notes | Code review: no capture code exists | All |
-| W3 | No training on company data | ✅ | Model is only called with retrieved evidence at answer time (`lib/openrouter.ts`) | Code review | Daksh |
+| W3 | No training on company data | ✅ | Part A and Part B call the model only with retrieved, permission-filtered evidence at answer time (`lib/openrouter.ts`, `lib/part-b/engine.ts`) | Code review | Daksh |
 | W4 | No "replica" / "clone" language; call them context agents | ✅ | Repo copy says "context agent" | "all three demo prompts" test greps briefs for clone/twin/replica | All |
 
 ## 3. Perspective tiers (doc: "Three tiers of perspective")
@@ -56,7 +56,7 @@ Last run: **Nov 7, 2026**, branch `main`. 24/24 evals passing, typecheck clean, 
 |---|---|---|---|---|
 | F1 | Collect from GitHub, Jira, Slack, notes | 🟡 | `data/corvid-labs/` (Corvid Labs corpus, 38 people, all sources; Trust Layer data built into `data/corvid-labs/trust/`) | Real connectors not built; fixed demo data is fine for Nov 7 |
 | F2 | Index: "who knows what" map | ✅ | `data/corvid-labs/trust/expertise.json` → `getExpertise` in router | Data test |
-| F3 | Ask in Slack (Mode A) or by voice (Mode B) | ✅ | Team question flow plus direct push-to-talk person conversation, contextual follow-ups, citations, and generic spoken playback (`web/src/part-b/`, `/api/people/[id]/chat`) | Typed fallback preserves the same flow when browser speech recognition is unavailable |
+| F3 | Ask in Slack (Mode A) or by voice (Mode B) | ✅ | Team question flow plus direct push-to-talk person conversation, live OpenRouter synthesis, contextual follow-ups, citations, and generic spoken playback (`web/src/part-b/`, `lib/part-b/`, `/api/people/[id]/chat`) | Typed and deterministic fallbacks preserve the same flow when speech or model access is unavailable |
 | F4 | Route to the 2–3 most relevant agents | ✅ | `lib/agents/router.ts` | eval 1 |
 | F5 | Agents return cited evidence, not prose | ✅ | `queryContextAgent` returns `Evidence[]` | Code review |
 | F6 | One brief; conflicts shown with dates, not guessed | ✅ | conflict check in `verify.ts` | eval 8 |

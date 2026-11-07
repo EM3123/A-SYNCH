@@ -31,7 +31,7 @@ You may change:
 
 - `web/src/part-b/**` — self-contained Part B UI and browser voice controls.
 - `lib/part-b/**` — perspective retrieval, conversation history, deterministic fallback, and prompt assembly.
-- `data/atlas/perspectives.json` — owner-confirmed seeded perspective records.
+- `data/corvid-labs/trust/perspectives.json` — owner-confirmed seeded perspective records in the shared Corvid Labs corpus.
 - `evals/part-b.test.ts` — Part B behavior and safety tests.
 - `app/api/people/[personId]/chat/route.ts` — wire the existing route to the Part B engine.
 - `web/src/api.ts` only for a narrowly scoped Part B client method.
