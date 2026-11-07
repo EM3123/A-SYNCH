@@ -6,7 +6,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://REPLACE-WITH-BACKEND-PROJECT.vercel.app/api/:path*"
+      "destination": "https://a-synch.vercel.app/api/:path*"
     },
     {
       "source": "/(.*)",
