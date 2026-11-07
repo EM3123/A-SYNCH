@@ -1,0 +1,25 @@
+{
+  "name": "a-synch",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "smoke:backend": "ASYNCH_FORCE_FALLBACK=1 tsx scripts/smoke-backend.ts"
+  },
+  "dependencies": {
+    "next": "16.4.5",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "tsx": "4.20.6",
+    "typescript": "7.0.2"
+  },
+  "packageManager": "pnpm@11.25.0"
+}
