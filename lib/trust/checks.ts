@@ -3,7 +3,7 @@
  * the same input always produces the same result.
  */
 import type { Evidence } from "@/lib/contracts";
-import { getMetadata, ATLAS_PEOPLE } from "@/lib/trust/context";
+import { getMetadata, CORVID_PEOPLE } from "@/lib/trust/context";
 import { FRESHNESS_HOURS, LEAK_OVERLAP, trustNow } from "@/lib/trust/policy";
 
 // ---------------------------------------------------------------------------
@@ -11,6 +11,23 @@ import { FRESHNESS_HOURS, LEAK_OVERLAP, trustNow } from "@/lib/trust/policy";
 // ---------------------------------------------------------------------------
 export function canAccess(evidence: Evidence, requesterId: string): boolean {
   return evidence.permittedUsers.includes("*") || evidence.permittedUsers.includes(requesterId);
+}
+
+// ---------------------------------------------------------------------------
+// 0. Normalize text before scanning, so lookalike letters, zero-width
+//    characters and spaced-out words can't hide an instruction
+// ---------------------------------------------------------------------------
+const HOMOGLYPHS: Record<string, string> = {
+  "\u0430": "a", "\u0435": "e", "\u043e": "o", "\u0440": "p", "\u0441": "c", "\u0443": "y", "\u0445": "x",
+  "\u0456": "i", "\u0455": "s", "\u03bf": "o", "\u03b1": "a", "\u03c1": "p", "\u03bd": "v",
+};
+
+export function normalizeForScan(text: string): string {
+  let out = text.normalize("NFKC").replace(/[\u200B-\u200D\u2060\uFEFF\u00AD]/g, "");
+  out = out.replace(/[\u0430\u0435\u043e\u0440\u0441\u0443\u0445\u0456\u0455\u03bf\u03b1\u03c1\u03bd]/g, (ch) => HOMOGLYPHS[ch] ?? ch);
+  // "I g n o r e" -> "Ignore": join runs of three or more single letters
+  out = out.replace(/\b(?:[a-zA-Z] ){2,}[a-zA-Z]\b/g, (run) => run.replace(/ /g, ""));
+  return out.replace(/\s+/g, " ");
 }
 
 // ---------------------------------------------------------------------------
@@ -34,7 +51,8 @@ const INJECTION_RULES: Array<[string, RegExp]> = [
 
 export function scanInjection(text: string | undefined): string[] {
   if (!text) return [];
-  return INJECTION_RULES.filter(([, rule]) => rule.test(text)).map(([name]) => name);
+  const clean = normalizeForScan(text);
+  return INJECTION_RULES.filter(([, rule]) => rule.test(clean)).map(([name]) => name);
 }
 
 export function isQuarantined(evidence: Evidence): boolean {
@@ -74,11 +92,13 @@ export function shortDate(iso: string): string {
 // ---------------------------------------------------------------------------
 // 4. Authority: no approving, committing, changing access or impersonating
 // ---------------------------------------------------------------------------
-const NAMES = ATLAS_PEOPLE.map((person) => person.id).join("|");
+const NAMES = CORVID_PEOPLE.map((person) => person.id).join("|");
 
 const APPROVAL_REQUEST_RULES: Array<[string, RegExp]> = [
   ["asks-to-approve", /\b(can|could|will|would|please|go ahead and)\s+(you\s+)?(approve|authori[sz]e|greenlight|green-light|sign off)\b/i],
-  ["approve-imperative", /(^|[.!?]\s*)(approve|authori[sz]e|greenlight|sign off on)\b/i],
+  ["approve-imperative", /(^|[.!?]\s*)(approve|authori[sz]e|green-?light|greenlight|sign off on)\b/i],
+  ["ship-it", /(^|[.!?]\s*)ship it\b/i],
+  ["go-ahead-request", /(^|[.!?]\s*)(please\s+)?go[ -]ahead\b/i],
   ["sign-off-on", /\bsign(-|\s)?off on\b/i],
   ["give-go-ahead", /\bgive\b[^.\n]{0,20}\b(go-ahead|go ahead|green light|approval|permission|sign-off)\b/i],
   ["on-behalf", /\bon\s+\w+'s\s+behalf\b|\bon (her|his|their) behalf\b|\bon behalf of\b/i],
@@ -91,12 +111,18 @@ const APPROVAL_REQUEST_RULES: Array<[string, RegExp]> = [
 
 /** Does the question ask the agent to approve, act, change access or impersonate? */
 export function detectAuthorityRequest(question: string): string[] {
-  return APPROVAL_REQUEST_RULES.filter(([, rule]) => rule.test(question)).map(([name]) => name);
+  const clean = normalizeForScan(question);
+  // A question that asks about status ("Has Priya approved…?", "Did Priya sign off on GA?")
+  // is not a request to act. Only the rules that are never status questions still apply.
+  const isStatusQuestion = /^\s*(has|have|had|did|does|do|is|are|was|were|who|what|when|why|how|which)\b/i.test(clean);
+  const statusSafe = new Set(["speak-as", "on-behalf", "change-access", "external-action"]);
+  return APPROVAL_REQUEST_RULES.filter(([name, rule]) => (!isStatusQuestion || statusSafe.has(name)) && rule.test(clean)).map(([name]) => name);
 }
 
 const APPROVAL_CLAIM_RULES: Array<[string, RegExp]> = [
   ["agent-approves", /\b(i|we)\s+(hereby\s+|have\s+)?(approve|approved|authori[sz]e|authori[sz]ed|sign(ed)? off)\b/i],
   ["person-approved", new RegExp(`\\b(${NAMES}|she|he)\\s+(has\\s+|have\\s+)?(already\\s+)?(approved|authori[sz]ed|signed off|green-?lit)\\b`, "i")],
+  ["person-said-yes", new RegExp(`\\b(${NAMES}|she|he)\\s+(has\\s+|have\\s+)?(already\\s+)?(said yes|agreed( to)?|gave (the )?go|given the go|okayed)\\b`, "i")],
   ["approved-by", new RegExp(`\\b(approved|authori[sz]ed|signed off)\\s+by\\s+(${NAMES})\\b`, "i")],
   ["launch-approved", /\b(launch|release|beta|rollout|ga|general availability|atlas)\s+(is|was|has been|is now)\s+(officially\s+)?(approved|authori[sz]ed|green-?lit)\b/i],
   ["grants-go-ahead", /\b(you can|you may|go ahead and|you're clear to|you are clear to|feel free to)\s+(ship|launch|release|deploy|roll out)\b/i],
@@ -104,7 +130,7 @@ const APPROVAL_CLAIM_RULES: Array<[string, RegExp]> = [
 
 /** Phrases that claim an approval exists. Allowed only with an explicit approval record. */
 export function findApprovalClaims(text: string): string[] {
-  return APPROVAL_CLAIM_RULES.filter(([, rule]) => rule.test(text)).map(([name]) => name);
+  return APPROVAL_CLAIM_RULES.filter(([, rule]) => rule.test(normalizeForScan(text))).map(([name]) => name);
 }
 
 export function hasApprovalRecord(evidence: Evidence[]): boolean {
@@ -147,7 +173,7 @@ export function supportRatio(claim: string, evidenceText: string): number {
 }
 
 export function evidenceBlob(evidence: Evidence): string {
-  const owner = ATLAS_PEOPLE.find((person) => person.id === evidence.ownerId);
+  const owner = CORVID_PEOPLE.find((person) => person.id === evidence.ownerId);
   return `${evidence.title} ${evidence.sourceLabel} ${evidence.text} ${owner?.name ?? ""}`;
 }
 
@@ -169,7 +195,7 @@ export function findLeaks(text: string, requesterId: string, allEvidence: Eviden
 // ---------------------------------------------------------------------------
 // 6. Never impersonate a person, never infer feelings or risk appetite
 // ---------------------------------------------------------------------------
-const FULL_NAMES = ATLAS_PEOPLE.flatMap((person) => [person.id, person.name.toLowerCase()]).join("|");
+const FULL_NAMES = CORVID_PEOPLE.flatMap((person) => [person.id, person.name.toLowerCase()]).join("|");
 
 const IMPERSONATION_RULES: Array<[string, RegExp]> = [
   ["claims-identity", new RegExp(`\\b(i am|i'm|this is)\\s+(${FULL_NAMES})\\b(?!'s)`, "i")],

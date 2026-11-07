@@ -1,0 +1,35 @@
+[
+  {
+    "thread": "T034",
+    "ts": "2026-11-05T18:20:00-05:00",
+    "author": "priya",
+    "authorName": "Priya Shah",
+    "isExternal": false,
+    "text": "Private for now: I'm considering moving Atlas GA to Q1 if SSO verification slips past Nov 14. The Azure AD clock-skew bug makes me less confident in Nov 10. Not ready to tell the team or sales yet.",
+    "reactions": {},
+    "channel": "leadership",
+    "channelId": "C10LDR"
+  },
+  {
+    "thread": "T034",
+    "ts": "2026-11-05T18:45:00-05:00",
+    "author": "elena",
+    "authorName": "Elena Vasquez",
+    "isExternal": false,
+    "text": "Agree it's the right call if it slips. Let's not tell sales until after the Nov 10 verification. Sanjay, can you model Halvorsen slipping to Q1?",
+    "reactions": {},
+    "channel": "leadership",
+    "channelId": "C10LDR"
+  },
+  {
+    "thread": "T034",
+    "ts": "2026-11-05T19:10:00-05:00",
+    "author": "sanjay",
+    "authorName": "Sanjay Mehta",
+    "isExternal": false,
+    "text": "Will do. Halvorsen is $240k ARR; slipping a quarter moves ~$60k of recognized revenue out of Q4. I'll have it Monday.",
+    "reactions": {},
+    "channel": "leadership",
+    "channelId": "C10LDR"
+  }
+]

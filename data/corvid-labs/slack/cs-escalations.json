@@ -1,0 +1,46 @@
+[
+  {
+    "thread": "T020",
+    "ts": "2026-11-02T09:48:00-05:00",
+    "author": "laura",
+    "authorName": "Laura Bennett",
+    "isExternal": false,
+    "text": "Northwind says their usage dashboard shows roughly double usage for Sunday Nov 1 between 1 and 2 AM. Dana Hollis is asking if they'll be billed for it. Ticket SUP-1180. Who owns usage numbers?",
+    "reactions": {},
+    "channel": "cs-escalations",
+    "channelId": "C15CSE"
+  },
+  {
+    "thread": "T020",
+    "ts": "2026-11-02T09:55:00-05:00",
+    "author": "aisha",
+    "authorName": "Aisha Mohammed",
+    "isExternal": false,
+    "text": "Mateo is pulling the raw events now. @kwame is this Atlas or billing?",
+    "reactions": {},
+    "channel": "cs-escalations",
+    "channelId": "C15CSE"
+  },
+  {
+    "thread": "T020",
+    "ts": "2026-11-02T10:02:00-05:00",
+    "author": "kwame",
+    "authorName": "Kwame Asante",
+    "isExternal": false,
+    "text": "Metering consumer, which Tomás owned. Wei has his notes. Wei — this sounds like your DST ticket from last week.",
+    "reactions": {},
+    "channel": "cs-escalations",
+    "channelId": "C15CSE"
+  },
+  {
+    "thread": "T020",
+    "ts": "2026-11-02T10:05:00-05:00",
+    "author": "wei",
+    "authorName": "Wei Zhang",
+    "isExternal": false,
+    "text": "Yes. Opening an incident.",
+    "reactions": {},
+    "channel": "cs-escalations",
+    "channelId": "C15CSE"
+  }
+]

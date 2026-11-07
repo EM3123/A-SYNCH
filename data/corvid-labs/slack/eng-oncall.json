@@ -1,0 +1,35 @@
+[
+  {
+    "thread": "T018",
+    "ts": "2026-11-01T02:14:00-05:00",
+    "author": "devon",
+    "authorName": "Devon Price",
+    "isExternal": false,
+    "text": ":pager: PagerDuty: `usage-events-lag` warning on metering consumer, resolved itself at 02:09. Looks like DST fallback noise. Will look Monday.",
+    "reactions": {},
+    "channel": "eng-oncall",
+    "channelId": "C06ONC"
+  },
+  {
+    "thread": "T040",
+    "ts": "2026-11-06T08:00:00-05:00",
+    "author": "devon",
+    "authorName": "Devon Price",
+    "isExternal": false,
+    "text": "On-call this week: Devon primary, Ravi secondary (IST hours). Hana is on PTO through Nov 13, ping me for Grafana stuff.",
+    "reactions": {},
+    "channel": "eng-oncall",
+    "channelId": "C06ONC"
+  },
+  {
+    "thread": "T040",
+    "ts": "2026-11-06T12:59:00-05:00",
+    "author": "devon",
+    "authorName": "Devon Price",
+    "isExternal": false,
+    "text": "Atlas API v1 deployed to staging (build 2026.11.06-3). No alerts.",
+    "reactions": {},
+    "channel": "eng-oncall",
+    "channelId": "C06ONC"
+  }
+]

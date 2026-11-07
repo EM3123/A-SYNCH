@@ -1,0 +1,59 @@
+[
+  {
+    "thread": "T008",
+    "ts": "2026-11-02T11:15:00-05:00",
+    "author": "grace",
+    "authorName": "Grace Kim",
+    "isExternal": false,
+    "text": "Hi! New here (backend, Atlas). How do I get access to the staging Postgres? The onboarding doc links a page that 404s.",
+    "reactions": {},
+    "channel": "help-infra",
+    "channelId": "C08HIN"
+  },
+  {
+    "thread": "T008",
+    "ts": "2026-11-02T11:21:00-05:00",
+    "author": "devon",
+    "authorName": "Devon Price",
+    "isExternal": false,
+    "text": "Welcome Grace! That page moved. Request the `atlas-staging-ro` group in Okta, Kwame approves. Then `corvid db connect staging` with the CLI. Read-only by default.",
+    "reactions": {
+      "pray": 1
+    },
+    "channel": "help-infra",
+    "channelId": "C08HIN"
+  },
+  {
+    "thread": "T008",
+    "ts": "2026-11-02T11:23:00-05:00",
+    "author": "grace",
+    "authorName": "Grace Kim",
+    "isExternal": false,
+    "text": "Thank you!!",
+    "reactions": {},
+    "channel": "help-infra",
+    "channelId": "C08HIN"
+  },
+  {
+    "thread": "T042",
+    "ts": "2026-11-06T10:40:00-05:00",
+    "author": "jasmine",
+    "authorName": "Jasmine Taylor",
+    "isExternal": false,
+    "text": "Is there a way to see Atlas on staging without bugging an engineer? I want screenshots for the launch email.",
+    "reactions": {},
+    "channel": "help-infra",
+    "channelId": "C08HIN"
+  },
+  {
+    "thread": "T042",
+    "ts": "2026-11-06T10:47:00-05:00",
+    "author": "devon",
+    "authorName": "Devon Price",
+    "isExternal": false,
+    "text": "Yep, ask Kwame to add your workspace to the staging allowlist. Prod is off for everyone.",
+    "reactions": {},
+    "channel": "help-infra",
+    "channelId": "C08HIN"
+  }
+]

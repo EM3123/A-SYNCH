@@ -1,0 +1,24 @@
+[
+  {
+    "thread": "T050",
+    "ts": "2026-11-04T13:40:00-05:00",
+    "author": "wei",
+    "authorName": "Wei Zhang",
+    "isExternal": false,
+    "text": "Backfill done for Nov 1. You good to recompute billing aggregates?",
+    "reactions": {},
+    "channel": "D08",
+    "channelId": "D08"
+  },
+  {
+    "thread": "T050",
+    "ts": "2026-11-04T13:55:00-05:00",
+    "author": "lucas",
+    "authorName": "Lucas Moreau",
+    "isExternal": false,
+    "text": "Yep, kicking it off now. Should be done by tomorrow morning.",
+    "reactions": {},
+    "channel": "D08",
+    "channelId": "D08"
+  }
+]

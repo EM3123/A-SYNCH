@@ -1,0 +1,1056 @@
+{
+  "company": "Corvid Labs",
+  "domain": "corvidlabs.io",
+  "headcount": 38,
+  "note": "Fictional company. All people, emails, messages and records are invented for the A-SYNCH demo.",
+  "people": [
+    {
+      "id": "elena",
+      "name": "Elena Vasquez",
+      "title": "CEO",
+      "team": "leadership",
+      "teamName": "Leadership",
+      "managerId": null,
+      "email": "elena@corvidlabs.io",
+      "slackHandle": "@elena",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "18:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2019-03-01",
+      "skills": [
+        "company strategy",
+        "fundraising",
+        "enterprise customers"
+      ],
+      "owns": [
+        "company roadmap",
+        "board updates"
+      ],
+      "accent": "#8B5CF6"
+    },
+    {
+      "id": "marcus",
+      "name": "Marcus Webb",
+      "title": "CTO",
+      "team": "leadership",
+      "teamName": "Leadership",
+      "managerId": "elena",
+      "email": "marcus@corvidlabs.io",
+      "slackHandle": "@marcus",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "08:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2019-03-01",
+      "skills": [
+        "architecture",
+        "hiring",
+        "platform strategy"
+      ],
+      "owns": [
+        "engineering org",
+        "architecture decisions"
+      ],
+      "accent": "#3B82F6"
+    },
+    {
+      "id": "priya",
+      "name": "Priya Shah",
+      "title": "Director, Product & Engineering (Atlas)",
+      "team": "product",
+      "teamName": "Product",
+      "managerId": "marcus",
+      "email": "priya@corvidlabs.io",
+      "slackHandle": "@priya",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "08:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2021-06-14",
+      "skills": [
+        "launch strategy",
+        "product tradeoffs",
+        "release management"
+      ],
+      "owns": [
+        "Atlas launch approvals",
+        "Atlas roadmap",
+        "Atlas rollout policy"
+      ],
+      "accent": "#F59E0B"
+    },
+    {
+      "id": "kwame",
+      "name": "Kwame Asante",
+      "title": "Engineering Manager, Atlas",
+      "team": "atlas-backend",
+      "teamName": "Atlas Backend",
+      "managerId": "priya",
+      "email": "kwame@corvidlabs.io",
+      "slackHandle": "@kwame",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2022-01-10",
+      "skills": [
+        "sprint planning",
+        "people management",
+        "delivery"
+      ],
+      "owns": [
+        "Atlas sprint plan",
+        "Atlas on-call schedule",
+        "Atlas team 1:1s"
+      ],
+      "accent": "#EF4444"
+    },
+    {
+      "id": "alex",
+      "name": "Alex Chen",
+      "title": "Senior Backend Engineer",
+      "team": "atlas-backend",
+      "teamName": "Atlas Backend",
+      "managerId": "kwame",
+      "email": "alex@corvidlabs.io",
+      "slackHandle": "@alex",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "18:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2021-09-07",
+      "skills": [
+        "Go",
+        "API design",
+        "Postgres",
+        "testing"
+      ],
+      "owns": [
+        "Atlas API v1",
+        "export endpoint",
+        "API test suite"
+      ],
+      "accent": "#10B981"
+    },
+    {
+      "id": "tomas",
+      "name": "Tomás Herrera",
+      "title": "Backend Engineer",
+      "team": "atlas-backend",
+      "teamName": "Atlas Backend",
+      "managerId": "kwame",
+      "email": "tomas@corvidlabs.io",
+      "slackHandle": "@tomas",
+      "location": "Austin, TX",
+      "timezone": "America/Chicago",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2022-04-18",
+      "skills": [
+        "Kafka",
+        "event pipelines",
+        "metering ingestion"
+      ],
+      "owns": [
+        "usage-events consumer",
+        "metering → Atlas integration"
+      ],
+      "accent": "#EC4899"
+    },
+    {
+      "id": "wei",
+      "name": "Wei Zhang",
+      "title": "Backend Engineer",
+      "team": "atlas-backend",
+      "teamName": "Atlas Backend",
+      "managerId": "kwame",
+      "email": "wei@corvidlabs.io",
+      "slackHandle": "@wei",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "10:00",
+        "end": "19:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2023-02-06",
+      "skills": [
+        "Go",
+        "Kafka",
+        "data correctness"
+      ],
+      "owns": [
+        "usage dedupe job",
+        "rollup tables"
+      ],
+      "accent": "#14B8A6"
+    },
+    {
+      "id": "grace",
+      "name": "Grace Kim",
+      "title": "Backend Engineer (new hire)",
+      "team": "atlas-backend",
+      "teamName": "Atlas Backend",
+      "managerId": "kwame",
+      "email": "grace@corvidlabs.io",
+      "slackHandle": "@grace",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2026-11-02",
+      "skills": [
+        "Python",
+        "Go (learning)",
+        "APIs"
+      ],
+      "owns": [],
+      "accent": "#6366F1"
+    },
+    {
+      "id": "sam",
+      "name": "Sam Rivera",
+      "title": "Senior Frontend Engineer",
+      "team": "atlas-frontend",
+      "teamName": "Atlas Frontend",
+      "managerId": "kwame",
+      "email": "sam@corvidlabs.io",
+      "slackHandle": "@sam",
+      "location": "San Francisco, CA",
+      "timezone": "America/Los_Angeles",
+      "workingHours": {
+        "start": "09:00",
+        "end": "18:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2022-08-01",
+      "skills": [
+        "React",
+        "TypeScript",
+        "feature flags",
+        "accessibility"
+      ],
+      "owns": [
+        "Atlas web app",
+        "rollout controls UI"
+      ],
+      "accent": "#F97316"
+    },
+    {
+      "id": "nadia",
+      "name": "Nadia Rahman",
+      "title": "Frontend Engineer",
+      "team": "atlas-frontend",
+      "teamName": "Atlas Frontend",
+      "managerId": "kwame",
+      "email": "nadia@corvidlabs.io",
+      "slackHandle": "@nadia",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2023-05-15",
+      "skills": [
+        "React",
+        "charts",
+        "data viz"
+      ],
+      "owns": [
+        "Atlas dashboards",
+        "CSV export UI"
+      ],
+      "accent": "#84CC16"
+    },
+    {
+      "id": "leo",
+      "name": "Leo Brooks",
+      "title": "Design Systems Engineer",
+      "team": "atlas-frontend",
+      "teamName": "Atlas Frontend",
+      "managerId": "kwame",
+      "email": "leo@corvidlabs.io",
+      "slackHandle": "@leo",
+      "location": "Remote (Denver, CO)",
+      "timezone": "America/Denver",
+      "workingHours": {
+        "start": "08:00",
+        "end": "16:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2022-11-07",
+      "skills": [
+        "design systems",
+        "accessibility",
+        "CSS"
+      ],
+      "owns": [
+        "Corvid UI kit",
+        "a11y CI checks"
+      ],
+      "accent": "#8B5CF6"
+    },
+    {
+      "id": "devon",
+      "name": "Devon Price",
+      "title": "Staff SRE (Platform lead)",
+      "team": "platform",
+      "teamName": "Platform & SRE",
+      "managerId": "marcus",
+      "email": "devon@corvidlabs.io",
+      "slackHandle": "@devon",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2020-07-20",
+      "skills": [
+        "Kubernetes",
+        "Postgres ops",
+        "incident response"
+      ],
+      "owns": [
+        "staging + prod clusters",
+        "deploy pipeline",
+        "incident process"
+      ],
+      "accent": "#3B82F6"
+    },
+    {
+      "id": "hana",
+      "name": "Hana Sato",
+      "title": "SRE",
+      "team": "platform",
+      "teamName": "Platform & SRE",
+      "managerId": "devon",
+      "email": "hana@corvidlabs.io",
+      "slackHandle": "@hana",
+      "location": "Lisbon, Portugal",
+      "timezone": "Europe/Lisbon",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2023-09-04",
+      "skills": [
+        "observability",
+        "Grafana",
+        "alerting"
+      ],
+      "owns": [
+        "Atlas dashboards in Grafana",
+        "SLO alerts"
+      ],
+      "accent": "#F59E0B"
+    },
+    {
+      "id": "ravi",
+      "name": "Ravi Iyer",
+      "title": "Infrastructure Engineer",
+      "team": "platform",
+      "teamName": "Platform & SRE",
+      "managerId": "devon",
+      "email": "ravi@corvidlabs.io",
+      "slackHandle": "@ravi",
+      "location": "Bangalore, India",
+      "timezone": "Asia/Kolkata",
+      "workingHours": {
+        "start": "10:00",
+        "end": "19:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2024-01-08",
+      "skills": [
+        "Terraform",
+        "networking",
+        "CI runners"
+      ],
+      "owns": [
+        "CI runners",
+        "Terraform modules"
+      ],
+      "accent": "#EF4444"
+    },
+    {
+      "id": "jordan",
+      "name": "Jordan Okafor",
+      "title": "Security Engineer",
+      "team": "security",
+      "teamName": "Security",
+      "managerId": "marcus",
+      "email": "jordan@corvidlabs.io",
+      "slackHandle": "@jordan",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2021-11-01",
+      "skills": [
+        "appsec",
+        "threat modeling",
+        "pen testing"
+      ],
+      "owns": [
+        "ATLAS-38 security review",
+        "security sign-off"
+      ],
+      "accent": "#10B981"
+    },
+    {
+      "id": "ingrid",
+      "name": "Ingrid Larsen",
+      "title": "Identity & Access Engineer",
+      "team": "security",
+      "teamName": "Security",
+      "managerId": "jordan",
+      "email": "ingrid@corvidlabs.io",
+      "slackHandle": "@ingrid",
+      "location": "Copenhagen, Denmark",
+      "timezone": "Europe/Copenhagen",
+      "workingHours": {
+        "start": "08:00",
+        "end": "16:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2024-03-11",
+      "skills": [
+        "SAML",
+        "OIDC",
+        "Okta",
+        "Azure AD"
+      ],
+      "owns": [
+        "enterprise SSO",
+        "ATLAS-41 SSO verification"
+      ],
+      "accent": "#EC4899"
+    },
+    {
+      "id": "fatima",
+      "name": "Fatima Noor",
+      "title": "QA Lead",
+      "team": "qa",
+      "teamName": "Quality",
+      "managerId": "marcus",
+      "email": "fatima@corvidlabs.io",
+      "slackHandle": "@fatima",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2021-02-22",
+      "skills": [
+        "test strategy",
+        "release QA",
+        "Playwright"
+      ],
+      "owns": [
+        "release checklist",
+        "regression suite"
+      ],
+      "accent": "#14B8A6"
+    },
+    {
+      "id": "ben",
+      "name": "Ben Carter",
+      "title": "QA Engineer",
+      "team": "qa",
+      "teamName": "Quality",
+      "managerId": "fatima",
+      "email": "ben@corvidlabs.io",
+      "slackHandle": "@ben",
+      "location": "Columbus, OH",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2024-06-03",
+      "skills": [
+        "Playwright",
+        "load testing",
+        "k6"
+      ],
+      "owns": [
+        "Atlas load tests"
+      ],
+      "accent": "#6366F1"
+    },
+    {
+      "id": "chloe",
+      "name": "Chloe Martin",
+      "title": "Senior Product Designer",
+      "team": "design",
+      "teamName": "Design & Research",
+      "managerId": "priya",
+      "email": "chloe@corvidlabs.io",
+      "slackHandle": "@chloe",
+      "location": "Brooklyn, NY",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "10:00",
+        "end": "18:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2022-03-14",
+      "skills": [
+        "interaction design",
+        "Figma",
+        "prototyping"
+      ],
+      "owns": [
+        "Atlas UX",
+        "rollout control design"
+      ],
+      "accent": "#F97316"
+    },
+    {
+      "id": "omar",
+      "name": "Omar Haddad",
+      "title": "UX Researcher",
+      "team": "design",
+      "teamName": "Design & Research",
+      "managerId": "chloe",
+      "email": "omar@corvidlabs.io",
+      "slackHandle": "@omar",
+      "location": "Toronto, ON",
+      "timezone": "America/Toronto",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2023-10-02",
+      "skills": [
+        "interviews",
+        "usability testing"
+      ],
+      "owns": [
+        "design partner research"
+      ],
+      "accent": "#84CC16"
+    },
+    {
+      "id": "sofia",
+      "name": "Sofia Rossi",
+      "title": "Data Engineer",
+      "team": "data",
+      "teamName": "Data Engineering",
+      "managerId": "marcus",
+      "email": "sofia@corvidlabs.io",
+      "slackHandle": "@sofia",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2022-09-19",
+      "skills": [
+        "dbt",
+        "Snowflake",
+        "rollups"
+      ],
+      "owns": [
+        "warehouse models",
+        "Atlas rollup SQL"
+      ],
+      "accent": "#8B5CF6"
+    },
+    {
+      "id": "kenji",
+      "name": "Kenji Mori",
+      "title": "Analytics Engineer",
+      "team": "data",
+      "teamName": "Data Engineering",
+      "managerId": "sofia",
+      "email": "kenji@corvidlabs.io",
+      "slackHandle": "@kenji",
+      "location": "Seattle, WA",
+      "timezone": "America/Los_Angeles",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2024-02-12",
+      "skills": [
+        "SQL",
+        "Looker",
+        "metrics definitions"
+      ],
+      "owns": [
+        "metric definitions doc"
+      ],
+      "accent": "#3B82F6"
+    },
+    {
+      "id": "ethan",
+      "name": "Ethan Walsh",
+      "title": "Product Manager, Billing",
+      "team": "billing",
+      "teamName": "Billing & Metering",
+      "managerId": "priya",
+      "email": "ethan@corvidlabs.io",
+      "slackHandle": "@ethan",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2023-01-09",
+      "skills": [
+        "pricing",
+        "metering",
+        "invoicing"
+      ],
+      "owns": [
+        "usage-based billing"
+      ],
+      "accent": "#F59E0B"
+    },
+    {
+      "id": "lucas",
+      "name": "Lucas Moreau",
+      "title": "Backend Engineer, Billing",
+      "team": "billing",
+      "teamName": "Billing & Metering",
+      "managerId": "ethan",
+      "email": "lucas@corvidlabs.io",
+      "slackHandle": "@lucas",
+      "location": "Montréal, QC",
+      "timezone": "America/Toronto",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2023-07-17",
+      "skills": [
+        "Kafka",
+        "Go",
+        "metering"
+      ],
+      "owns": [
+        "metering service",
+        "usage-events topic schema"
+      ],
+      "accent": "#EF4444"
+    },
+    {
+      "id": "maya",
+      "name": "Maya Patel",
+      "title": "Customer Lead, Design Partner Program",
+      "team": "product",
+      "teamName": "Product",
+      "managerId": "priya",
+      "email": "maya@corvidlabs.io",
+      "slackHandle": "@maya",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2022-05-02",
+      "skills": [
+        "customer discovery",
+        "beta programs"
+      ],
+      "owns": [
+        "design partner program",
+        "partner onboarding"
+      ],
+      "accent": "#10B981"
+    },
+    {
+      "id": "laura",
+      "name": "Laura Bennett",
+      "title": "Customer Success Manager",
+      "team": "customer-success",
+      "teamName": "Customer Success & Support",
+      "managerId": "aisha",
+      "email": "laura@corvidlabs.io",
+      "slackHandle": "@laura",
+      "location": "Chicago, IL",
+      "timezone": "America/Chicago",
+      "workingHours": {
+        "start": "08:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2022-10-24",
+      "skills": [
+        "account management",
+        "renewals"
+      ],
+      "owns": [
+        "Northwind account"
+      ],
+      "accent": "#EC4899"
+    },
+    {
+      "id": "diego",
+      "name": "Diego Alvarez",
+      "title": "Customer Success Manager",
+      "team": "customer-success",
+      "teamName": "Customer Success & Support",
+      "managerId": "aisha",
+      "email": "diego@corvidlabs.io",
+      "slackHandle": "@diego",
+      "location": "Austin, TX",
+      "timezone": "America/Chicago",
+      "workingHours": {
+        "start": "08:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2023-03-20",
+      "skills": [
+        "onboarding",
+        "integrations"
+      ],
+      "owns": [
+        "Lumen account",
+        "Kestrel account"
+      ],
+      "accent": "#14B8A6"
+    },
+    {
+      "id": "aisha",
+      "name": "Aisha Mohammed",
+      "title": "Head of Support",
+      "team": "customer-success",
+      "teamName": "Customer Success & Support",
+      "managerId": "elena",
+      "email": "aisha@corvidlabs.io",
+      "slackHandle": "@aisha",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "08:00",
+        "end": "16:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2020-11-16",
+      "skills": [
+        "support operations",
+        "escalations"
+      ],
+      "owns": [
+        "support queue",
+        "customer escalations"
+      ],
+      "accent": "#6366F1"
+    },
+    {
+      "id": "mateo",
+      "name": "Mateo Silva",
+      "title": "Support Engineer",
+      "team": "customer-success",
+      "teamName": "Customer Success & Support",
+      "managerId": "aisha",
+      "email": "mateo@corvidlabs.io",
+      "slackHandle": "@mateo",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "11:00",
+        "end": "19:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2024-08-12",
+      "skills": [
+        "debugging",
+        "SQL",
+        "customer tickets"
+      ],
+      "owns": [
+        "tier-2 tickets"
+      ],
+      "accent": "#F97316"
+    },
+    {
+      "id": "ryan",
+      "name": "Ryan O'Connor",
+      "title": "Enterprise Account Executive",
+      "team": "sales",
+      "teamName": "Sales",
+      "managerId": "elena",
+      "email": "ryan@corvidlabs.io",
+      "slackHandle": "@ryan",
+      "location": "Chicago, IL",
+      "timezone": "America/Chicago",
+      "workingHours": {
+        "start": "08:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2023-04-03",
+      "skills": [
+        "enterprise sales",
+        "negotiation"
+      ],
+      "owns": [
+        "Halvorsen Freight deal"
+      ],
+      "accent": "#84CC16"
+    },
+    {
+      "id": "megan",
+      "name": "Megan Liu",
+      "title": "Sales Engineer",
+      "team": "sales",
+      "teamName": "Sales",
+      "managerId": "ryan",
+      "email": "megan@corvidlabs.io",
+      "slackHandle": "@megan",
+      "location": "Chicago, IL",
+      "timezone": "America/Chicago",
+      "workingHours": {
+        "start": "08:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2024-01-22",
+      "skills": [
+        "demos",
+        "security questionnaires",
+        "SSO setup"
+      ],
+      "owns": [
+        "Halvorsen technical eval"
+      ],
+      "accent": "#8B5CF6"
+    },
+    {
+      "id": "rebecca",
+      "name": "Rebecca Stone",
+      "title": "General Counsel",
+      "team": "legal",
+      "teamName": "Legal & Compliance",
+      "managerId": "elena",
+      "email": "rebecca@corvidlabs.io",
+      "slackHandle": "@rebecca",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2021-08-09",
+      "skills": [
+        "contracts",
+        "privacy law",
+        "DPAs"
+      ],
+      "owns": [
+        "design partner agreements",
+        "DPAs"
+      ],
+      "accent": "#3B82F6"
+    },
+    {
+      "id": "victor",
+      "name": "Victor Petrov",
+      "title": "Compliance Manager",
+      "team": "legal",
+      "teamName": "Legal & Compliance",
+      "managerId": "rebecca",
+      "email": "victor@corvidlabs.io",
+      "slackHandle": "@victor",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2023-11-06",
+      "skills": [
+        "SOC 2",
+        "access reviews",
+        "vendor risk"
+      ],
+      "owns": [
+        "SOC 2 evidence",
+        "quarterly access review"
+      ],
+      "accent": "#F59E0B"
+    },
+    {
+      "id": "jasmine",
+      "name": "Jasmine Taylor",
+      "title": "Product Marketing Manager",
+      "team": "marketing",
+      "teamName": "Marketing",
+      "managerId": "elena",
+      "email": "jasmine@corvidlabs.io",
+      "slackHandle": "@jasmine",
+      "location": "New York, NY",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "18:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2023-06-05",
+      "skills": [
+        "launch messaging",
+        "positioning"
+      ],
+      "owns": [
+        "Atlas launch comms"
+      ],
+      "accent": "#EF4444"
+    },
+    {
+      "id": "noah",
+      "name": "Noah Fischer",
+      "title": "Content Marketer",
+      "team": "marketing",
+      "teamName": "Marketing",
+      "managerId": "jasmine",
+      "email": "noah@corvidlabs.io",
+      "slackHandle": "@noah",
+      "location": "Remote (Portland, OR)",
+      "timezone": "America/Los_Angeles",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2024-09-09",
+      "skills": [
+        "blog",
+        "release notes"
+      ],
+      "owns": [
+        "changelog",
+        "blog"
+      ],
+      "accent": "#10B981"
+    },
+    {
+      "id": "olivia",
+      "name": "Olivia Grant",
+      "title": "People Ops Partner",
+      "team": "people",
+      "teamName": "People Ops",
+      "managerId": "elena",
+      "email": "olivia@corvidlabs.io",
+      "slackHandle": "@olivia",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2021-04-12",
+      "skills": [
+        "benefits",
+        "leave",
+        "onboarding"
+      ],
+      "owns": [
+        "leave tracking",
+        "new hire onboarding"
+      ],
+      "accent": "#EC4899"
+    },
+    {
+      "id": "sanjay",
+      "name": "Sanjay Mehta",
+      "title": "Finance Lead",
+      "team": "finance",
+      "teamName": "Finance",
+      "managerId": "elena",
+      "email": "sanjay@corvidlabs.io",
+      "slackHandle": "@sanjay",
+      "location": "Pittsburgh, PA",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2022-02-07",
+      "skills": [
+        "forecasting",
+        "revenue recognition"
+      ],
+      "owns": [
+        "ARR forecast"
+      ],
+      "accent": "#14B8A6"
+    },
+    {
+      "id": "isabel",
+      "name": "Isabel Cruz",
+      "title": "Technical Writer",
+      "team": "docs",
+      "teamName": "Docs",
+      "managerId": "priya",
+      "email": "isabel@corvidlabs.io",
+      "slackHandle": "@isabel",
+      "location": "Remote (Raleigh, NC)",
+      "timezone": "America/New_York",
+      "workingHours": {
+        "start": "09:00",
+        "end": "17:00",
+        "days": "Mon-Fri"
+      },
+      "startDate": "2024-04-15",
+      "skills": [
+        "API docs",
+        "guides"
+      ],
+      "owns": [
+        "Atlas API docs",
+        "beta guide"
+      ],
+      "accent": "#6366F1"
+    }
+  ]
+}

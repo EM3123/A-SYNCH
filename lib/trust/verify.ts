@@ -15,7 +15,7 @@ import type {
   SituationBrief,
   TrustDecision,
 } from "@/lib/contracts";
-import { ATLAS_EVIDENCE, ATLAS_PEOPLE, findEvidence, getMetadata } from "@/lib/trust/context";
+import { CORVID_EVIDENCE, CORVID_PEOPLE, findEvidence, getMetadata } from "@/lib/trust/context";
 import {
   canAccess,
   detectAuthorityRequest,
@@ -88,6 +88,8 @@ export interface VerifyResult {
   brief: SituationBrief;
   securityEvents: SecurityEvent[];
   audit: TrustAudit;
+  /** Records the kept claims cite, even if the router did not return them. Always permitted to the requester. */
+  citedSources: Evidence[];
 }
 
 const RANK: Record<TrustDecision, number> = { "needs-human": 0, supported: 1, confirmed: 2 };
@@ -102,6 +104,23 @@ const NODE_STATES = new Set(["done", "next", "blocked"]);
 const isString = (value: unknown): value is string => typeof value === "string";
 const isStringArray = (value: unknown): value is string[] =>
   Array.isArray(value) && value.every(isString);
+
+/** Copy only the fields the Situation Brief format defines, at every level. */
+function pickKnownFields(brief: SituationBrief): SituationBrief {
+  return {
+    title: brief.title,
+    answer: brief.answer,
+    status: brief.status,
+    claims: brief.claims.map((claim) => ({ text: claim.text, evidenceIds: claim.evidenceIds, trust: claim.trust })),
+    relevantPeople: brief.relevantPeople.map((person) => ({ personId: person.personId, reason: person.reason, evidenceIds: person.evidenceIds })),
+    decisionTree: brief.decisionTree.map((node) => ({ label: node.label, state: node.state, reason: node.reason })),
+    nextStep: brief.nextStep,
+    ownerId: brief.ownerId,
+    downstreamBlockers: brief.downstreamBlockers,
+    conflicts: brief.conflicts,
+    trust: { decision: brief.trust.decision, reasons: brief.trust.reasons, requiresHuman: brief.trust.requiresHuman },
+  };
+}
 
 export function validateBrief(value: unknown): string[] {
   const errors: string[] = [];
@@ -150,7 +169,7 @@ export function parseModelBrief(raw: string): SituationBrief | null {
 // Safe handoff brief: shown whenever an answer can't be shown safely
 // ---------------------------------------------------------------------------
 export function safeHandoffBrief(ownerId: string, reason: string): SituationBrief {
-  const owner = ATLAS_PEOPLE.find((person) => person.id === ownerId) ?? ATLAS_PEOPLE[0];
+  const owner = CORVID_PEOPLE.find((person) => person.id === ownerId) ?? CORVID_PEOPLE[0];
   return {
     title: "Needs human review",
     answer: `A-SYNCH couldn't verify an answer it can safely show you, so this goes to ${owner.name} instead of guessing.`,
@@ -171,16 +190,19 @@ export function safeHandoffBrief(ownerId: string, reason: string): SituationBrie
 // ---------------------------------------------------------------------------
 export function verifyBrief(input: VerifyInput): VerifyResult {
   const now = input.now ?? trustNow();
-  const allEvidence = input.allEvidence ?? ATLAS_EVIDENCE;
+  const allEvidence = input.allEvidence ?? CORVID_EVIDENCE;
   const checks: AuditCheck[] = [];
   const reasons: string[] = [];
   const securityEvents: SecurityEvent[] = [];
   let blocked = false; // forces needs-human
   let removedClaims = 0;
 
-  const fallbackOwner = input.personId && ATLAS_PEOPLE.some((p) => p.id === input.personId) ? input.personId : "priya";
+  const fallbackOwner = input.personId && CORVID_PEOPLE.some((p) => p.id === input.personId) ? input.personId : "priya";
   const finish = (brief: SituationBrief): VerifyResult => ({
     brief,
+    citedSources: [...new Set(brief.claims.flatMap((claim) => claim.evidenceIds))]
+      .map((id) => findEvidence(id, allEvidence))
+      .filter((item): item is Evidence => Boolean(item) && canAccess(item as Evidence, input.requesterId)),
     securityEvents,
     audit: {
       traceId: randomUUID(),
@@ -205,6 +227,15 @@ export function verifyBrief(input: VerifyInput): VerifyResult {
     },
   });
 
+  // 0. Injection in the company's records is always reported, whatever the ranking.
+  // Records the requester can open that carry instructions are flagged, not just the
+  // ones the router happened to return, so an injected message can't hide by ranking low.
+  for (const item of allEvidence) {
+    if (canAccess(item, input.requesterId) && isQuarantined(item)) {
+      securityEvents.push({ type: "untrusted-source-ignored", label: `Ignored instruction-like content in ${item.sourceLabel}`, evidenceId: item.id });
+    }
+  }
+
   // 1. Schema ---------------------------------------------------------------
   const schemaErrors = validateBrief(input.candidate);
   if (schemaErrors.length) {
@@ -212,7 +243,8 @@ export function verifyBrief(input: VerifyInput): VerifyResult {
     return finish(safeHandoffBrief(fallbackOwner, "The model's answer didn't match the Situation Brief format."));
   }
   checks.push({ check: "schema", result: "pass" });
-  const candidate = input.candidate as SituationBrief;
+  // Keep only the fields the brief format defines. Anything else the model added is dropped unseen.
+  const candidate = pickKnownFields(input.candidate as SituationBrief);
 
   // 2. Question-level checks ------------------------------------------------
   const questionInjection = scanInjection(input.question);
@@ -354,7 +386,9 @@ export function verifyBrief(input: VerifyInput): VerifyResult {
   checks.push({ check: "leaks", result: "pass" });
 
   // 5. Conflicts among the evidence relevant to the cited facts -----------------
-  const pool = [...new Map([...input.sources, ...citedEvidence].map((item) => [item.id, item])).values()]
+  // Conflicts are checked across every record the requester can open, not only the few the
+  // router returned. Otherwise a conflict would depend on ranking, and a stale note could hide.
+  const pool = [...new Map([...input.sources, ...citedEvidence, ...allEvidence].map((item) => [item.id, item])).values()]
     .filter((item) => canAccess(item, input.requesterId) && !isQuarantined(item));
   const citedKeys = new Set(citedEvidence.flatMap((item) => getMetadata(item.id).assertions.map((a) => a.key)));
   const conflictLines: string[] = [];

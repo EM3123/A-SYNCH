@@ -1,0 +1,24 @@
+[
+  {
+    "thread": "T054",
+    "ts": "2026-11-06T10:30:00-05:00",
+    "author": "maya",
+    "authorName": "Maya Patel",
+    "isExternal": false,
+    "text": "Any update from Lumen's counsel on the DPA?",
+    "reactions": {},
+    "channel": "D12",
+    "channelId": "D12"
+  },
+  {
+    "thread": "T054",
+    "ts": "2026-11-06T10:42:00-05:00",
+    "author": "rebecca",
+    "authorName": "Rebecca Stone",
+    "isExternal": false,
+    "text": "We accepted their 30-day retention redline. Miriam says she'll get it countersigned Monday. Until then, no Lumen data flow — Northwind and Kestrel are fine to go.",
+    "reactions": {},
+    "channel": "D12",
+    "channelId": "D12"
+  }
+]

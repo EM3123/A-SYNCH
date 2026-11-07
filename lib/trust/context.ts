@@ -1,12 +1,13 @@
 /**
- * Typed access to the Project Atlas context in data/atlas/.
- * Edit the JSON files; this module just loads them.
+ * Typed access to the Trust Layer dataset in data/corvid-labs/trust/ (built from the
+ * Corvid Labs corpus by data/corvid-labs/generator/build_trust.py).
+ * Edit the JSON files or rerun the builder; this module just loads them.
  */
 import type { Evidence, PersonProfile } from "@/lib/contracts";
-import peopleJson from "@/data/atlas/people.json";
-import evidenceJson from "@/data/atlas/evidence.json";
-import expertiseJson from "@/data/atlas/expertise.json";
-import metadataJson from "@/data/atlas/trust-metadata.json";
+import peopleJson from "@/data/corvid-labs/trust/people.json";
+import evidenceJson from "@/data/corvid-labs/trust/evidence.json";
+import expertiseJson from "@/data/corvid-labs/trust/expertise.json";
+import metadataJson from "@/data/corvid-labs/trust/trust-metadata.json";
 
 export interface Assertion {
   key: string;
@@ -25,8 +26,8 @@ export interface Expertise {
   owns: string[];
 }
 
-export const ATLAS_PEOPLE = peopleJson as PersonProfile[];
-export const ATLAS_EVIDENCE = evidenceJson as Evidence[];
+export const CORVID_PEOPLE = peopleJson as PersonProfile[];
+export const CORVID_EVIDENCE = evidenceJson as Evidence[];
 
 const metadata = (metadataJson as { records: Record<string, RecordMetadata> }).records;
 const expertise = expertiseJson as unknown as Record<string, Expertise>;
@@ -39,6 +40,6 @@ export function getExpertise(personId: string): Expertise | undefined {
   return expertise[personId];
 }
 
-export function findEvidence(evidenceId: string, pool: Evidence[] = ATLAS_EVIDENCE) {
+export function findEvidence(evidenceId: string, pool: Evidence[] = CORVID_EVIDENCE) {
   return pool.find((item) => item.id === evidenceId);
 }

@@ -1,0 +1,65 @@
+[
+  {
+    "id": "ext-hollis",
+    "name": "Dana Hollis",
+    "title": "VP Operations",
+    "company": "Northwind Logistics",
+    "email": "dana.hollis@northwind-logistics.com"
+  },
+  {
+    "id": "ext-park",
+    "name": "Jae Park",
+    "title": "IT Admin",
+    "company": "Northwind Logistics",
+    "email": "jpark@northwind-logistics.com"
+  },
+  {
+    "id": "ext-osei",
+    "name": "Kofi Osei",
+    "title": "Head of Platform",
+    "company": "Lumen Health",
+    "email": "kofi.osei@lumenhealth.com"
+  },
+  {
+    "id": "ext-brandt",
+    "name": "Miriam Brandt",
+    "title": "Senior Counsel",
+    "company": "Lumen Health",
+    "email": "mbrandt@lumenhealth.com"
+  },
+  {
+    "id": "ext-lumenbot",
+    "name": "lumen-integration-bot",
+    "title": "Integration bot (Slack Connect)",
+    "company": "Lumen Health",
+    "email": null
+  },
+  {
+    "id": "ext-reyes",
+    "name": "Carla Reyes",
+    "title": "Director of Ops Analytics",
+    "company": "Kestrel Freightworks",
+    "email": "creyes@kestrelfw.com"
+  },
+  {
+    "id": "ext-novak",
+    "name": "Petr Novak",
+    "title": "Identity Engineer",
+    "company": "Kestrel Freightworks",
+    "email": "pnovak@kestrelfw.com"
+  },
+  {
+    "id": "ext-lindqvist",
+    "name": "Erik Lindqvist",
+    "title": "Procurement Manager",
+    "company": "Halvorsen Freight",
+    "email": "erik.lindqvist@halvorsenfreight.com"
+  },
+  {
+    "id": "ext-adeyemi",
+    "name": "Tolu Adeyemi",
+    "title": "CISO",
+    "company": "Halvorsen Freight",
+    "email": "tadeyemi@halvorsenfreight.com"
+  }
+]

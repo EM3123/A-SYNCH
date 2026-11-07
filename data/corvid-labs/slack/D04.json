@@ -1,0 +1,24 @@
+[
+  {
+    "thread": "T046",
+    "ts": "2026-11-06T11:20:00-05:00",
+    "author": "maya",
+    "authorName": "Maya Patel",
+    "isExternal": false,
+    "text": "Lumen can't go today because of the DPA, right? Want to make sure I'm telling Kofi the right thing.",
+    "reactions": {},
+    "channel": "D04",
+    "channelId": "D04"
+  },
+  {
+    "thread": "T046",
+    "ts": "2026-11-06T11:24:00-05:00",
+    "author": "diego",
+    "authorName": "Diego Alvarez",
+    "isExternal": false,
+    "text": "Right. Rebecca said no customer data flows to Lumen's workspace until the countersigned DPA is in. Their counsel said Monday.",
+    "reactions": {},
+    "channel": "D04",
+    "channelId": "D04"
+  }
+]

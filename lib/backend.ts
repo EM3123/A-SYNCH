@@ -71,7 +71,10 @@ export async function askAsynch(
   }));
   routeEvents.forEach((event) => options.onEvent?.(event));
 
-  const requesterId = input.requesterId || DEMO_REQUESTER_ID;
+  // Demo mode: identity is always the server-side demo requester. A caller-supplied
+  // requesterId is ignored, so a request cannot claim to be Priya to see her private notes.
+  // Real identity (Slack OAuth) replaces this before the pilot. See docs/security/DEMO_SAFETY.md.
+  const requesterId = DEMO_REQUESTER_ID;
   const contributions = await gatherContributions({
     people: selectedPeople,
     question,
@@ -119,7 +122,13 @@ export async function askAsynch(
     personId: input.personId,
     sources,
   });
-  securityEvents.push(...verified.securityEvents);
+  for (const event of verified.securityEvents) {
+    const duplicate = securityEvents.some((seen) => seen.type === event.type && seen.evidenceId === event.evidenceId);
+    if (!duplicate) securityEvents.push(event);
+  }
+  // Show every record the answer cites, even when the router did not return it.
+  const shownIds = new Set(sources.map((item) => item.id));
+  sources.push(...verified.citedSources.filter((item) => !shownIds.has(item.id)));
   if (process.env.ASYNCH_AUDIT === "1") {
     console.info(`[A-SYNCH trust] ${JSON.stringify(verified.audit)}`);
   }
