@@ -1,0 +1,52 @@
+[
+  {
+    "id": "priya",
+    "name": "Priya Shah",
+    "role": "Product & Engineering Lead",
+    "availability": "busy",
+    "availabilityLabel": "Executive meeting until 4:30 PM",
+    "expertise": ["Launch strategy", "Product", "Tradeoffs"],
+    "topics": ["atlas", "launch", "release", "beta", "approval", "product"],
+    "accent": "#8B5CF6"
+  },
+  {
+    "id": "alex",
+    "name": "Alex Chen",
+    "role": "Backend Engineer",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": ["API", "Backend", "Testing"],
+    "topics": ["atlas", "backend", "api", "tests", "github", "ship"],
+    "accent": "#3B82F6"
+  },
+  {
+    "id": "sam",
+    "name": "Sam Rivera",
+    "role": "Frontend Engineer",
+    "availability": "away",
+    "availabilityLabel": "At lunch until 2:15 PM",
+    "expertise": ["Frontend", "Rollouts", "Design systems"],
+    "topics": ["atlas", "frontend", "rollout", "ui", "ship", "beta"],
+    "accent": "#F59E0B"
+  },
+  {
+    "id": "jordan",
+    "name": "Jordan Okafor",
+    "role": "Security Engineer",
+    "availability": "busy",
+    "availabilityLabel": "In incident review",
+    "expertise": ["Security", "SSO", "Risk"],
+    "topics": ["atlas", "security", "sso", "review", "risk", "ga", "launch"],
+    "accent": "#EF4444"
+  },
+  {
+    "id": "maya",
+    "name": "Maya Patel",
+    "role": "Customer Lead",
+    "availability": "available",
+    "availabilityLabel": "Available now",
+    "expertise": ["Customers", "Design partners", "Impact"],
+    "topics": ["atlas", "customer", "design partner", "beta", "impact", "launch"],
+    "accent": "#10B981"
+  }
+]
