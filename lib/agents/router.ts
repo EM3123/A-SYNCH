@@ -5,6 +5,9 @@ import type {
   PersonProfile,
 } from "@/lib/contracts";
 import { EVIDENCE, PEOPLE, getPerson } from "@/lib/agents/demo-context";
+// Trust Layer: shared permission check, injection screening, who-knows-what map.
+import { canAccess, screenEvidence } from "@/lib/trust/checks";
+import { getExpertise } from "@/lib/trust/context";
 
 const STOP_WORDS = new Set([
   "a",
@@ -87,13 +90,6 @@ export function routeToPeople(options: {
   return chosen.slice(0, options.limit ?? 4).map((entry) => entry.person);
 }
 
-function canAccess(evidence: Evidence, requesterId: string): boolean {
-  return (
-    evidence.permittedUsers.includes("*") ||
-    evidence.permittedUsers.includes(requesterId)
-  );
-}
-
 function evidenceScore(evidence: Evidence, question: string): number {
   const queryTokens = tokenize(question);
   const haystack = `${evidence.title} ${evidence.sourceLabel} ${evidence.text}`;
@@ -104,13 +100,8 @@ function evidenceScore(evidence: Evidence, question: string): number {
 }
 
 function explainSelection(person: PersonProfile, question: string): string {
-  const lower = question.toLowerCase();
-  if (person.id === "priya") return "Owns Atlas launch principles and final approval";
-  if (person.id === "alex") return "Owns the Atlas backend and current test status";
-  if (person.id === "sam") return "Owns the rollout controls required for a safe beta";
-  if (person.id === "jordan") return "Owns the open security and SSO review";
-  if (person.id === "maya") return "Knows current customer demand and launch impact";
-  return `Relevant to: ${lower.slice(0, 80)}`;
+  const reason = getExpertise(person.id)?.selectionReason;
+  return reason ?? `Relevant to: ${question.toLowerCase().slice(0, 80)}`;
 }
 
 export async function queryContextAgent(options: {
@@ -120,12 +111,11 @@ export async function queryContextAgent(options: {
 }): Promise<AgentContribution> {
   const owned = EVIDENCE.filter((item) => item.ownerId === options.person.id);
   const accessible = owned.filter((item) => canAccess(item, options.requesterId));
-  const ignoredEvidence = accessible.filter((item) =>
-    item.securityFlags?.includes("prompt-injection"),
-  );
+  // Retrieved text is data: anything that tries to instruct the model is set aside,
+  // whether or not it was pre-flagged in the fixtures.
+  const { usable, ignored: ignoredEvidence } = screenEvidence(accessible);
 
-  const evidence = accessible
-    .filter((item) => !item.securityFlags?.includes("prompt-injection"))
+  const evidence = usable
     .map((item) => ({ item, score: evidenceScore(item, options.question) }))
     .sort((a, b) => b.score - a.score || b.item.timestamp.localeCompare(a.item.timestamp))
     .slice(0, 4)

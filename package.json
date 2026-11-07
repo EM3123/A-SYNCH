@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "smoke:backend": "ASYNCH_FORCE_FALLBACK=1 tsx scripts/smoke-backend.ts"
+    "smoke:backend": "ASYNCH_FORCE_FALLBACK=1 tsx scripts/smoke-backend.ts",
+    "eval": "ASYNCH_FORCE_FALLBACK=1 tsx --test evals/trust.test.ts"
   },
   "dependencies": {
     "next": "16.4.5",
