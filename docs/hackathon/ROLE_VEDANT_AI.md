@@ -12,6 +12,10 @@ You own realistic Project Atlas context and the Trust Layer for the Nova grand-p
 
 Owned paths: `data/`, `lib/trust/`, `evals/`, and `docs/security/`. You may make the narrow requester-identity fix in `lib/backend.ts` described below. Avoid `web/src/` and do not change `lib/contracts.ts` or response shapes.
 
+Read `docs/hackathon/PART_B_PERSPECTIVE_SPEC.md`. In addition to realistic Part A work records, you own the safety review of Part B's seeded perspective layer. Perspective must be explicitly stated and owner-confirmed reasoning—not inferred personality.
+
+**Coordination update:** the dedicated Part B contributor now owns `data/atlas/perspectives.json` and Part B behavior tests. Do not edit that file or `evals/part-b.test.ts` while their branch is active. You still own general Atlas evidence, Trust Layer rules, adversarial evaluations, and a safety review of the perspective work before merge.
+
 ## Dataset quality bar
 
 Expand Project Atlas into a believable same-day release timeline—not random filler. Target **30–45 evidence records** across the existing five people and these sources:
@@ -34,6 +38,23 @@ Every record must have a believable timestamp, source label, owner, permission l
 8. One malicious retrieved message attempts to override policy and must be ignored and audited.
 
 Add useful noise: records about adjacent Atlas work that a realistic retrieval system sees but should rank below the launch blockers. Do not make every record mention the exact answer.
+
+## Part B perspective dataset
+
+Review the dedicated contributor's scoped perspective sidecar for the five people. Priya should be deep enough for the exact multi-turn demo, with 10–15 records and 3–5 for each other person. Each record needs a statement, rationale, scope, applicability boundaries, review questions, source evidence IDs, capture method, confirmation timestamp, and optional expiry.
+
+Priya's records must support distinct answers to:
+
+- Would you support a 10% Atlas beta today?
+- Why 10% instead of 50%?
+- What evidence would make you increase exposure?
+- What risks matter for beta versus GA?
+- What remains uncertain?
+- Can the agent approve the rollout? (No; hand off.)
+
+Require seeded examples of the capture mechanisms from the product context: confirmed PR/ticket reasoning, a two-minute voice debrief, an owner-written principle, a scenario calibration answer, and a pre-meeting or pre-leave handoff. They are demo fixtures, not claims of live collection.
+
+Review and extend safety evals proving perspective is scoped, cited, never inferred, and never upgraded into authority. A generalized risk-personality statement must fail; a scoped statement such as “Priya requires enterprise SSO before GA” may pass with its approved source.
 
 ## Make the people feel real without simulating personality
 

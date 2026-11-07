@@ -18,6 +18,9 @@ The team changed roles on Nov 7. Ignore older assumptions:
 
 - **Edmund owns the frontend rebuild.** Read `docs/hackathon/ROLE_EDMUND_AI.md` before changing UI code. Owned paths: `web/src/`, `app/page.tsx`, `app/layout.tsx`, and frontend assets.
 - **Vedant owns realistic demo data and safety.** Read `docs/hackathon/ROLE_VEDANT_AI.md` before changing fixtures or Trust Layer code. Owned paths: `data/`, `lib/trust/`, `evals/`, and `docs/security/`.
+- **The Part B contributor owns the perspective voice agent.** Read `docs/hackathon/ROLE_PART_B_AI.md` and `docs/hackathon/PART_B_PERSPECTIVE_SPEC.md`. Owned paths: `web/src/part-b/`, `lib/part-b/`, `data/atlas/perspectives.json`, `evals/part-b.test.ts`, and the person-chat route. These narrower paths override the broader Edmund/Vedant ownership while that branch is active.
 - **Daksh owns backend integration, contracts, final merges, and deployment.** Only Daksh changes `lib/contracts.ts` or API response shapes unless he explicitly approves a proposal.
 
 Read `docs/hackathon/CURRENT_WORKSTREAMS.md` for branch rules, acceptance criteria, and the exact handoff procedure. Do not edit another person's owned paths merely to make your work easier; leave a written integration note instead.
+
+For any Part B work, read `docs/hackathon/PART_B_PERSPECTIVE_SPEC.md`. Part B is not merely speech input/output: it is a multi-turn conversation grounded in a specific person's owner-confirmed reasoning, scoped priorities, tradeoff logic, and stated decision posture. Voice is the interface to that perspective layer.

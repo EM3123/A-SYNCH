@@ -12,6 +12,10 @@ You own the frontend of **A-SYNCH** for the Nova grand-prize demo. The interface
 
 Owned paths: `web/src/`, `app/page.tsx`, `app/layout.tsx`, and frontend assets. Avoid `data/`, `lib/trust/`, `evals/`, and backend APIs.
 
+Read `docs/hackathon/PART_B_PERSPECTIVE_SPEC.md` before designing Part B. The microphone is only the interface. The product is a sustained judgment conversation grounded in the selected person's approved principles, priorities, decision tradeoffs, and scoped risk posture. Make Part A facts and Part B perspective feel like two deliberately different modes.
+
+**Coordination update:** a dedicated contributor now owns the Part B implementation under `web/src/part-b/`, `lib/part-b/`, and the person-chat route. Do not edit those paths while their branch is active. You own the surrounding product shell, design system, person-profile entry point, and final visual integration. Provide styling hooks or an integration note instead of duplicating their voice/conversation logic.
+
 ## Product direction
 
 Build a serious internal intelligence product, not a game and not a generic chatbot. Aim for the clarity of Linear, the operational density of Palantir, and one memorable custom visualization: the **Team Intelligence Mesh**.
@@ -73,6 +77,8 @@ Clicking Priya or choosing Part B opens a focused conversation screen:
 - Keep citations/principles visible beside the transcript so the answer never feels like role-play.
 
 For `Would Priya support a 10% beta rollout today?`, clearly label the answer as guidance grounded in a stated principle—not approval.
+
+The transcript must expose the perspective layer: show which owner-confirmed principle or past rationale informed each response, its scope, and whether the turn is stated perspective, supported guidance, or needs Priya. Follow-ups must use earlier turns rather than resetting the conversation.
 
 ### 5. Approval refusal / human handoff
 

@@ -8,6 +8,8 @@ A-SYNCH is an availability-aware intelligence layer for teams. A user can ask th
 
 The user may also skip team search and directly talk to a selected person's context agent. That agent uses the person's stated reasoning and approved principles, never impersonates them, and cannot approve actions on their behalf.
 
+Read `docs/hackathon/PART_B_PERSPECTIVE_SPEC.md`. Part B is a separate multi-turn perspective pipeline, not the Part A response read aloud. It must retrieve the selected person's scoped, owner-confirmed reasoning and combine it with situation evidence and active conversation history.
+
 ## Demo scenario
 
 Five people are working on Project Atlas. Priya, the lead, is unavailable. The user asks, "Can we ship Atlas today?"
@@ -50,6 +52,20 @@ Question
 ```
 
 Context agents return evidence, not polished answers. Retrieved content is untrusted data. The OpenRouter API key must never reach the browser.
+
+## Required Part B pipeline
+
+```text
+Selected person + conversation turn + prior turns
+  -> retrieve current Situation Brief
+  -> retrieve that person's scoped perspective records
+  -> classify fact / perspective / action request / missing context
+  -> generate a conversational, cited response
+  -> verify permissions, provenance, scope, authority and persona boundaries
+  -> return verified turn for transcript and generic speech playback
+```
+
+Part B must retain the active conversation history so pronouns and follow-ups resolve correctly. It needs deterministic seeded answers for the complete Priya demo even when OpenRouter is unavailable. Do not reuse one canned response for every Priya question.
 
 ## Required reliability
 
