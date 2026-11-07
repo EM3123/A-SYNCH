@@ -84,6 +84,8 @@ Last run: **Nov 7, 2026**, branch `trust-layer`. 24/24 evals passing, typecheck 
 
 ## 7. Open tradeoff (doc: "Owner visibility vs. fear of asking")
 
+Tracked in `docs/hackathon/WORKSTREAM_SAFETY_PRIVACY.md` (items 4–6).
+
 | # | Item | Status | Notes |
 |---|---|---|---|
 | O1 | Askers stay anonymous to owners unless a direct reply is needed | ❌ decision needed | The audit trace stores `requesterId` today. The team needs to decide before an owner view is built. |
@@ -107,6 +109,8 @@ Last run: **Nov 7, 2026**, branch `trust-layer`. 24/24 evals passing, typecheck 
 ---
 
 ## Known limitations (said plainly)
+
+- **Requester identity is taken from the request body**, so a caller can claim to be someone else. Fix tracked as P0 in `docs/hackathon/WORKSTREAM_SAFETY_PRIVACY.md`.
 
 - Checks are pattern- and word-overlap based. They catch the demo cases and common rewordings; a determined adversary could phrase around them. The safe direction holds: labels only go down, so a miss means a weaker label is not applied, never a stronger one is invented.
 - `lib/agents/synthesizer.ts` has an approval pattern that also matches status questions like "Has Priya approved?". The Trust Layer does not flag those, but the synthesizer's fallback may still route them to the approval brief. Daksh's call.
