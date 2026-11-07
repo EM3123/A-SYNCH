@@ -1,0 +1,101 @@
+/* A-Synch: the ocean is one canvas. Chrome is text on water, with no boxes. */
+:root {
+  --abyss-navy: #030F18;
+  --panel-navy: #051C2C;
+  --hairline: rgba(244, 244, 240, 0.12);
+  --ink-cream: #F4F4F0;
+  --muted-slate: #8A99AE;
+  --signal-cyan: #00A9F4;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body {
+  background: var(--abyss-navy);
+  color: var(--ink-cream);
+  font-family: Inter, system-ui, sans-serif;
+  overflow: hidden;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+.world { position: fixed; inset: 0; }
+.ocean { position: absolute; left: 0; top: 0; display: block; }
+
+.mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+.dim { color: var(--muted-slate); }
+
+button {
+  font: inherit; color: var(--muted-slate); background: none; border: 0; padding: 4px 0; cursor: pointer;
+}
+button[aria-pressed='true'] { color: var(--ink-cream); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--signal-cyan); outline-offset: 4px; }
+
+/* Top chrome: plain text floating on the water */
+.chrome {
+  position: absolute; top: 18px; left: 24px; right: 24px;
+  display: flex; justify-content: space-between; align-items: baseline;
+  pointer-events: none;
+}
+.chrome > * { pointer-events: auto; }
+.brand { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.14em; color: var(--ink-cream); }
+.chrome nav { display: flex; gap: 28px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; }
+
+/* Cast bar: an underline in the water beside the boat */
+.cast {
+  position: absolute; left: calc(14vw + 220px); top: calc(25vh - 58px);
+  display: flex; flex-direction: column; gap: 6px; width: min(380px, 40vw);
+}
+.cast input {
+  background: transparent; border: 0; border-bottom: 1px solid rgba(244, 244, 240, 0.5);
+  color: var(--ink-cream); font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-size: 20px;
+  padding: 6px 0; width: 100%;
+}
+.cast input::placeholder { color: var(--muted-slate); }
+.scan { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-slate); }
+
+/* Inspector: no card, only a hairline on the left */
+.drawer {
+  position: absolute; top: 0; right: 0; bottom: 0; width: min(440px, 100%);
+  background: var(--panel-navy); border-left: 1px solid rgba(244, 244, 240, 0.2);
+  padding: 72px 32px 32px; display: flex; flex-direction: column; gap: 16px; overflow: auto;
+}
+.drawer h2 { font-family: 'Instrument Serif', Georgia, serif; font-weight: 400; font-size: 26px; line-height: 1.2; margin: 0; }
+.drawer .close { position: absolute; top: 16px; right: 20px; font-size: 20px; }
+.synthesis { border-left: 2px solid var(--signal-cyan); padding-left: 14px; margin: 0; line-height: 1.55; }
+.ask {
+  background: transparent; border: 0; border-bottom: 1px solid rgba(244, 244, 240, 0.5);
+  color: var(--ink-cream); padding: 8px 0; font: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ocean { animation: none; }
+}
+
+@media (max-width: 720px) {
+  .chrome { flex-direction: column; gap: 10px; }
+  .cast { left: 24px; top: calc(25vh - 96px); width: calc(100vw - 48px); }
+}
+
+/* ---- Landing ---- */
+.landing { position: fixed; inset: 0; }
+.landing .query {
+  position: absolute; left: calc(30vw + 170px); top: calc(42vh - 150px);
+  display: flex; flex-direction: column; gap: 10px; width: min(420px, 45vw);
+}
+.landing .query input {
+  background: transparent; border: 0; border-bottom: 1px solid rgba(244, 244, 240, 0.5);
+  color: var(--ink-cream); font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-size: 22px; padding: 6px 0;
+}
+.landing .query input::placeholder { color: var(--muted-slate); }
+.landing .modes { display: flex; gap: 22px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+.landing .modes button[aria-pressed='true'] { color: var(--ink-cream); }
+.landing .status-line, .landing .again { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted-slate); text-align: left; }
+.landing .again { color: var(--ink-cream); }
+
+/* Touch targets: text buttons get a comfortable hit area without changing how they look */
+.landing .modes button, .landing .again, .chrome nav button, .chrome > button { padding: 14px 6px; min-height: 44px; }
