@@ -243,6 +243,13 @@ function shownBriefText(brief: SituationBrief): string {
   return [brief.title, brief.answer, brief.status, brief.nextStep, ...brief.claims.map((item) => item.text), ...brief.conflicts].join("\n");
 }
 
+function uniqueSecurityEvents(events: SecurityEvent[]): SecurityEvent[] {
+  return [...new Map(events.map((event) => [
+    `${event.type}:${event.evidenceId ?? event.label}`,
+    event,
+  ])).values()];
+}
+
 export async function askPerspective(options: AskPerspectiveOptions): Promise<AskResponse> {
   const startedAt = Date.now();
   const question = options.question?.trim();
@@ -319,7 +326,7 @@ export async function askPerspective(options: AskPerspectiveOptions): Promise<As
       { type: "synthesis", label: history.length ? "Resolving this turn against the active conversation" : "Starting a new perspective conversation" },
       { type: "trust", label: "Checking scope, citations, permissions, persona, and authority" },
     ],
-    securityEvents: [...ignoredEvents, ...verified.securityEvents],
+    securityEvents: uniqueSecurityEvents([...ignoredEvents, ...verified.securityEvents]),
     meta: { usedFallback: true, durationMs: Date.now() - startedAt },
   };
 }

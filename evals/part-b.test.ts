@@ -125,7 +125,10 @@ test("Part B: restricted perspective never leaks, even through a spoofed request
 test("Part B: imported prompt injection is quarantined and audited", async () => {
   const result = await askPerspective({ personId: "priya", question: "Would you support a 10% Atlas beta today?" });
   assert.ok(!result.sources.some((source) => source.id === "priya-injected-perspective"));
-  assert.ok(result.securityEvents.some((event) => event.type === "untrusted-source-ignored" && event.evidenceId === "priya-injected-perspective"));
+  assert.equal(
+    result.securityEvents.filter((event) => event.type === "untrusted-source-ignored" && event.evidenceId === "priya-injected-perspective").length,
+    1,
+  );
   assert.doesNotMatch(result.brief.answer, /rollout is approved/i);
 });
 
