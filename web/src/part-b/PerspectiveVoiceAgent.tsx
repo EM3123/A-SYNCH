@@ -95,17 +95,60 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
   const [voiceState, setVoiceState] = useState<VoiceState>('ready');
   const [error, setError] = useState<string | null>(null);
   const [muted, setMuted] = useState(false);
+  const [audioError, setAudioError] = useState<string | null>(null);
+  const [waiting, setWaiting] = useState(false);
   const [copied, setCopied] = useState(false);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const turnsRef = useRef<TranscriptTurn[]>([]);
   const latestSpokenRef = useRef('');
   const transcriptEndRef = useRef<HTMLDivElement | null>(null);
+  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
+  const speechTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const mutedRef = useRef(false);
+  const mountedRef = useRef(true);
+  const requestBusyRef = useRef(false);
+  const playbackEpochRef = useRef(0);
 
-  useEffect(() => { turnsRef.current = turns; }, [turns]);
-  useEffect(() => () => {
-    recognitionRef.current?.abort();
+  const cancelSpeech = useCallback(() => {
+    playbackEpochRef.current += 1;
+    if (speechTimerRef.current) clearTimeout(speechTimerRef.current);
+    speechTimerRef.current = null;
+    if (utteranceRef.current) {
+      utteranceRef.current.onstart = null;
+      utteranceRef.current.onend = null;
+      utteranceRef.current.onerror = null;
+      utteranceRef.current = null;
+    }
     window.speechSynthesis?.cancel();
   }, []);
+
+  const cancelRecognition = useCallback(() => {
+    const recognition = recognitionRef.current;
+    recognitionRef.current = null;
+    if (recognition) {
+      recognition.onstart = null;
+      recognition.onresult = null;
+      recognition.onend = null;
+      recognition.onerror = null;
+      recognition.abort();
+    }
+  }, []);
+
+  useEffect(() => { turnsRef.current = turns; }, [turns]);
+  useEffect(() => {
+    mountedRef.current = true;
+    const synth = window.speechSynthesis;
+    const refreshVoices = () => { voicesRef.current = synth?.getVoices() ?? []; };
+    refreshVoices();
+    synth?.addEventListener('voiceschanged', refreshVoices);
+    return () => {
+      mountedRef.current = false;
+      synth?.removeEventListener('voiceschanged', refreshVoices);
+      cancelRecognition();
+      cancelSpeech();
+    };
+  }, [cancelRecognition, cancelSpeech]);
   useEffect(() => {
     transcriptEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, [turns.length, voiceState]);
@@ -113,26 +156,78 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
   const latestResponse = [...turns].reverse().find((turn) => turn.response)?.response;
 
   const speak = useCallback((text: string) => {
-    latestSpokenRef.current = text;
-    if (muted || !('speechSynthesis' in window)) {
-      setVoiceState('ready');
+    if (!mountedRef.current || mutedRef.current) return;
+    cancelSpeech();
+    setAudioError(null);
+    const synth = window.speechSynthesis;
+    if (!synth || typeof SpeechSynthesisUtterance === 'undefined') {
+      setAudioError('Spoken replies are unavailable in this browser. Open localhost:3000 in Chrome or Safari to hear them.');
       return;
     }
-    window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
+    utteranceRef.current = utterance;
     utterance.lang = 'en-US';
     utterance.rate = 1.02;
-    const genericVoice = window.speechSynthesis.getVoices().find((voice) => voice.lang.toLowerCase().startsWith('en'));
+    utterance.volume = 1;
+    const voices = synth.getVoices().length ? synth.getVoices() : voicesRef.current;
+    const english = voices.filter((voice) => voice.lang.toLowerCase().startsWith('en'));
+    const genericVoice = english.find((voice) => voice.localService && voice.default)
+      ?? english.find((voice) => voice.localService) ?? english[0];
     if (genericVoice) utterance.voice = genericVoice;
-    utterance.onstart = () => setVoiceState('speaking');
-    utterance.onend = () => setVoiceState('ready');
-    utterance.onerror = () => setVoiceState('ready');
-    window.speechSynthesis.speak(utterance);
-  }, [muted]);
+    const isCurrent = () => mountedRef.current && utteranceRef.current === utterance;
+    utterance.onstart = () => {
+      if (!isCurrent()) return;
+      if (speechTimerRef.current) clearTimeout(speechTimerRef.current);
+      speechTimerRef.current = null;
+      setVoiceState('speaking');
+    };
+    utterance.onend = () => {
+      if (!isCurrent()) return;
+      if (speechTimerRef.current) clearTimeout(speechTimerRef.current);
+      utteranceRef.current = null;
+      setVoiceState('ready');
+    };
+    utterance.onerror = (event) => {
+      if (!isCurrent()) return;
+      cancelSpeech();
+      setVoiceState('ready');
+      if (event.error !== 'canceled' && event.error !== 'interrupted') {
+        setAudioError(event.error === 'not-allowed'
+          ? 'Your browser blocked automatic sound. Tap Read aloud on the reply to start playback.'
+          : 'Voice playback could not start. Try Test voice or Read aloud; check that your browser and speakers are unmuted.');
+      }
+    };
+    speechTimerRef.current = setTimeout(() => {
+      if (!isCurrent()) return;
+      cancelSpeech();
+      setVoiceState('ready');
+      setAudioError('Sound did not start. Tap Read aloud on the reply, or try Test voice.');
+    }, 5000);
+    try {
+      synth.resume();
+      synth.speak(utterance);
+    } catch {
+      cancelSpeech();
+      setVoiceState('ready');
+      setAudioError('Voice playback is unavailable here. Try this demo in Chrome or Safari.');
+    }
+  }, [cancelSpeech]);
+
+  const readAloud = (text: string) => {
+    cancelRecognition();
+    mutedRef.current = false;
+    setMuted(false);
+    speak(text);
+  };
 
   const submitTurn = useCallback(async (rawQuestion: string) => {
     const question = rawQuestion.trim();
-    if (!question || voiceState === 'checking') return;
+    if (!question || requestBusyRef.current) return;
+    requestBusyRef.current = true;
+    setWaiting(true);
+    cancelRecognition();
+    cancelSpeech();
+    const playbackEpoch = playbackEpochRef.current;
     const priorHistory = turnHistory(turnsRef.current);
     setError(null);
     setCopied(false);
@@ -145,6 +240,7 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
     }]);
     try {
       const response = await askPerspectivePerson(person.id, question, priorHistory, requesterId);
+      if (!mountedRef.current) return;
       setTurns((current) => [...current, {
         id: response.requestId,
         role: 'assistant',
@@ -152,17 +248,23 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
         response,
       }]);
       onLatestResponse?.(response);
-      speak(response.brief.answer);
+      latestSpokenRef.current = response.brief.answer;
+      setVoiceState('ready');
+      if (playbackEpochRef.current === playbackEpoch) speak(response.brief.answer);
     } catch (cause) {
+      if (!mountedRef.current) return;
       setError(cause instanceof Error ? cause.message : 'The perspective conversation could not continue.');
       setVoiceState('ready');
+    } finally {
+      requestBusyRef.current = false;
+      if (mountedRef.current) setWaiting(false);
     }
-  }, [onLatestResponse, person.id, requesterId, speak, voiceState]);
+  }, [cancelRecognition, cancelSpeech, onLatestResponse, person.id, requesterId, speak]);
 
   const startListening = () => {
     setError(null);
     setCopied(false);
-    window.speechSynthesis?.cancel();
+    cancelSpeech();
     const Recognition = recognitionConstructor();
     if (!Recognition) {
       setVoiceState('unsupported');
@@ -170,7 +272,7 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
       return;
     }
 
-    recognitionRef.current?.abort();
+    cancelRecognition();
     const recognition = new Recognition();
     recognition.continuous = false;
     recognition.interimResults = true;
@@ -216,19 +318,19 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
   };
 
   const stopAudio = () => {
-    recognitionRef.current?.stop();
-    recognitionRef.current = null;
-    window.speechSynthesis?.cancel();
-    setVoiceState('stopped');
+    cancelRecognition();
+    cancelSpeech();
+    setVoiceState(requestBusyRef.current ? 'checking' : 'stopped');
   };
 
   const endConversation = () => {
     stopAudio();
+    mountedRef.current = false;
     onClose?.();
   };
 
   const replay = () => {
-    if (latestSpokenRef.current) speak(latestSpokenRef.current);
+    if (latestSpokenRef.current) readAloud(latestSpokenRef.current);
   };
 
   const submitTyped = (event: FormEvent) => {
@@ -297,12 +399,12 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
               <p>Ask a judgment question. The context agent brings {person.name.split(' ')[0]}’s stated priorities, tradeoffs, and decision boundaries into the conversation.</p>
               <div className="part-b-suggestions">
                 {SUGGESTIONS.map((suggestion) => (
-                  <button key={suggestion} type="button" onClick={() => void submitTurn(suggestion)} disabled={voiceState === 'checking'}>
+                  <button key={suggestion} type="button" onClick={() => void submitTurn(suggestion)} disabled={waiting}>
                     {suggestion} <span>↗</span>
                   </button>
                 ))}
               </div>
-              <small>Microphone starts only when you press it · typing works too</small>
+              <small>Replies are read aloud automatically · type or press the microphone to ask</small>
             </div>
           ) : (
             <div className="part-b-transcript" aria-live="polite">
@@ -319,6 +421,7 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
                     <p>{turn.content}</p>
                     {turn.response && (
                       <>
+                        <button type="button" className="read-reply" disabled={waiting} onClick={() => readAloud(turn.content)}>Read aloud</button>
                         <details className="part-b-proof">
                           <summary>Why this answer <span>{turn.response.sources.length} source{turn.response.sources.length === 1 ? '' : 's'} →</span></summary>
                           <div>
@@ -345,7 +448,7 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
                   </div>
                 </article>
               ))}
-              {voiceState === 'checking' && (
+              {waiting && (
                 <div className="part-b-thinking"><i /><i /><i /><span>Checking perspective, evidence, and authority…</span></div>
               )}
               <div ref={transcriptEndRef} />
@@ -353,6 +456,7 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
           )}
 
           {error && <p className="part-b-error" role="alert">{error}</p>}
+          {audioError && <p className="part-b-error" role="alert">{audioError}</p>}
 
           <div className="part-b-input-dock">
             <form className="part-b-compose" onSubmit={submitTyped}>
@@ -360,7 +464,7 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
                 type="button"
                 className="part-b-mic"
                 onClick={voiceState === 'listening' ? stopAudio : startListening}
-                disabled={voiceState === 'checking'}
+                disabled={waiting}
                 aria-label={voiceState === 'listening' ? 'Stop listening' : 'Start push-to-talk'}
                 data-active={voiceState === 'listening'}
               >
@@ -376,23 +480,26 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
                 maxLength={1500}
                 rows={1}
               />
-              <button type="submit" className="part-b-send" disabled={!draft.trim() || voiceState === 'checking'} aria-label="Send message">↗</button>
+              <button type="submit" className="part-b-send" disabled={!draft.trim() || waiting} aria-label="Send message">↗</button>
             </form>
             <div className="part-b-controls">
               <span><i data-state={voiceState} /> {STATE_LABELS[voiceState]}</span>
               <div>
                 {voiceActive && <button type="button" onClick={stopAudio}>Stop</button>}
-                <button type="button" onClick={replay} disabled={!latestResponse}>Replay</button>
+                <button type="button" onClick={() => readAloud('Sound is on. I will read every reply aloud.')} disabled={waiting}>Test voice</button>
+                <button type="button" onClick={replay} disabled={!latestResponse || waiting}>Replay</button>
                 <button
                   type="button"
-                  aria-pressed={muted}
+                  aria-label="Read replies aloud"
+                  aria-pressed={!muted}
                   onClick={() => {
-                    setMuted((value) => !value);
-                    window.speechSynthesis?.cancel();
-                    setVoiceState('ready');
+                    mutedRef.current = !mutedRef.current;
+                    setMuted(mutedRef.current);
+                    if (mutedRef.current) cancelSpeech();
+                    setVoiceState(requestBusyRef.current ? 'checking' : 'ready');
                   }}
                 >
-                  {muted ? 'Sound on' : 'Mute'}
+                  {muted ? 'Spoken replies: Off' : 'Spoken replies: On'}
                 </button>
               </div>
             </div>
