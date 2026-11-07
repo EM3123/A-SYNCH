@@ -9,6 +9,7 @@ import type {
 import { DEMO_REQUESTER_ID, PEOPLE } from "@/lib/agents/demo-context";
 import { gatherContributions, routeToPeople } from "@/lib/agents/router";
 import { synthesizeBrief } from "@/lib/agents/synthesizer";
+import { verifyBrief } from "@/lib/trust";
 
 export class AskValidationError extends Error {
   constructor(message: string) {
@@ -99,20 +100,29 @@ export async function askAsynch(
     })),
   );
 
-  if (contributions.some((contribution) => contribution.evidence.some((item) => item.stale))) {
-    securityEvents.push({
-      type: "stale-conflict",
-      label: "Surfaced a stale status conflict instead of silently resolving it",
-      evidenceId: "stale-launch-status",
-    });
-  }
-
   const synthesis = await synthesizeBrief({
     question,
     mode,
     personId: input.personId,
     contributions,
   });
+
+  // Trust Layer: the model proposes, deterministic checks verify. Recomputes
+  // every claim's trust label, removes unverifiable claims, surfaces stale
+  // conflicts and blocks approval claims. Labels can only go down.
+  const sources = contributions.flatMap((contribution) => contribution.evidence);
+  const verified = verifyBrief({
+    candidate: synthesis.brief,
+    question,
+    requesterId,
+    mode,
+    personId: input.personId,
+    sources,
+  });
+  securityEvents.push(...verified.securityEvents);
+  if (process.env.ASYNCH_AUDIT === "1") {
+    console.info(`[A-SYNCH trust] ${JSON.stringify(verified.audit)}`);
+  }
 
   const trustEvent: RoutingEvent = {
     type: "trust",
@@ -127,20 +137,13 @@ export async function askAsynch(
     trustEvent,
   ];
 
-  if (synthesis.brief.trust.decision === "needs-human") {
-    securityEvents.push({
-      type: "authority-boundary",
-      label: "The context agent refused to claim human approval",
-    });
-  }
-
   return {
     requestId: randomUUID(),
     mode,
     question,
     selectedPeople,
-    sources: contributions.flatMap((contribution) => contribution.evidence),
-    brief: synthesis.brief,
+    sources,
+    brief: verified.brief,
     routingEvents,
     securityEvents,
     meta: {

@@ -1,0 +1,28 @@
+{
+  "_about": "Who-knows-what map. selectionReason is what the mesh shows when the router picks someone. owns lists the decisions only that person can make.",
+  "priya": {
+    "selectionReason": "Owns Atlas launch principles and final approval",
+    "knowsAbout": ["launch principles", "beta vs GA tradeoffs", "release approval"],
+    "owns": ["Atlas launch approval (beta and GA)"]
+  },
+  "alex": {
+    "selectionReason": "Owns the Atlas backend and current test status",
+    "knowsAbout": ["Atlas API", "backend tests", "staging deploys"],
+    "owns": ["Backend readiness"]
+  },
+  "sam": {
+    "selectionReason": "Owns the rollout controls required for a safe beta",
+    "knowsAbout": ["percentage rollout control", "frontend accessibility", "feature flags"],
+    "owns": ["Rollout control (PR #219)"]
+  },
+  "jordan": {
+    "selectionReason": "Owns the open security and SSO review",
+    "knowsAbout": ["security review ATLAS-38", "enterprise SSO verification", "launch risk"],
+    "owns": ["Security sign-off for general availability"]
+  },
+  "maya": {
+    "selectionReason": "Knows current customer demand and launch impact",
+    "knowsAbout": ["design partners", "customer commitments", "beta impact"],
+    "owns": ["Design partner communication"]
+  }
+}
