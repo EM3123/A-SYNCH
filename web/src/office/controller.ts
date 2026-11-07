@@ -54,12 +54,18 @@ export function createOfficeController(requesterId: string): OfficeController {
   const msg = (from: string, text: string, kind: Message['kind'] = 'speech', evidenceIds?: string[]): Message =>
     ({ id: uid('m'), at: Date.now(), from, text, kind, evidenceIds });
 
-  // Send an agent back to where they belong: their desk, or the break room if their human is away.
+  // Send an agent back to where they belong: their team's desk, or the out-of-office lounge if
+  // their human is away. If the human is in a calendar meeting, the agent stays in that meeting.
   const goHome = (id: string) => {
     const ag = state().agents[id];
     if (!ag) return;
     const away = ag.availability === 'away';
-    dispatch({ type: 'move', agentId: id, room: away ? 'break' : 'workspace', status: away ? 'away' : 'working', detail: away ? ag.availabilityLabel : 'At their desk' });
+    const calendar = Object.values(state().meetings).find((m) => m.source === 'calendar' && m.status !== 'ended' && m.participants.includes(id));
+    if (calendar && !away) {
+      dispatch({ type: 'move', agentId: id, room: 'conference', status: 'meeting', detail: ag.availabilityLabel });
+      return;
+    }
+    dispatch({ type: 'move', agentId: id, room: away ? 'break' : ag.homeRoom, status: away ? 'away' : 'working', detail: away ? ag.availabilityLabel : 'At their desk' });
   };
 
   const fail = (err: unknown) => {
@@ -72,7 +78,7 @@ export function createOfficeController(requesterId: string): OfficeController {
   const stuckTimer = window.setInterval(() => {
     const now = Date.now();
     for (const m of Object.values(state().meetings)) {
-      if ((m.status === 'gathering' || m.status === 'discussing') && now - m.startedAt > STUCK_AFTER_MS) {
+      if (m.source !== 'calendar' && (m.status === 'gathering' || m.status === 'discussing') && now - m.startedAt > STUCK_AFTER_MS) {
         dispatch({ type: 'meeting-status', meetingId: m.id, status: 'stuck' });
         store.log('meeting-stuck', `“${m.title}” has run ${Math.round((now - m.startedAt) / 60000)} min without a decision`, { meetingId: m.id, agentIds: m.participants, room: m.room });
       }
@@ -92,7 +98,27 @@ export function createOfficeController(requesterId: string): OfficeController {
       try {
         const people = await loadPeople();
         dispatch({ type: 'roster', people: toRoster(people) });
-        store.log('status', `${people.length} agents in the office`);
+        store.log('status', `${people.length} agents at Corvid Labs. Calendars as of Fri Nov 6, 2:30 PM ET (seeded).`);
+
+        // People who are genuinely in a meeting right now (from the seeded calendars). Everyone
+        // sharing the same calendar reason is in the same meeting, and their agents sit in the
+        // conference room. Away, sick and on-leave people stay in the out-of-office lounge.
+        const groups = new Map<string, string[]>();
+        for (const p of people) {
+          if (p.availability !== 'busy') continue;
+          groups.set(p.availabilityLabel, [...(groups.get(p.availabilityLabel) ?? []), p.id]);
+        }
+        for (const [label, ids] of groups) {
+          const until = label.match(/\buntil\b.*$/i)?.[0];
+          const title = label.replace(/\s+until\b.*$/i, '');
+          const meetingId = uid('cal');
+          dispatch({
+            type: 'meeting-start',
+            meeting: { id: meetingId, title, room: 'conference', participants: ids, startedAt: Date.now(), agenda: [label], status: 'discussing', decisions: [], transcript: [], source: 'calendar', until },
+          });
+          ids.forEach((id) => dispatch({ type: 'move', agentId: id, room: 'conference', status: 'meeting', detail: label }));
+          store.log('meeting-started', `${ids.map(first).join(', ')} ${ids.length === 1 ? 'is' : 'are'} in “${title}” ${until ?? ''}`.trim(), { meetingId, agentIds: ids, room: 'conference' });
+        }
       } catch (err) {
         fail(err);
       }
@@ -130,6 +156,9 @@ export function createOfficeController(requesterId: string): OfficeController {
         }));
         steps.push(() => {
           dispatch({ type: 'meeting-status', meetingId, status: 'decided', decisions: [r.brief.status, r.brief.nextStep] });
+          // Keep the backend's full answer and open it: the Situation Brief is the centerpiece.
+          dispatch({ type: 'brief', key: meetingId, response: r });
+          dispatch({ type: 'select', selection: { kind: 'meeting', id: meetingId } });
           store.log('meeting-decided', `${r.brief.status}. Next: ${r.brief.nextStep}`, { meetingId, agentIds: ids });
           r.securityEvents.forEach((e) => store.log('security', e.label, { meetingId }));
         });
@@ -161,9 +190,9 @@ export function createOfficeController(requesterId: string): OfficeController {
       const convo = Object.values(state().conversations).find((c) => !c.endedAt && c.participants.includes(agentId) && c.participants.includes('you'));
       const conversationId = convo?.id ?? uid('conv');
       if (!convo) {
-        dispatch({ type: 'conversation-start', conversation: { id: conversationId, participants: ['you', agentId], room: 'common', startedAt: Date.now(), messages: [] } });
-        dispatch({ type: 'move', agentId, room: 'common', status: 'communicating', detail: 'Talking with you' });
-        store.log('conversation', `You started talking with ${first(agentId)}'s agent`, { conversationId, agentIds: [agentId], room: 'common' });
+        dispatch({ type: 'conversation-start', conversation: { id: conversationId, participants: ['you', agentId], room: ag.room, startedAt: Date.now(), messages: [] } });
+        dispatch({ type: 'status', agentId, status: 'communicating', detail: 'Talking with you' });
+        store.log('conversation', `You started talking with ${first(agentId)}'s agent`, { conversationId, agentIds: [agentId], room: ag.room });
       }
       dispatch({ type: 'conversation-message', conversationId, message: msg('you', question) });
       dispatch({ type: 'status', agentId, status: 'thinking', detail: `Checking ${first(agentId)}'s context` });
@@ -172,6 +201,7 @@ export function createOfficeController(requesterId: string): OfficeController {
         const r = await askPerson(agentId, question, requesterId);
         const evidence = [...new Set(r.brief.claims.flatMap((c) => c.evidenceIds))];
         dispatch({ type: 'conversation-message', conversationId, message: msg(agentId, r.brief.answer, 'speech', evidence) });
+        dispatch({ type: 'brief', key: conversationId, response: r });
         if (r.brief.trust.requiresHuman) {
           dispatch({ type: 'status', agentId, status: 'needs-input', detail: `Only ${first(agentId)} can decide this` });
           store.log('needs-input', `${first(agentId)}'s agent cannot approve this. A request for ${first(agentId)} is ready.`, { agentIds: [agentId], conversationId });
@@ -196,7 +226,7 @@ export function createOfficeController(requesterId: string): OfficeController {
       if (!ag) return;
       const taskId = uid('task');
       dispatch({ type: 'task-upsert', task: { id: taskId, title, assignee: agentId, status: 'in-progress', progress: null, source: 'user', createdAt: Date.now() } });
-      dispatch({ type: 'move', agentId, room: 'workspace', status: 'working', detail: `Working on “${title}”` });
+      dispatch({ type: 'move', agentId, room: ag.homeRoom, status: 'working', detail: `Working on “${title}”` });
       store.log('task-assigned', `${first(agentId)} took “${title}”`, { agentIds: [agentId], taskId });
       try {
         const r = await askPerson(agentId, title, requesterId);

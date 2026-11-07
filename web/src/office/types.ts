@@ -74,6 +74,10 @@ export interface Meeting {
   decisions: string[];
   transcript: Message[];
   responseId?: string;
+  // 'calendar' meetings come from the seeded calendars (someone is genuinely in a meeting);
+  // 'asked' meetings are created when the manager asks the team.
+  source?: 'calendar' | 'asked';
+  until?: string; // plain-language end time from the calendar, e.g. "until 4:30 PM ET"
 }
 
 export interface Conversation {
@@ -121,6 +125,9 @@ export interface Agent {
   availability: 'available' | 'busy' | 'away';
   availabilityLabel: string;
   // Where the agent is and what it is doing in the office.
+  team: string;
+  teamName: string;
+  homeRoom: RoomId; // the room their team sits in
   room: RoomId;
   seat: string;
   homeSeat: string; // the agent's own desk; they return here after meetings

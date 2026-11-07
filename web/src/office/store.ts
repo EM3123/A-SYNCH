@@ -1,7 +1,7 @@
 // The office store: one reducer, a subscription for React (useSyncExternalStore), and an event
 // bus the visual layer listens to for animations. Every change goes through dispatch().
 import type { AskResponse } from '../api';
-import { ROOMS, SEATS, freeSeat } from './layout';
+import { ROOMS, SEATS, freeSeat, teamOf } from './layout';
 import {
   STATUS_LABEL,
   type ActivityEvent, type Agent, type AgentStatus, type Conversation, type Meeting, type Message,
@@ -37,12 +37,20 @@ export function initialState(): OfficeState {
   };
 }
 
-const takenSeats = (s: OfficeState, except?: string) =>
-  new Set(Object.values(s.agents).filter((a) => a.id !== except).map((a) => a.seat));
+// Seats nobody else may take: where others sit now, and every person's own desk (a visitor
+// never sits at a teammate's desk, even when that teammate is away).
+const takenSeats = (s: OfficeState, except?: string) => {
+  const taken = new Set<string>();
+  for (const a of Object.values(s.agents)) {
+    taken.add(a.homeSeat);
+    if (a.id !== except) taken.add(a.seat);
+  }
+  return taken;
+};
 
-// Where an agent sits in a room: their own desk in the workspace, otherwise the first free seat.
+// Where an agent sits in a room: their own desk in their team's room, otherwise a free seat.
 function seatIn(s: OfficeState, agent: Agent, room: RoomId): string {
-  if (room === 'workspace') return agent.homeSeat;
+  if (room === agent.homeRoom) return agent.homeSeat;
   return freeSeat(room, takenSeats(s, agent.id)) ?? agent.seat;
 }
 
@@ -57,18 +65,27 @@ export function reduce(s: OfficeState, a: Action): [OfficeState, OfficeEvent[]] 
   switch (a.type) {
     case 'roster': {
       const agents: Record<string, Agent> = {};
-      const taken = new Set<string>();
-      a.people.forEach((p, i) => {
+      const homeTaken = new Set<string>();
+      const occupied = new Set<string>();
+      a.people.forEach((p) => {
         const old = s.agents[p.id];
-        const homeSeat = old?.homeSeat ?? `desk-${i % 8}`;
-        taken.add(homeSeat);
-        // Real availability decides the starting room: away people's agents wait in the break room.
-        const room: RoomId = old?.room ?? (p.availability === 'away' ? 'break' : 'workspace');
-        const status: AgentStatus = old?.status ?? (p.availability === 'away' ? 'away' : 'working');
+        // People sit with their team. Real availability decides the starting room: when the
+        // human is away, sick or on leave, their agent waits in the out-of-office lounge.
+        const { team, teamName, room: homeRoom } = teamOf(p.id, p.role);
+        const homeSeat = old?.homeSeat ?? freeSeat(homeRoom, homeTaken) ?? `${homeRoom}-0`;
+        homeTaken.add(homeSeat);
+        const away = p.availability === 'away';
+        const room: RoomId = old?.room ?? (away ? 'break' : homeRoom);
+        const seat = old?.seat ?? (away ? freeSeat('break', occupied) ?? 'break-0' : homeSeat);
+        occupied.add(seat);
+        const status: AgentStatus = old?.status ?? (away ? 'away' : 'working');
         agents[p.id] = {
           ...p,
+          team,
+          teamName,
+          homeRoom,
           room,
-          seat: old?.seat ?? (room === 'workspace' ? homeSeat : `break-${i % 4}`),
+          seat,
           homeSeat,
           status,
           statusDetail: old?.statusDetail ?? (p.availability === 'available' ? 'At their desk' : p.availabilityLabel),

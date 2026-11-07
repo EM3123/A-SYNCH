@@ -8,15 +8,20 @@ import { useOffice } from './useOffice';
 import { relationshipEdges, workforce } from './store';
 import { STATUS_LABEL, type ActivityEvent } from './types';
 import { useVoice } from '../voice/useVoice';
+import BriefPanel, { EvidenceList } from './BriefPanel';
 import './office.css';
 
 const REQUESTER_ID = 'daksh'; // demo requester from the backend
 
-const EXAMPLES = [
-  'Can we ship Atlas today?',
-  'Ask Priya would she support a 10% beta rollout today?',
-  'Show me all agents waiting for input',
+// The three guaranteed demo prompts. A person prompt opens that person's context agent and asks
+// it straight away (Mode B); a team prompt convenes the router and the relevant agents (Mode A).
+const DEMO: Array<{ text: string; agentId?: string; hint: string }> = [
+  { text: 'Can we ship Atlas today?', hint: 'Ask the team · Mode A' },
+  { text: 'Would Priya support a 10% beta rollout today?', agentId: 'priya', hint: "Talk to Priya's agent · Mode B" },
+  { text: 'Approve the Atlas launch for me.', agentId: 'priya', hint: 'Trust check: approval refused' },
 ];
+
+const EXAMPLES = [...DEMO.map((d) => d.text), 'Show me all agents waiting for input'];
 
 const time = (t: number) => new Date(t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -25,8 +30,10 @@ export default function OfficeShell({ makeRenderer }: { makeRenderer?: () => Off
   const s = useOffice(controller);
   const mapRef = useRef<HTMLDivElement>(null);
   const [command, setCommand] = useState('');
-  const [chatWith, setChatWith] = useState<string | null>(null);
+  const [chatWith, setChatWith] = useState<{ id: string; first?: string } | null>(null);
   const [taskDraft, setTaskDraft] = useState('');
+  const [filter, setFilter] = useState('');
+  const [copied, setCopied] = useState('');
 
   // Controller lives for the page. Created after mount so server rendering stays clean.
   useEffect(() => {
@@ -67,6 +74,32 @@ export default function OfficeShell({ makeRenderer }: { makeRenderer?: () => Off
     void controller.command(t);
   };
 
+  const copy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied('Copied to clipboard.');
+    } catch {
+      setCopied('Copy did not work. Select the text and copy it by hand.');
+    }
+  };
+
+  const runDemo = (d: (typeof DEMO)[number]) => {
+    if (!controller) return;
+    if (d.agentId) {
+      controller.select({ kind: 'agent', id: d.agentId });
+      setChatWith({ id: d.agentId, first: d.text });
+    } else {
+      setChatWith(null);
+      void controller.askTeam(d.text);
+    }
+  };
+
+  const brief = meeting ? s.briefs[meeting.id] : undefined;
+  const people = Object.values(s.agents).filter((a) => {
+    const q = filter.trim().toLowerCase();
+    return !q || a.name.toLowerCase().includes(q) || a.role.toLowerCase().includes(q) || a.teamName.toLowerCase().includes(q);
+  });
+
   const openFeed = (ev: ActivityEvent) => {
     if (!controller) return;
     if (ev.meetingId) controller.select({ kind: 'meeting', id: ev.meetingId });
@@ -78,7 +111,9 @@ export default function OfficeShell({ makeRenderer }: { makeRenderer?: () => Off
     <div className="os">
       <header className="os-top">
         <div className="os-brand">A-SYNCH <span>/ OFFICE</span></div>
-        <div className="os-workspace">Workspace: <strong>Project Atlas</strong> <span className="os-tag">Seeded demo</span></div>
+        <div className="os-workspace">
+          <strong>Corvid Labs</strong> · Project Atlas <span className="os-tag">Seeded demo · Fri Nov 6, 2:30 PM ET</span>
+        </div>
         <div className="os-top-right">
           <button
             type="button"
@@ -90,19 +125,14 @@ export default function OfficeShell({ makeRenderer }: { makeRenderer?: () => Off
         </div>
       </header>
 
-      <nav className="os-side" aria-label="Agents">
-        <h2>Agents</h2>
-        <ul>
-          {Object.values(s.agents).map((a) => (
-            <li key={a.id}>
-              <button
-                type="button"
-                aria-pressed={sel?.kind === 'agent' && sel.id === a.id}
-                onClick={() => controller?.select({ kind: 'agent', id: a.id })}
-              >
-                <span className="os-dot" style={{ background: a.accent }} aria-hidden="true" />
-                <span className="os-who">{a.name}</span>
-                <span className={`os-status st-${a.status}`}>{STATUS_LABEL[a.status]}</span>
+      <nav className="os-side" aria-label="People and meetings">
+        <h2>Try the demo</h2>
+        <ul className="os-demo">
+          {DEMO.map((d) => (
+            <li key={d.text}>
+              <button type="button" onClick={() => runDemo(d)} disabled={!controller || s.busy}>
+                <span className="os-who">{d.text}</span>
+                <span className="os-status">{d.hint}</span>
               </button>
             </li>
           ))}
@@ -113,11 +143,29 @@ export default function OfficeShell({ makeRenderer }: { makeRenderer?: () => Off
             <li key={m.id}>
               <button type="button" onClick={() => controller?.select({ kind: 'meeting', id: m.id })}>
                 <span className="os-who">{m.title}</span>
-                <span className={`os-status mt-${m.status}`}>{m.status}</span>
+                <span className={`os-status mt-${m.status}`}>{m.source === 'calendar' ? `On the calendar ${m.until ?? ''}`.trim() : m.status}</span>
               </button>
             </li>
           ))}
           {Object.values(s.meetings).every((m) => m.status === 'ended') && <li className="os-empty">No meetings right now</li>}
+        </ul>
+        <h2>People ({people.length})</h2>
+        <label htmlFor="os-filter" className="sr-only">Filter people</label>
+        <input id="os-filter" className="os-filter" value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Filter by name, role, team" autoComplete="off" />
+        <ul>
+          {people.map((a) => (
+            <li key={a.id}>
+              <button
+                type="button"
+                aria-pressed={sel?.kind === 'agent' && sel.id === a.id}
+                onClick={() => controller?.select({ kind: 'agent', id: a.id })}
+              >
+                <span className="os-dot" style={{ background: a.accent }} aria-hidden="true" />
+                <span className="os-who">{a.name}</span>
+                <span className={`os-status st-${a.status} av-${a.availability}`}>{a.availability === 'available' ? STATUS_LABEL[a.status] : a.availabilityLabel}</span>
+              </button>
+            </li>
+          ))}
         </ul>
       </nav>
 
@@ -179,12 +227,18 @@ export default function OfficeShell({ makeRenderer }: { makeRenderer?: () => Off
       {agent && (
         <section className="os-panel" aria-labelledby="panel-title">
           <button type="button" className="os-close" onClick={() => controller?.select(null)} aria-label="Close">×</button>
-          <p className="os-kicker">{agent.role}</p>
+          <p className="os-kicker">{agent.role} · {agent.teamName}</p>
           <h2 id="panel-title">{agent.name}</h2>
+          {/* The core rule of the product: if the person is free, go to them; if not, ask their agent. */}
+          <p className={`os-avail av-${agent.availability}`} role="note">
+            {agent.availability === 'available'
+              ? `${agent.name.split(' ')[0]} is free now (${agent.availabilityLabel}). Go to them directly, or ask their context agent.`
+              : `${agent.name.split(' ')[0]} is not reachable right now: ${agent.availabilityLabel}. Ask their context agent instead.`}
+          </p>
           <dl className="os-facts">
-            <div><dt>Status</dt><dd>{STATUS_LABEL[agent.status]}. {agent.statusDetail}</dd></div>
+            <div><dt>Agent status</dt><dd>{STATUS_LABEL[agent.status]}. {agent.statusDetail}</dd></div>
             <div><dt>Location</dt><dd>{s.rooms[agent.room].name}</dd></div>
-            <div><dt>Human</dt><dd>{agent.availabilityLabel}</dd></div>
+            <div><dt>Expertise</dt><dd>{agent.expertise.join(', ') || 'Not listed'}</dd></div>
             <div><dt>Current task</dt><dd>{agent.taskId ? s.tasks[agent.taskId]?.title : 'None'}</dd></div>
             <div>
               <dt>Works most with</dt>
@@ -192,7 +246,7 @@ export default function OfficeShell({ makeRenderer }: { makeRenderer?: () => Off
             </div>
           </dl>
           <div className="os-actions">
-            <button type="button" className="primary" onClick={() => setChatWith(agent.id)}>Talk to {agent.name.split(' ')[0]}'s agent</button>
+            <button type="button" className="primary" onClick={() => setChatWith({ id: agent.id })}>Talk to {agent.name.split(' ')[0]}'s agent</button>
           </div>
           <form
             className="os-assign"
@@ -219,34 +273,47 @@ export default function OfficeShell({ makeRenderer }: { makeRenderer?: () => Off
       )}
 
       {meeting && (
-        <section className="os-panel os-panel-wide" aria-labelledby="panel-title">
+        <section className="os-panel os-panel-brief" aria-labelledby="panel-title">
           <button type="button" className="os-close" onClick={() => controller?.select(null)} aria-label="Close">×</button>
-          <p className="os-kicker">Meeting · {meeting.status}</p>
+          <p className="os-kicker">{meeting.source === 'calendar' ? 'On the calendar' : 'Meeting'} · {meeting.status}</p>
           <h2 id="panel-title">{meeting.title}</h2>
           {meeting.status === 'stuck' && <p className="os-warn">No decision yet. Assign a decision-maker or end the meeting.</p>}
-          <p className="os-muted">With {meeting.participants.map((id) => s.agents[id]?.name.split(' ')[0]).join(', ')} · started {time(meeting.startedAt)}</p>
-          {meeting.decisions.length > 0 && (
-            <>
-              <h3>Decisions</h3>
-              <ul>{meeting.decisions.map((d, i) => <li key={i}>{d}</li>)}</ul>
-            </>
+          <p className="os-muted">
+            With {meeting.participants.map((id) => s.agents[id]?.name.split(' ')[0]).join(', ')}
+            {meeting.source === 'calendar' ? ` · ${meeting.until ?? 'in progress'}` : ` · started ${time(meeting.startedAt)}`}
+          </p>
+          {brief && (
+            <BriefPanel
+              response={brief}
+              agents={s.agents}
+              onTalk={(id) => { controller?.select({ kind: 'agent', id }); setChatWith({ id }); }}
+              onCopy={copy}
+            />
           )}
-          <h3>Transcript</h3>
-          <ol className="os-transcript">
-            {meeting.transcript.map((m) => (
-              <li key={m.id} className={`msg-${m.kind}`}>
-                <strong>{m.from === 'system' ? 'Orchestrator' : s.agents[m.from]?.name.split(' ')[0] ?? m.from}</strong> {m.text}
-              </li>
-            ))}
-          </ol>
-          {meeting.status !== 'ended' && (
+          {copied && <p role="status" className="os-muted">{copied}</p>}
+          {meeting.transcript.length > 0 && (
+            <details>
+              <summary>How the agents got there ({meeting.transcript.length} steps)</summary>
+              <ol className="os-transcript">
+                {meeting.transcript.map((m) => (
+                  <li key={m.id} className={`msg-${m.kind}`}>
+                    <strong>{m.from === 'system' ? 'Orchestrator' : s.agents[m.from]?.name.split(' ')[0] ?? m.from}</strong> {m.text}
+                  </li>
+                ))}
+              </ol>
+            </details>
+          )}
+          {meeting.source === 'calendar' && !brief && (
+            <p className="os-muted">This meeting is on the seeded calendars. Their agents stay available to answer questions while they are in it.</p>
+          )}
+          {meeting.status !== 'ended' && meeting.source !== 'calendar' && (
             <div className="os-actions"><button type="button" onClick={() => controller?.endMeeting(meeting.id)}>End meeting</button></div>
           )}
         </section>
       )}
 
-      {chatWith && controller && s.agents[chatWith] && (
-        <AgentChat controller={controller} agentId={chatWith} onClose={() => setChatWith(null)} />
+      {chatWith && controller && s.agents[chatWith.id] && (
+        <AgentChat key={chatWith.id + (chatWith.first ?? '')} controller={controller} agentId={chatWith.id} firstQuestion={chatWith.first} onClose={() => setChatWith(null)} />
       )}
     </div>
   );
@@ -254,18 +321,28 @@ export default function OfficeShell({ makeRenderer }: { makeRenderer?: () => Off
 
 // ---- Talking to one agent, by text or voice ----
 
-function AgentChat({ controller, agentId, onClose }: { controller: OfficeController; agentId: string; onClose: () => void }) {
+function AgentChat({ controller, agentId, firstQuestion, onClose }: { controller: OfficeController; agentId: string; firstQuestion?: string; onClose: () => void }) {
   const s = useOffice(controller);
   const ag = s.agents[agentId];
   const convo = Object.values(s.conversations).find((c) => !c.endedAt && c.participants.includes(agentId) && c.participants.includes('you'));
+  const latest = convo ? s.briefs[convo.id] : undefined;
   const [text, setText] = useState('');
   const voice = useVoice();
   const logRef = useRef<HTMLOListElement>(null);
+  const asked = useRef(false);
   const firstName = ag.name.split(' ')[0];
 
   useEffect(() => {
     logRef.current?.scrollTo({ top: logRef.current.scrollHeight });
   }, [convo?.messages.length]);
+
+  // A demo prompt handed over from the sidebar is asked once, as soon as the chat opens.
+  useEffect(() => {
+    if (firstQuestion && !asked.current) {
+      asked.current = true;
+      void controller.askAgent(agentId, firstQuestion);
+    }
+  }, [controller, agentId, firstQuestion]);
 
   const send = async (q: string, spoken: boolean) => {
     const question = q.trim();
@@ -292,6 +369,7 @@ function AgentChat({ controller, agentId, onClose }: { controller: OfficeControl
       <button type="button" className="os-close" onClick={onClose} aria-label="Close conversation">×</button>
       <p className="os-kicker">Context agent</p>
       <h2 id="chat-title">{firstName}'s context agent</h2>
+      <p className={`os-avail av-${ag.availability}`}>{ag.availability === 'available' ? `${firstName} is free now.` : `${firstName}: ${ag.availabilityLabel}.`}</p>
       <p className="os-boundary">Answers from {firstName}'s stated principles and sources. It is not {firstName}, and it cannot approve anything for {firstName}.</p>
       <ol ref={logRef} className="os-log" aria-live="polite">
         {(convo?.messages ?? []).map((m) => (
@@ -302,6 +380,15 @@ function AgentChat({ controller, agentId, onClose }: { controller: OfficeControl
         ))}
         {ag.status === 'thinking' && <li className="from-agent thinking">Checking {firstName}'s context…</li>}
       </ol>
+      {latest && (
+        <details className="os-evidence">
+          <summary>Sources and reasoning ({latest.sources.length})</summary>
+          <EvidenceList ids={[...new Set(latest.brief.claims.flatMap((c) => c.evidenceIds))]} sources={latest.sources} agents={s.agents} />
+          {latest.securityEvents.length > 0 && (
+            <ul className="bp-trust">{latest.securityEvents.map((e, i) => <li key={i} className="bp-sec">{e.label}</li>)}</ul>
+          )}
+        </details>
+      )}
       {ag.status === 'needs-input' && (
         <button type="button" className="os-link" onClick={() => void navigator.clipboard?.writeText(`Hi ${firstName}, could you confirm: ${convo?.messages.filter((m) => m.from === 'you').at(-1)?.text ?? ''}`)}>
           Copy request for {firstName}

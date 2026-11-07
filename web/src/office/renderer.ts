@@ -103,7 +103,8 @@ export class PlaceholderRenderer implements OfficeRenderer {
       el.dataset.status = ag.status;
       el.style.setProperty('--accent', ag.accent);
       (el.querySelector('.ph-avatar') as HTMLElement).textContent = ag.name.split(' ').map((p) => p[0]).join('').slice(0, 2);
-      (el.querySelector('.ph-name') as HTMLElement).textContent = `${ag.name.split(' ')[0]} · ${STATUS_LABEL[ag.status]}`;
+      (el.querySelector('.ph-name') as HTMLElement).textContent = ag.name.split(' ')[0];
+      el.dataset.avail = ag.availability;
       (el.querySelector('.ph-icon') as HTMLElement).textContent = ICON[ag.status] ?? '';
       el.setAttribute('aria-label', `${ag.name}, ${ag.role}. ${STATUS_LABEL[ag.status]}: ${ag.statusDetail}`);
       el.setAttribute('aria-pressed', String(s.selection?.kind === 'agent' && s.selection.id === ag.id));
