@@ -13,6 +13,49 @@ import {
 import type { ConversationTurn } from "@/lib/part-b";
 import { KOKORO_VOICES } from "@/lib/speech/config";
 import { parseSpeechRequest, speechChunks, SpeechValidationError } from "@/lib/speech/text";
+import { readSpeechStream } from "@/web/src/part-b/speech-stream";
+
+test("Part B speech: starts with the first sentence rather than batching the full answer", () => {
+  const first = "Priya supports a reversible beta, subject to the rollout controls.";
+  const text = `${first} ${"The next sentence describes the reasoning behind this guidance. ".repeat(10)}Only Priya can approve it.`;
+  const chunks = speechChunks(text);
+  assert.equal(chunks[0], first);
+  assert.ok(chunks.every((chunk) => chunk.length <= 160));
+  assert.equal(chunks.join(" "), text);
+});
+
+test("Part B speech: a long opening sentence cannot delay the first phrase", () => {
+  const text = `${"Owner-confirmed reasoning supports a reversible experiment ".repeat(5)}but only Priya can approve it.`;
+  const chunks = speechChunks(text);
+  assert.ok(chunks[0].length <= 80);
+  assert.equal(chunks.join(" "), text);
+});
+
+test("Part B speech: streaming reader yields a sentence before the response finishes", async () => {
+  const encoder = new TextEncoder();
+  let output: ReadableStreamDefaultController<Uint8Array>;
+  const stream = new ReadableStream<Uint8Array>({ start(controller) { output = controller; } });
+  const iterator = readSpeechStream(stream);
+  const first = { text: "First sentence.", audio: "first-wav" };
+  output!.enqueue(encoder.encode(JSON.stringify(first) + "\n"));
+  assert.deepEqual((await iterator.next()).value, first);
+  const second = { text: "Priya’s boundary stays intact.", audio: "second-wav" };
+  const bytes = encoder.encode(JSON.stringify(second) + "\n");
+  for (let index = 0; index < bytes.length; index += 3) output!.enqueue(bytes.slice(index, index + 3));
+  output!.close();
+  assert.deepEqual((await iterator.next()).value, second);
+  assert.equal((await iterator.next()).done, true);
+});
+
+test("Part B speech: incomplete and malformed streaming chunks fail safely", async () => {
+  for (const text of ['{"text":"missing audio"}\n', '{"text":"incomplete"']) {
+    const stream = new ReadableStream<Uint8Array>({ start(controller) {
+      controller.enqueue(new TextEncoder().encode(text));
+      controller.close();
+    } });
+    await assert.rejects(async () => { for await (const chunk of readSpeechStream(stream)) void chunk; });
+  }
+});
 
 test("Part B speech: accepts only the four generic local voices", () => {
   for (const voice of KOKORO_VOICES) {

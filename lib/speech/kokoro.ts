@@ -25,7 +25,11 @@ function loadModel(): Promise<KokoroTTS> {
   return state.model;
 }
 
-export async function synthesizeSpeech(text: string, voice: KokoroVoice, signal?: AbortSignal): Promise<ArrayBuffer> {
+export async function prepareSpeech(): Promise<void> {
+  await loadModel();
+}
+
+export async function* streamSpeech(text: string, voice: KokoroVoice, signal?: AbortSignal): AsyncGenerator<{ text: string; audio: RawAudio }> {
   // A local demo needs one bounded job, not unbounded concurrent CPU inference.
   if (state.busy) throw new SpeechBusyError("Local voice is busy; browser speech is available.");
   state.busy = true;
@@ -33,22 +37,26 @@ export async function synthesizeSpeech(text: string, voice: KokoroVoice, signal?
     signal?.throwIfAborted();
     const model = await loadModel();
     signal?.throwIfAborted();
-    const waves: Float32Array[] = [];
     for (const chunk of speechChunks(text)) {
       signal?.throwIfAborted();
       const result = await model.generate(chunk, { voice, speed: 1.04 });
       signal?.throwIfAborted();
-      waves.push(result.audio);
+      yield { text: chunk, audio: result };
     }
-    const waveform = new Float32Array(waves.reduce((size, wave) => size + wave.length, 0));
-    let offset = 0;
-    for (const wave of waves) {
-      waveform.set(wave, offset);
-      offset += wave.length;
-    }
-    if (!waveform.length) throw new Error("Local voice returned no audio.");
-    return new RawAudio(waveform, 24000).toWav();
   } finally {
     state.busy = false;
   }
+}
+
+export async function synthesizeSpeech(text: string, voice: KokoroVoice, signal?: AbortSignal): Promise<ArrayBuffer> {
+  const waves: Float32Array[] = [];
+  for await (const chunk of streamSpeech(text, voice, signal)) waves.push(chunk.audio.audio);
+  const waveform = new Float32Array(waves.reduce((size, wave) => size + wave.length, 0));
+  let offset = 0;
+  for (const wave of waves) {
+    waveform.set(wave, offset);
+    offset += wave.length;
+  }
+  if (!waveform.length) throw new Error("Local voice returned no audio.");
+  return new RawAudio(waveform, 24000).toWav();
 }

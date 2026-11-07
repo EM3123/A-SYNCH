@@ -17,8 +17,18 @@ voice switching, and unmount. Fetch/generation failure falls back to browser
 speech; blocked autoplay offers a direct Play voice action on the prepared WAV.
 Only fixed generic voices are accepted. VoxCPM2 is not installed.
 
-Verified: typecheck; 54 evals; backend smoke; frontend build/lint; production
+Latency follow-up: the earlier implementation waited for the entire WAV.
+Part B now preloads the model and requests `stream: true`; the endpoint sends
+sentence-sized WAVs as NDJSON. The client plays the first short phrase while
+the server generates the rest. Four seconds without playable audio triggers
+browser speech for the remaining text. A warm-model sample improved first
+playable audio from 11.53 seconds to 1.86 seconds. Generation speed still depends
+on CPU load; total generation time was not reduced by the same factor.
+
+Verified: typecheck; 58 evals; backend smoke; frontend build/lint; production
 Next build with webpack; all four voices return HTTP 200 and valid 24 kHz mono
 WAVs; browser voice selector; automatic spoken reply reaches Speaking; Stop
-during preparation. Microphone permission and blocked-autoplay paths were not
-retested in this change. Local model generation adds a few seconds of latency.
+during preparation, including streamed playback; malformed/truncated stream
+rejection and early first-chunk delivery. Browser fallback on a slow first
+phrase was observed. Microphone permission and blocked-autoplay paths were not
+retested in this change.

@@ -14,7 +14,7 @@ Then read down the table. Any row whose test fails, or whose "Where" no longer m
 
 Status key: ✅ enforced in code and tested · 🟡 partly there · ❌ not built yet · 📝 lives outside the repo (deck, pitch, process)
 
-Last run: **Nov 7, 2026**, local Kokoro voice update. 54/54 evals passing, typecheck clean, backend smoke passing, frontend build/lint and production Next build (`next build --webpack`) clean. Four local Kokoro voices each return valid WAV audio on localhost; browser speech remains available as fallback.
+Last run: **Nov 7, 2026**, local Kokoro latency update. 58/58 evals passing, typecheck clean, backend smoke passing, frontend build/lint and production Next build (`next build --webpack`) clean. Sentence streaming begins before the full answer is generated; a four-second preparation deadline falls back to browser speech. Local benchmark: 11.53 s whole-reply wait versus 1.86 s first playable sentence (one warm-model sample, not a latency guarantee).
 
 ---
 

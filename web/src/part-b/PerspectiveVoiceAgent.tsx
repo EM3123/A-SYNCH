@@ -7,6 +7,8 @@ import {
 } from '../api';
 import './PerspectiveVoiceAgent.css';
 import { DEFAULT_VOICE, KOKORO_VOICES, type KokoroVoice } from '../../../lib/speech/config';
+import { speechChunks } from '../../../lib/speech/text';
+import { readSpeechStream } from './speech-stream';
 
 type VoiceState = 'ready' | 'listening' | 'transcribing' | 'checking' | 'preparing' | 'speaking' | 'stopped' | 'unsupported' | 'permission-denied';
 type VoiceChoice = KokoroVoice | 'browser';
@@ -116,7 +118,6 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
   const playbackEpochRef = useRef(0);
   const voiceChoiceRef = useRef<VoiceChoice>(DEFAULT_VOICE);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const audioUrlRef = useRef<string | null>(null);
   const speechFetchRef = useRef<AbortController | null>(null);
 
   const cancelSpeech = useCallback(() => {
@@ -133,8 +134,6 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
       audio.removeAttribute('src');
       audio.load();
     }
-    if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current);
-    audioUrlRef.current = null;
     if (mountedRef.current) setNeedsAudioTap(false);
     if (speechTimerRef.current) clearTimeout(speechTimerRef.current);
     speechTimerRef.current = null;
@@ -166,8 +165,12 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
     const refreshVoices = () => { voicesRef.current = synth?.getVoices() ?? []; };
     refreshVoices();
     synth?.addEventListener('voiceschanged', refreshVoices);
+    // Load weights when Part B opens, rather than after a question is answered.
+    const warmup = new AbortController();
+    void fetch('/api/speech', { cache: 'no-store', signal: warmup.signal }).catch(() => {});
     return () => {
       mountedRef.current = false;
+      warmup.abort();
       synth?.removeEventListener('voiceschanged', refreshVoices);
       cancelRecognition();
       cancelSpeech();
@@ -252,60 +255,72 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
     const controller = new AbortController();
     speechFetchRef.current = controller;
     const isCurrent = () => mountedRef.current && !mutedRef.current && playbackEpochRef.current === epoch;
-    // First use may download the weights. Later calls reuse the local model.
-    const timeout = setTimeout(() => controller.abort(), 90000);
+    let completedChunks = 0;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    const armDeadline = () => {
+      clearTimeout(timeout);
+      // Do not leave the demo silent if a cold/overloaded CPU is too slow.
+      timeout = setTimeout(() => controller.abort(new DOMException('Local voice is too slow', 'TimeoutError')), 4000);
+    };
+    armDeadline();
     void (async () => {
       try {
         const response = await fetch('/api/speech', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text, voice }),
+          body: JSON.stringify({ text, voice, stream: true }),
           signal: controller.signal,
         });
-        if (!response.ok || !response.headers.get('content-type')?.startsWith('audio/wav')) {
+        if (!response.ok || !response.body || !response.headers.get('content-type')?.startsWith('application/x-ndjson')) {
           throw new Error('Local speech unavailable');
         }
-        const blob = await response.blob();
-        if (!isCurrent()) return;
-        const url = URL.createObjectURL(blob);
-        audioUrlRef.current = url;
-        const audio = new Audio(url);
-        audioRef.current = audio;
-        audio.onplaying = () => {
+        for await (const chunk of readSpeechStream(response.body)) {
           if (!isCurrent()) return;
-          setNeedsAudioTap(false);
-          setAudioError(null);
-          setVoiceState('speaking');
-        };
-        audio.onended = () => {
+          const audio = new Audio(`data:audio/wav;base64,${chunk.audio}`);
+          audioRef.current = audio;
+          await new Promise<void>((resolve, reject) => {
+            const onAbort = () => reject(controller.signal.reason);
+            const clean = () => controller.signal.removeEventListener('abort', onAbort);
+            controller.signal.addEventListener('abort', onAbort, { once: true });
+            audio.onplaying = () => {
+              if (!isCurrent()) return;
+              clearTimeout(timeout);
+              setNeedsAudioTap(false);
+              setAudioError(null);
+              setVoiceState('speaking');
+            };
+            audio.onended = () => { clean(); resolve(); };
+            audio.onerror = () => { clean(); reject(new Error('Local audio could not play')); };
+            void audio.play().catch((cause: unknown) => {
+              if (!isCurrent()) { clean(); reject(cause); return; }
+              if (cause instanceof DOMException && cause.name === 'NotAllowedError') {
+                clearTimeout(timeout);
+                setNeedsAudioTap(true);
+                setVoiceState('ready');
+                setAudioError('Your browser blocked automatic sound. Tap Play voice below.');
+              } else { clean(); reject(cause); }
+            });
+          });
           if (!isCurrent()) return;
-          setVoiceState('ready');
-          // Keep no generated conversation audio beyond the active playback.
-          cancelSpeech();
-        };
-        audio.onerror = () => {
-          if (!isCurrent()) return;
-          speakBrowser(text);
-          setAudioError('Local audio could not play. Using the browser voice.');
-        };
-        try {
-          await audio.play();
-        } catch (cause) {
-          if (!isCurrent()) return;
-          if (cause instanceof DOMException && cause.name === 'NotAllowedError') {
-            // Retain this WAV so the next explicit click plays synchronously,
-            // without another fetch losing the browser's user activation.
-            setNeedsAudioTap(true);
-            setVoiceState('ready');
-            setAudioError('Your browser blocked automatic sound. Tap Play voice below.');
-          } else {
-            throw cause;
-          }
+          completedChunks += 1;
+          audio.onplaying = audio.onended = audio.onerror = null;
+          audio.removeAttribute('src');
+          audio.load();
+          audioRef.current = null;
+          setVoiceState('preparing');
+          armDeadline();
         }
+        if (isCurrent()) { setVoiceState('ready'); cancelSpeech(); }
       } catch {
         if (!isCurrent()) return;
-        speakBrowser(text);
-        setAudioError('Kokoro is unavailable right now. Using the browser voice.');
+        const remaining = speechChunks(text).slice(completedChunks).join(' ');
+        if (remaining) {
+          speakBrowser(remaining);
+          setAudioError('Switched to browser voice to avoid a long wait.');
+        } else {
+          cancelSpeech();
+          setVoiceState('ready');
+        }
       } finally {
         clearTimeout(timeout);
         if (speechFetchRef.current === controller) speechFetchRef.current = null;

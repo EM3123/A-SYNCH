@@ -37,9 +37,15 @@ no TTS key or Python service is required. Chat text and generated audio are not
 saved to disk. If Kokoro is unavailable, the interface falls back to browser
 speech. If autoplay is blocked, press **Play voice**. Stop, microphone input,
 mute, voice switching, and leaving the conversation cancel pending playback.
+The model preloads when Part B opens. Replies play a short opening phrase and
+then stream sentence-sized audio while later sentences generate. If preparing
+the next audio takes more than four seconds, playback switches to browser
+speech for the remaining text instead of leaving the user waiting.
 
 `POST /api/speech` accepts `{ "text": "Hello.", "voice": "af_heart" }` and returns
 an uncached WAV. Supported IDs: `af_heart`, `af_bella`, `am_michael`, `bf_emma`.
+Add `"stream": true` to receive newline-delimited `{ text, audio }` chunks
+(`audio` is a base64 WAV). `GET /api/speech` preloads the local model.
 VoxCPM2 is not included in this lightweight local demo.
 
 Open `http://localhost:3000` for the complete demo. The interface and API ship
