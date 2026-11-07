@@ -56,7 +56,7 @@ Last run: **Nov 7, 2026**, branch `main`. 24/24 evals passing, typecheck clean, 
 |---|---|---|---|---|
 | F1 | Collect from GitHub, Jira, Slack, notes | 🟡 | `data/corvid-labs/` (Corvid Labs corpus, 38 people, all sources; Trust Layer data built into `data/corvid-labs/trust/`) | Real connectors not built; fixed demo data is fine for Nov 7 |
 | F2 | Index: "who knows what" map | ✅ | `data/corvid-labs/trust/expertise.json` → `getExpertise` in router | Data test |
-| F3 | Ask in Slack (Mode A) or by voice (Mode B) | 🟡 | Web team flow plus direct person conversation, follow-ups, and read-aloud (`/api/ask`, `/api/people/[id]/chat`) | Slack app and microphone input remain outside demo scope |
+| F3 | Ask in Slack (Mode A) or by voice (Mode B) | ✅ | Team question flow plus direct push-to-talk person conversation, contextual follow-ups, citations, and generic spoken playback (`web/src/part-b/`, `/api/people/[id]/chat`) | Typed fallback preserves the same flow when browser speech recognition is unavailable |
 | F4 | Route to the 2–3 most relevant agents | ✅ | `lib/agents/router.ts` | eval 1 |
 | F5 | Agents return cited evidence, not prose | ✅ | `queryContextAgent` returns `Evidence[]` | Code review |
 | F6 | One brief; conflicts shown with dates, not guessed | ✅ | conflict check in `verify.ts` | eval 8 |
@@ -80,7 +80,7 @@ Last run: **Nov 7, 2026**, branch `main`. 24/24 evals passing, typecheck clean, 
 | D2 | A stand-in, not a decision-maker | ✅ | T3 |
 | D3 | The decision tree is the demo | 🟡 | Data is there; UI must make it the centerpiece (Edmund) |
 | D4 | Answers that unblock | 🟡 | T6 |
-| D5 | Engineering-native and voice-first | 🟡 | Engineering-native ✅; voice ❌ (Mode B) |
+| D5 | Engineering-native and voice-first | ✅ | GitHub/Jira/Slack context plus direct browser voice conversation with text fallback |
 | D6 | Easy to approve | ✅ | W2, W3, audit trace with no secret text |
 
 ## 7. Open tradeoff (doc: "Owner visibility vs. fear of asking")
