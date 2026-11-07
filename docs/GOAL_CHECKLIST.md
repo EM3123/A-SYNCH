@@ -14,7 +14,7 @@ Then read down the table. Any row whose test fails, or whose "Where" no longer m
 
 Status key: ✅ enforced in code and tested · 🟡 partly there · ❌ not built yet · 📝 lives outside the repo (deck, pitch, process)
 
-Last run: **Nov 7, 2026**, branch `codex/demo-final`. 50/50 evals passing, typecheck clean, smoke passing, frontend and production Next builds clean.
+Last run: **Nov 7, 2026**, local Kokoro voice update. 54/54 evals passing, typecheck clean, backend smoke passing, frontend build/lint and production Next build (`next build --webpack`) clean. Four local Kokoro voices each return valid WAV audio on localhost; browser speech remains available as fallback.
 
 ---
 
@@ -56,7 +56,7 @@ Last run: **Nov 7, 2026**, branch `codex/demo-final`. 50/50 evals passing, typec
 |---|---|---|---|---|
 | F1 | Collect from GitHub, Jira, Slack, notes | 🟡 | `data/corvid-labs/` (Corvid Labs corpus, 38 people, all sources; Trust Layer data built into `data/corvid-labs/trust/`) | Real connectors not built; fixed demo data is fine for Nov 7 |
 | F2 | Index: "who knows what" map | ✅ | `data/corvid-labs/trust/expertise.json` → `getExpertise` in router | Data test |
-| F3 | Ask in Slack (Mode A) or by voice (Mode B) | ✅ | Team question flow plus direct push-to-talk person conversation, live OpenRouter synthesis, contextual follow-ups, citations, and generic spoken playback (`web/src/part-b/`, `lib/part-b/`, `/api/people/[id]/chat`) | Typed and deterministic fallbacks preserve the same flow when speech or model access is unavailable |
+| F3 | Ask in Slack (Mode A) or by voice (Mode B) | ✅ | Team question flow plus direct push-to-talk person conversation, OpenRouter synthesis when configured, contextual follow-ups, citations, and four selectable local Kokoro voices (`web/src/part-b/`, `lib/part-b/`, `lib/speech/`, `/api/speech`, `/api/people/[id]/chat`) | Typed/deterministic and browser-speech fallbacks preserve the flow; speech validation/chunking evals and four localhost WAV checks pass. Kokoro's first use needs a model download. |
 | F4 | Route to the 2–3 most relevant agents | ✅ | `lib/agents/router.ts` | eval 1 |
 | F5 | Agents return cited evidence, not prose | ✅ | `queryContextAgent` returns `Evidence[]` | Code review |
 | F6 | One brief; conflicts shown with dates, not guessed | ✅ | conflict check in `verify.ts` | eval 8 |

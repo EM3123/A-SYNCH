@@ -11,6 +11,42 @@ import {
   validateConversationHistory,
 } from "@/lib/part-b";
 import type { ConversationTurn } from "@/lib/part-b";
+import { KOKORO_VOICES } from "@/lib/speech/config";
+import { parseSpeechRequest, speechChunks, SpeechValidationError } from "@/lib/speech/text";
+
+test("Part B speech: accepts only the four generic local voices", () => {
+  for (const voice of KOKORO_VOICES) {
+    assert.deepEqual(parseSpeechRequest({ text: " Hello. ", voice: voice.id }), { text: "Hello.", voice: voice.id });
+  }
+  assert.equal(parseSpeechRequest({ text: "Hello." }).voice, "af_heart");
+  for (const voice of ["priya", "browser", "../../private", null, 42]) {
+    assert.throws(() => parseSpeechRequest({ text: "Hello.", voice }), SpeechValidationError);
+  }
+});
+
+test("Part B speech: rejects empty, oversized, and malformed inputs", () => {
+  for (const body of [null, [], "hello", {}, { text: 42 }, { text: "   " }, { text: "x".repeat(6001) }]) {
+    assert.throws(() => parseSpeechRequest(body), SpeechValidationError);
+  }
+  assert.equal(parseSpeechRequest({ text: "x".repeat(6000) }).text.length, 6000);
+});
+
+test("Part B speech: long replies retain every word and the final authority boundary", () => {
+  const text = `${"This is supported guidance, grounded in the stated principle. ".repeat(30)}Only Priya can approve the launch.`;
+  const chunks = speechChunks(text);
+  assert.ok(chunks.length > 1);
+  assert.ok(chunks.every((chunk) => chunk.length > 0 && chunk.length <= 240));
+  assert.equal(chunks.join(" "), text);
+  assert.match(chunks.at(-1)!, /Only Priya can approve the launch\.$/);
+});
+
+test("Part B speech: even unbroken input is split without dropped characters", () => {
+  const text = "a".repeat(1000);
+  const chunks = speechChunks(text);
+  assert.ok(chunks.every((chunk) => chunk.length <= 240));
+  assert.equal(chunks.join(""), text);
+  assert.deepEqual(speechChunks("  "), []);
+});
 
 function addTurn(history: ConversationTurn[], question: string, result: AskResponse) {
   history.push({ role: "user", content: question }, { role: "assistant", content: result.brief.answer });

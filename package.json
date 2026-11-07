@@ -11,6 +11,8 @@
     "eval": "ASYNCH_FORCE_FALLBACK=1 tsx --test evals/*.test.ts"
   },
   "dependencies": {
+    "@huggingface/transformers": "3.8.1",
+    "kokoro-js": "^1.2.1",
     "next": "16.4.5",
     "qrcode.react": "^4.2.0",
     "react": "19.3.1",

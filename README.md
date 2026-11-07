@@ -24,6 +24,24 @@ OPENROUTER_MODEL=...
 
 Never commit `.env.local`.
 
+### Local Part B voices
+
+Open a person's context agent, choose a **Voice**, then click **Test voice** or
+ask a question. Heart, Bella, Michael, and Emma use Kokoro-82M locally on the
+Node server; **Browser voice** uses the system's speech synthesis. These are
+generic synthetic voices, not the teammate's voice.
+
+The first Kokoro request downloads roughly 100 MB of public model files into
+the ignored `.cache/kokoro/` directory. Subsequent requests reuse those weights;
+no TTS key or Python service is required. Chat text and generated audio are not
+saved to disk. If Kokoro is unavailable, the interface falls back to browser
+speech. If autoplay is blocked, press **Play voice**. Stop, microphone input,
+mute, voice switching, and leaving the conversation cancel pending playback.
+
+`POST /api/speech` accepts `{ "text": "Hello.", "voice": "af_heart" }` and returns
+an uncached WAV. Supported IDs: `af_heart`, `af_bella`, `am_michael`, `bf_emma`.
+VoxCPM2 is not included in this lightweight local demo.
+
 Open `http://localhost:3000` for the complete demo. The interface and API ship
 as one Next.js deployment from the repository root, so no second frontend
 project or cross-origin configuration is required.

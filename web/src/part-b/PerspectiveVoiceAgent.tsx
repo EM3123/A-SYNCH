@@ -6,8 +6,10 @@ import {
   type PersonProfile,
 } from '../api';
 import './PerspectiveVoiceAgent.css';
+import { DEFAULT_VOICE, KOKORO_VOICES, type KokoroVoice } from '../../../lib/speech/config';
 
-type VoiceState = 'ready' | 'listening' | 'transcribing' | 'checking' | 'speaking' | 'stopped' | 'unsupported' | 'permission-denied';
+type VoiceState = 'ready' | 'listening' | 'transcribing' | 'checking' | 'preparing' | 'speaking' | 'stopped' | 'unsupported' | 'permission-denied';
+type VoiceChoice = KokoroVoice | 'browser';
 
 interface SpeechRecognitionResultLike {
   isFinal: boolean;
@@ -58,6 +60,7 @@ const STATE_LABELS: Record<VoiceState, string> = {
   listening: 'Listening',
   transcribing: 'Transcribing',
   checking: 'Checking approved perspective',
+  preparing: 'Preparing local voice…',
   speaking: 'Speaking',
   stopped: 'Stopped',
   unsupported: 'Voice input unavailable',
@@ -96,6 +99,8 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
   const [error, setError] = useState<string | null>(null);
   const [muted, setMuted] = useState(false);
   const [audioError, setAudioError] = useState<string | null>(null);
+  const [voiceChoice, setVoiceChoice] = useState<VoiceChoice>(DEFAULT_VOICE);
+  const [needsAudioTap, setNeedsAudioTap] = useState(false);
   const [waiting, setWaiting] = useState(false);
   const [copied, setCopied] = useState(false);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
@@ -109,9 +114,28 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
   const mountedRef = useRef(true);
   const requestBusyRef = useRef(false);
   const playbackEpochRef = useRef(0);
+  const voiceChoiceRef = useRef<VoiceChoice>(DEFAULT_VOICE);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioUrlRef = useRef<string | null>(null);
+  const speechFetchRef = useRef<AbortController | null>(null);
 
   const cancelSpeech = useCallback(() => {
     playbackEpochRef.current += 1;
+    speechFetchRef.current?.abort();
+    speechFetchRef.current = null;
+    const audio = audioRef.current;
+    audioRef.current = null;
+    if (audio) {
+      audio.onplaying = null;
+      audio.onended = null;
+      audio.onerror = null;
+      audio.pause();
+      audio.removeAttribute('src');
+      audio.load();
+    }
+    if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current);
+    audioUrlRef.current = null;
+    if (mountedRef.current) setNeedsAudioTap(false);
     if (speechTimerRef.current) clearTimeout(speechTimerRef.current);
     speechTimerRef.current = null;
     if (utteranceRef.current) {
@@ -155,12 +179,13 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
 
   const latestResponse = [...turns].reverse().find((turn) => turn.response)?.response;
 
-  const speak = useCallback((text: string) => {
+  const speakBrowser = useCallback((text: string) => {
     if (!mountedRef.current || mutedRef.current) return;
     cancelSpeech();
     setAudioError(null);
     const synth = window.speechSynthesis;
     if (!synth || typeof SpeechSynthesisUtterance === 'undefined') {
+      setVoiceState('ready');
       setAudioError('Spoken replies are unavailable in this browser. Open localhost:3000 in Chrome or Safari to hear them.');
       return;
     }
@@ -212,6 +237,92 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
       setAudioError('Voice playback is unavailable here. Try this demo in Chrome or Safari.');
     }
   }, [cancelSpeech]);
+
+  const speak = useCallback((text: string) => {
+    if (!mountedRef.current || mutedRef.current) return;
+    if (voiceChoiceRef.current === 'browser') {
+      speakBrowser(text);
+      return;
+    }
+    cancelSpeech();
+    setAudioError(null);
+    setVoiceState('preparing');
+    const epoch = playbackEpochRef.current;
+    const voice = voiceChoiceRef.current;
+    const controller = new AbortController();
+    speechFetchRef.current = controller;
+    const isCurrent = () => mountedRef.current && !mutedRef.current && playbackEpochRef.current === epoch;
+    // First use may download the weights. Later calls reuse the local model.
+    const timeout = setTimeout(() => controller.abort(), 90000);
+    void (async () => {
+      try {
+        const response = await fetch('/api/speech', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text, voice }),
+          signal: controller.signal,
+        });
+        if (!response.ok || !response.headers.get('content-type')?.startsWith('audio/wav')) {
+          throw new Error('Local speech unavailable');
+        }
+        const blob = await response.blob();
+        if (!isCurrent()) return;
+        const url = URL.createObjectURL(blob);
+        audioUrlRef.current = url;
+        const audio = new Audio(url);
+        audioRef.current = audio;
+        audio.onplaying = () => {
+          if (!isCurrent()) return;
+          setNeedsAudioTap(false);
+          setAudioError(null);
+          setVoiceState('speaking');
+        };
+        audio.onended = () => {
+          if (!isCurrent()) return;
+          setVoiceState('ready');
+          // Keep no generated conversation audio beyond the active playback.
+          cancelSpeech();
+        };
+        audio.onerror = () => {
+          if (!isCurrent()) return;
+          speakBrowser(text);
+          setAudioError('Local audio could not play. Using the browser voice.');
+        };
+        try {
+          await audio.play();
+        } catch (cause) {
+          if (!isCurrent()) return;
+          if (cause instanceof DOMException && cause.name === 'NotAllowedError') {
+            // Retain this WAV so the next explicit click plays synchronously,
+            // without another fetch losing the browser's user activation.
+            setNeedsAudioTap(true);
+            setVoiceState('ready');
+            setAudioError('Your browser blocked automatic sound. Tap Play voice below.');
+          } else {
+            throw cause;
+          }
+        }
+      } catch {
+        if (!isCurrent()) return;
+        speakBrowser(text);
+        setAudioError('Kokoro is unavailable right now. Using the browser voice.');
+      } finally {
+        clearTimeout(timeout);
+        if (speechFetchRef.current === controller) speechFetchRef.current = null;
+      }
+    })();
+  }, [cancelSpeech, speakBrowser]);
+
+  const playPreparedAudio = () => {
+    const audio = audioRef.current;
+    if (!audio || mutedRef.current) return;
+    const epoch = playbackEpochRef.current;
+    void audio.play().catch(() => {
+      if (mountedRef.current && playbackEpochRef.current === epoch) {
+        setAudioError('Playback could not start. Check that your browser and speakers are unmuted, or choose Browser voice.');
+      }
+    });
+  };
 
   const readAloud = (text: string) => {
     cancelRecognition();
@@ -356,7 +467,7 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
     }
   };
 
-  const voiceActive = voiceState === 'listening' || voiceState === 'transcribing' || voiceState === 'checking' || voiceState === 'speaking';
+  const voiceActive = voiceState === 'listening' || voiceState === 'transcribing' || voiceState === 'checking' || voiceState === 'preparing' || voiceState === 'speaking';
 
   return (
     <main className="perspective-shell">
@@ -404,7 +515,7 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
                   </button>
                 ))}
               </div>
-              <small>Replies are read aloud automatically · type or press the microphone to ask</small>
+              <small>Replies are read aloud automatically · generic AI voices, never the person’s voice</small>
             </div>
           ) : (
             <div className="part-b-transcript" aria-live="polite">
@@ -457,6 +568,7 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
 
           {error && <p className="part-b-error" role="alert">{error}</p>}
           {audioError && <p className="part-b-error" role="alert">{audioError}</p>}
+          {needsAudioTap && <button type="button" className="part-b-play-audio" onClick={playPreparedAudio}>▶ Play voice</button>}
 
           <div className="part-b-input-dock">
             <form className="part-b-compose" onSubmit={submitTyped}>
@@ -485,6 +597,25 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
             <div className="part-b-controls">
               <span><i data-state={voiceState} /> {STATE_LABELS[voiceState]}</span>
               <div>
+                <label className="part-b-voice-picker">
+                  <span>Voice</span>
+                  <select
+                    aria-label="Reply voice"
+                    title="Generic synthetic voices, not the selected person's voice"
+                    value={voiceChoice}
+                    onChange={(event) => {
+                      const value = event.target.value as VoiceChoice;
+                      cancelSpeech();
+                      voiceChoiceRef.current = value;
+                      setVoiceChoice(value);
+                      setAudioError(null);
+                      setVoiceState(requestBusyRef.current ? 'checking' : 'ready');
+                    }}
+                  >
+                    {KOKORO_VOICES.map((voice) => <option key={voice.id} value={voice.id}>{voice.label} · Kokoro</option>)}
+                    <option value="browser">Browser voice</option>
+                  </select>
+                </label>
                 {voiceActive && <button type="button" onClick={stopAudio}>Stop</button>}
                 <button type="button" onClick={() => readAloud('Sound is on. I will read every reply aloud.')} disabled={waiting}>Test voice</button>
                 <button type="button" onClick={replay} disabled={!latestResponse || waiting}>Replay</button>
