@@ -130,7 +130,10 @@ function normalizeLivePerspective(options: {
 
   return {
     title,
-    answer: /context agent/i.test(answer) ? answer : `As ${options.person.name}'s context agent: ${answer}`,
+    // The UI labels every turn as the person's context agent, so the spoken
+    // answer doesn't need to re-announce it. The persona check still blocks
+    // any line that claims to be the person.
+    answer,
     status,
     claims,
     relevantPeople: [{
@@ -258,7 +261,7 @@ function priyaBrief(intent: PerspectiveIntent, records: PerspectiveRecord[], top
   if (intent === "authority-request") {
     return baseBrief({
       title: "Priya's confirmation is required",
-      answer: `I am Priya's context agent. I can explain the conditions and prepare the decision brief, but I cannot approve, authorize, or commit on Priya's behalf.${topic ? ` The current topic is ${topic}.` : ""}`,
+      answer: `That one has to come from Priya herself. I can't approve, authorize, or commit anything for her. What I can do is package this up so she can decide in one read.${topic ? ` I'll frame it as the ${topic.replace(/^the\s+/i, "")}.` : ""} The button below copies a ready-to-send note for her.`,
       status: "Human confirmation required",
       ownerId: "priya",
       records,
@@ -277,7 +280,7 @@ function priyaBrief(intent: PerspectiveIntent, records: PerspectiveRecord[], top
   if (intent === "exposure-rationale") {
     return baseBrief({
       title: "Why start at 10%, not 50%",
-      answer: "Priya's stated rollout reasoning favors the smallest exposure that produces a useful customer signal. Ten percent limits the initial blast radius while the team proves rollback ownership, observable success and failure signals, and the kill switch. Fifty percent is too large before those controls have worked with real traffic. This is supported guidance from her confirmed reasoning, not approval.",
+      answer: "Her rule of thumb is the smallest rollout that still teaches you something. Ten percent keeps the blast radius small while the team proves the kill switch and the rollback actually work on real traffic. At fifty percent, a bad day hits half your design partners before you've tested any of that.",
       status: "Supported application of stated rollout reasoning",
       ownerId: "priya",
       records,
@@ -298,7 +301,7 @@ function priyaBrief(intent: PerspectiveIntent, records: PerspectiveRecord[], top
   if (intent === "scale-conditions") {
     return baseBrief({
       title: "Conditions for increasing the rollout",
-      answer: "Priya's confirmed criteria are: name the rollback owner, test the kill switch end to end, make success and failure signals observable, and show that the first cohort is stable without disproportionate support work. If a stop condition fires, do not increase exposure. Priya still needs to confirm the next launch stage.",
+      answer: "She's laid out four things. Someone's named as the rollback owner. The kill switch is tested end to end. Success and failure are observable on a dashboard, not guessed at. And the first cohort holds up without the team quietly doing a lot of manual support. If any stop condition fires, you hold. Then it goes back to Priya for the next stage.",
       status: "Conditions are stated; scale-up is not approved",
       ownerId: "priya",
       records,
@@ -319,7 +322,7 @@ function priyaBrief(intent: PerspectiveIntent, records: PerspectiveRecord[], top
   if (intent === "remaining-blockers") {
     return baseBrief({
       title: "What remains blocked",
-      answer: "For a reversible design-partner beta, Sam must fix the keyboard-focus check and merge the rollout control, then Priya must confirm the launch stage. General availability additionally waits on ATLAS-38 and enterprise SSO verification.",
+      answer: "For the beta, it's really one thing: Sam's rollout control is stuck on a keyboard-focus accessibility check. Once that merges, it goes to Priya to confirm. Full launch is a separate track. That's still waiting on the security review and enterprise SSO.",
       status: "Beta has one engineering dependency and one human decision",
       ownerId: "priya",
       records,
@@ -336,7 +339,7 @@ function priyaBrief(intent: PerspectiveIntent, records: PerspectiveRecord[], top
   if (intent === "beta-vs-ga") {
     return baseBrief({
       title: "Beta and GA use different evidence thresholds",
-      answer: "Priya's stated principle separates a contained, reversible beta from general availability. The beta needs informed participants, rollout controls, and a rollback path. GA additionally needs the security review and enterprise SSO verification because it creates a broader customer promise.",
+      answer: "She treats them as two different bars. A beta is small, reversible, and the customers know what they signed up for, so it needs rollout controls and a way back. Full launch is a promise to everyone, so it also needs the security review and enterprise SSO done first.",
       status: "Stated launch-stage perspective",
       ownerId: "priya",
       records,
@@ -349,7 +352,7 @@ function priyaBrief(intent: PerspectiveIntent, records: PerspectiveRecord[], top
   if (intent === "known-uncertainty") {
     return baseBrief({
       title: "Known uncertainty before scale-up",
-      answer: "Priya explicitly identified support burden as the largest current uncertainty: a small cohort can look successful while manual help hides a workflow that will not scale. The beta should measure interventions per successful workflow before exposure increases.",
+      answer: "Priya's flagged one thing she doesn't know yet: support load. A small group can look great because the team is hand-holding them, and that won't scale. So she wants the beta to track how many manual interventions each successful workflow takes before anyone expands it.",
       status: "Owner-stated uncertainty",
       ownerId: "priya",
       records,
@@ -362,7 +365,7 @@ function priyaBrief(intent: PerspectiveIntent, records: PerspectiveRecord[], top
   if (intent === "initial-beta-guidance") {
     return baseBrief({
       title: "Priya's stated rollout perspective",
-      answer: "Priya's context agent can share that her confirmed principles support a reversible design-partner beta before enterprise SSO is complete. A 10% initial exposure appears consistent with her blast-radius and learning-signal criteria once the rollout control merges. This is supported guidance, not Priya's approval.",
+      answer: "Probably, based on what she's told me. Priya's on record that a reversible beta can go out before enterprise SSO is done. Ten percent fits how she thinks about rollouts, once Sam's rollout control merges. I'd treat that as a strong read, not a yes. She still makes the call.",
       status: "Supported guidance; confirmation still required",
       ownerId: "priya",
       records,
@@ -382,7 +385,7 @@ function priyaBrief(intent: PerspectiveIntent, records: PerspectiveRecord[], top
 
   return baseBrief({
     title: "Needs a more specific perspective question",
-    answer: "I am a context agent and I do not have enough owner-confirmed perspective in the requested scope to answer without guessing. Ask about a documented principle, tradeoff, review condition, or current Atlas decision.",
+    answer: "I'd be guessing on that one, and I'd rather not. I don't have enough owner-confirmed perspective to answer it. Can you be more specific about the decision, like which rollout or which tradeoff you mean?",
     status: "Perspective not available",
     ownerId: "priya",
     records,
@@ -392,12 +395,14 @@ function priyaBrief(intent: PerspectiveIntent, records: PerspectiveRecord[], top
   });
 }
 
-function generalBrief(personId: string, records: PerspectiveRecord[]): SituationBrief {
+function generalBrief(person: PersonProfile, records: PerspectiveRecord[]): SituationBrief {
+  const personId = person.id;
+  const firstName = person.name.split(" ")[0];
   const record = records[0];
   if (!record) return safeHandoffBrief(personId, "No current owner-confirmed perspective matched this question.");
   return baseBrief({
     title: record.title,
-    answer: `This context agent can share the following owner-confirmed perspective within the scope “${record.scope}”: ${record.statement} ${record.rationale}`,
+    answer: `Here's what ${firstName} has told me about ${record.scope.charAt(0).toLowerCase()}${record.scope.slice(1).replace(/\.$/, "")}: ${record.statement} ${record.rationale}`,
     status: "Stated perspective",
     ownerId: personId,
     records: [record],
@@ -442,12 +447,12 @@ export async function askPerspective(options: AskPerspectiveOptions): Promise<As
   });
   let fallbackCandidate = person.id === "priya"
     ? priyaBrief(intent, retrieved.records, resolvedTopic)
-    : generalBrief(person.id, retrieved.records);
+    : generalBrief(person, retrieved.records);
 
   if (intent === "generalized-inference") {
     fallbackCandidate = baseBrief({
       title: "Needs the person's stated perspective",
-      answer: "I cannot infer a person's personality, feelings, or generalized risk posture. I can only share scoped reasoning they explicitly stated and confirmed.",
+      answer: "That's not something I'll guess at. I cannot infer how someone feels, or how much risk they'd take in general. What I can tell you is what they've actually said about a specific decision. Want to ask it that way?",
       status: "Unsupported inference refused",
       ownerId: person.id,
       records: retrieved.records,

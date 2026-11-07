@@ -64,11 +64,50 @@ const STATE_LABELS: Record<VoiceState, string> = {
   'permission-denied': 'Microphone permission denied',
 };
 
-const SUGGESTIONS = [
-  'Would you support a 10% beta rollout today?',
-  'Why 10% instead of 50%?',
-  'What would make you comfortable increasing it?',
+function suggestionsFor(firstName: string): string[] {
+  return [
+    `Would ${firstName} back a 10% beta today?`,
+    'Why 10% and not 50%?',
+    `What would make ${firstName} comfortable increasing it?`,
+  ];
+}
+
+/** Voices that sound closest to a person, best first. Matched by name. */
+const PREFERRED_VOICES = [
+  /natural/i, // Edge: "Microsoft Aria Online (Natural)", "Jenny", "Guy"
+  /google us english/i,
+  /\b(ava|samantha|allison|susan|zoe|evan|nathan)\b.*(premium|enhanced)/i,
+  /\b(ava|samantha|allison|zoe)\b/i,
+  /google uk english/i,
 ];
+
+function pickVoice(voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | undefined {
+  const english = voices.filter((voice) => voice.lang.toLowerCase().startsWith('en'));
+  for (const rule of PREFERRED_VOICES) {
+    const match = english.find((voice) => rule.test(voice.name));
+    if (match) return match;
+  }
+  return english.find((voice) => voice.lang.toLowerCase() === 'en-us') ?? english[0];
+}
+
+/** Turn a written answer into something that sounds right read aloud. */
+function toSpoken(text: string): string {
+  return text
+    .replace(/[*_`#>]/g, '')
+    .replace(/\s*\([^)]*\)/g, '')
+    .replace(/\bPR\s*#?(\d+)/gi, 'pull request $1')
+    .replace(/\bGA\b/g, 'general availability')
+    .replace(/\bSSO\b/g, 'S S O')
+    .replace(/(\d+)\s*%/g, '$1 percent')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/** Split into sentences so speech has natural pauses and captions can follow along. */
+function sentences(text: string): string[] {
+  const parts = text.match(/[^.!?]+[.!?]+["')\]]*|[^.!?]+$/g) ?? [text];
+  return parts.map((part) => part.trim()).filter(Boolean);
+}
 
 function recognitionConstructor(): SpeechRecognitionConstructor | undefined {
   if (typeof window === 'undefined') return undefined;
@@ -96,15 +135,30 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
   const [error, setError] = useState<string | null>(null);
   const [muted, setMuted] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [handsFree, setHandsFree] = useState(true);
+  const [voice, setVoice] = useState<SpeechSynthesisVoice | undefined>();
+  const [caption, setCaption] = useState<{ turnId: string; shown: number } | null>(null);
+  const handsFreeRef = useRef(true);
+  const startListeningRef = useRef<() => void>(() => {});
+  const fillerTimerRef = useRef<number | null>(null);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const turnsRef = useRef<TranscriptTurn[]>([]);
   const latestSpokenRef = useRef('');
   const transcriptEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => { turnsRef.current = turns; }, [turns]);
+  useEffect(() => { handsFreeRef.current = handsFree; }, [handsFree]);
+  useEffect(() => {
+    if (!('speechSynthesis' in window)) return;
+    const load = () => setVoice(pickVoice(window.speechSynthesis.getVoices()));
+    load();
+    window.speechSynthesis.addEventListener('voiceschanged', load);
+    return () => window.speechSynthesis.removeEventListener('voiceschanged', load);
+  }, []);
   useEffect(() => () => {
     recognitionRef.current?.abort();
     window.speechSynthesis?.cancel();
+    if (fillerTimerRef.current) window.clearTimeout(fillerTimerRef.current);
   }, []);
   useEffect(() => {
     transcriptEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -112,23 +166,76 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
 
   const latestResponse = [...turns].reverse().find((turn) => turn.response)?.response;
 
-  const speak = useCallback((text: string) => {
+  /**
+   * Speak sentence by sentence. Short utterances avoid Chrome cutting off long
+   * speech, give natural pauses, and let the caption reveal the answer as it's
+   * spoken. In hands-free mode the mic reopens when the agent finishes.
+   */
+  const speak = useCallback((text: string, turnId?: string, sentenceCount?: number) => {
     latestSpokenRef.current = text;
+    const reveal = (shown: number) => { if (turnId) setCaption({ turnId, shown }); };
+    const finish = () => {
+      if (turnId) setCaption(null);
+      setVoiceState('ready');
+      if (handsFreeRef.current && !muted) window.setTimeout(() => startListeningRef.current(), 250);
+    };
     if (muted || !('speechSynthesis' in window)) {
+      if (turnId) setCaption(null);
       setVoiceState('ready');
       return;
     }
     window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US';
-    utterance.rate = 1.02;
-    const genericVoice = window.speechSynthesis.getVoices().find((voice) => voice.lang.toLowerCase().startsWith('en'));
-    if (genericVoice) utterance.voice = genericVoice;
-    utterance.onstart = () => setVoiceState('speaking');
-    utterance.onend = () => setVoiceState('ready');
-    utterance.onerror = () => setVoiceState('ready');
-    window.speechSynthesis.speak(utterance);
-  }, [muted]);
+    const chunks = sentences(text);
+    const total = sentenceCount ?? chunks.length;
+    // Some browsers have no voices and never start speaking. Don't leave the
+    // caption dimmed: show the full answer if speech hasn't begun shortly.
+    let started = false;
+    window.setTimeout(() => {
+      if (started) return;
+      window.speechSynthesis.cancel();
+      if (turnId) setCaption(null);
+      setVoiceState('ready');
+    }, 2500);
+    chunks.forEach((chunk, index) => {
+      const utterance = new SpeechSynthesisUtterance(toSpoken(chunk));
+      utterance.lang = voice?.lang ?? 'en-US';
+      if (voice) utterance.voice = voice;
+      utterance.rate = 1;
+      utterance.pitch = 1;
+      utterance.onstart = () => {
+        started = true;
+        setVoiceState('speaking');
+        reveal(Math.min(total, index + 1));
+      };
+      if (index === chunks.length - 1) {
+        utterance.onend = finish;
+        utterance.onerror = (event) => {
+          // "interrupted"/"canceled" mean the user cut in; don't reopen the mic.
+          if (event.error === 'interrupted' || event.error === 'canceled') { if (turnId) setCaption(null); return; }
+          finish();
+        };
+      }
+      window.speechSynthesis.speak(utterance);
+    });
+  }, [muted, voice]);
+
+  /** A short spoken acknowledgement if the answer takes a moment, like a person would. */
+  const startFiller = useCallback(() => {
+    if (muted || !('speechSynthesis' in window)) return;
+    const firstName = person.name.split(' ')[0];
+    const lines = [`One sec, checking what ${firstName}'s said.`, `Let me look at ${firstName}'s notes.`, 'Good question. Checking.'];
+    fillerTimerRef.current = window.setTimeout(() => {
+      const utterance = new SpeechSynthesisUtterance(lines[turnsRef.current.length % lines.length]);
+      if (voice) utterance.voice = voice;
+      utterance.rate = 1.05;
+      window.speechSynthesis.speak(utterance);
+    }, 900);
+  }, [muted, person.name, voice]);
+
+  const stopFiller = () => {
+    if (fillerTimerRef.current) window.clearTimeout(fillerTimerRef.current);
+    fillerTimerRef.current = null;
+  };
 
   const submitTurn = useCallback(async (rawQuestion: string) => {
     const question = rawQuestion.trim();
@@ -138,6 +245,7 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
     setCopied(false);
     setVoiceState('checking');
     setDraft('');
+    startFiller();
     setTurns((current) => [...current, {
       id: `user-${Date.now()}-${current.length}`,
       role: 'user',
@@ -145,6 +253,8 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
     }]);
     try {
       const response = await askPerspectivePerson(person.id, question, priorHistory, requesterId);
+      stopFiller();
+      window.speechSynthesis?.cancel();
       setTurns((current) => [...current, {
         id: response.requestId,
         role: 'assistant',
@@ -152,17 +262,21 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
         response,
       }]);
       onLatestResponse?.(response);
-      speak(response.brief.answer);
+      if (!muted) setCaption({ turnId: response.requestId, shown: 0 });
+      speak(response.brief.answer, response.requestId, sentences(response.brief.answer).length);
     } catch (cause) {
+      stopFiller();
       setError(cause instanceof Error ? cause.message : 'The perspective conversation could not continue.');
       setVoiceState('ready');
     }
-  }, [onLatestResponse, person.id, requesterId, speak, voiceState]);
+  }, [muted, onLatestResponse, person.id, requesterId, speak, startFiller, voiceState]);
 
   const startListening = () => {
     setError(null);
     setCopied(false);
+    // Barge-in: talking over the agent stops it, like interrupting a person.
     window.speechSynthesis?.cancel();
+    setCaption(null);
     const Recognition = recognitionConstructor();
     if (!Recognition) {
       setVoiceState('unsupported');
@@ -198,6 +312,9 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
       if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
         setVoiceState('permission-denied');
         setError('Microphone access was denied. Nothing was recorded; type below to continue.');
+      } else if (event.error === 'no-speech' || event.error === 'aborted') {
+        // Silence just ends the turn; the user can tap the mic to talk again.
+        setVoiceState('ready');
       } else {
         setVoiceState('ready');
         setError(`Voice input stopped (${event.error}). Type below or try again.`);
@@ -215,7 +332,11 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
     }
   };
 
+  startListeningRef.current = startListening;
+
   const stopAudio = () => {
+    stopFiller();
+    setCaption(null);
     recognitionRef.current?.stop();
     recognitionRef.current = null;
     window.speechSynthesis?.cancel();
@@ -296,13 +417,13 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
               <h2>Start with your voice</h2>
               <p>Ask a judgment question. The context agent brings {person.name.split(' ')[0]}’s stated priorities, tradeoffs, and decision boundaries into the conversation.</p>
               <div className="part-b-suggestions">
-                {SUGGESTIONS.map((suggestion) => (
+                {suggestionsFor(person.name.split(' ')[0]).map((suggestion) => (
                   <button key={suggestion} type="button" onClick={() => void submitTurn(suggestion)} disabled={voiceState === 'checking'}>
                     {suggestion} <span>↗</span>
                   </button>
                 ))}
               </div>
-              <small>Microphone starts only when you press it · typing works too</small>
+              <small>Tap once and just talk. It listens again after it answers, and you can cut in anytime · typing works too</small>
             </div>
           ) : (
             <div className="part-b-transcript" aria-live="polite">
@@ -316,7 +437,15 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
                         <span>{turn.response.meta.usedFallback ? 'Verified local answer' : 'OpenRouter + Trust Layer'}</span>
                       </div>
                     )}
-                    <p>{turn.content}</p>
+                    {caption?.turnId === turn.id ? (
+                      <p className="turn-caption">
+                        {sentences(turn.content).map((sentence, index) => (
+                          <span key={index} data-spoken={index < caption.shown}>{sentence} </span>
+                        ))}
+                      </p>
+                    ) : (
+                      <p>{turn.content}</p>
+                    )}
                     {turn.response && (
                       <>
                         <details className="part-b-proof">
@@ -345,6 +474,12 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
                   </div>
                 </article>
               ))}
+              {voiceState === 'listening' && (
+                <article className="part-b-turn part-b-turn-user part-b-turn-live">
+                  <span className="turn-author">You</span>
+                  <div className="turn-message"><p>{draft || 'Listening…'}</p></div>
+                </article>
+              )}
               {voiceState === 'checking' && (
                 <div className="part-b-thinking"><i /><i /><i /><span>Checking perspective, evidence, and authority…</span></div>
               )}
@@ -381,6 +516,14 @@ export default function PerspectiveVoiceAgent({ person, requesterId, onClose, on
             <div className="part-b-controls">
               <span><i data-state={voiceState} /> {STATE_LABELS[voiceState]}</span>
               <div>
+                <button
+                  type="button"
+                  aria-pressed={handsFree}
+                  title="When on, the mic reopens after the agent finishes, so you can just keep talking"
+                  onClick={() => setHandsFree((value) => !value)}
+                >
+                  {handsFree ? 'Hands-free on' : 'Hands-free off'}
+                </button>
                 {voiceActive && <button type="button" onClick={stopAudio}>Stop</button>}
                 <button type="button" onClick={replay} disabled={!latestResponse}>Replay</button>
                 <button

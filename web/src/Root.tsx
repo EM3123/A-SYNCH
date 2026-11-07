@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { loadPeople, type PersonProfile } from './api';
 import Landing from './scenes/Landing';
+// The theme lives in App.css. It used to load via App.tsx, which Root no longer renders.
+import './App.css';
 
 export default function Root() {
   const [roster, setRoster] = useState<PersonProfile[]>([]);

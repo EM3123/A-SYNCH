@@ -154,3 +154,16 @@
 @media (prefers-reduced-motion: reduce) {
   .part-b-transcript { scroll-behavior: auto; }
 }
+
+/* Live captions: the answer reveals sentence by sentence as it is spoken. */
+.turn-caption span { transition: opacity 240ms ease, color 240ms ease; }
+.turn-caption span[data-spoken='false'] { opacity: 0.28; }
+.turn-caption span[data-spoken='true'] { opacity: 1; }
+
+/* What the mic is hearing, shown as the user's turn while they talk. */
+.part-b-turn-live .turn-message { opacity: 0.75; font-style: italic; }
+
+.part-b-controls button[aria-pressed='true'] { font-weight: 600; }
+@media (prefers-reduced-motion: reduce) {
+  .turn-caption span { transition: none; }
+}
