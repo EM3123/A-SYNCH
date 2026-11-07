@@ -1,5 +1,6 @@
 // The office store: one reducer, a subscription for React (useSyncExternalStore), and an event
 // bus the visual layer listens to for animations. Every change goes through dispatch().
+import type { AskResponse } from '../api';
 import { ROOMS, SEATS, freeSeat } from './layout';
 import {
   STATUS_LABEL,
@@ -19,6 +20,7 @@ export type Action =
   | { type: 'conversation-message'; conversationId: string; message: Message }
   | { type: 'conversation-end'; conversationId: string }
   | { type: 'task-upsert'; task: Task }
+  | { type: 'brief'; key: string; response: AskResponse }
   | { type: 'feed'; event: ActivityEvent }
   | { type: 'select'; selection: OfficeState['selection'] }
   | { type: 'mode'; mode: OfficeState['mode'] }
@@ -30,7 +32,7 @@ export const uid = (p: string) => `${p}-${Date.now().toString(36)}-${(counter++)
 
 export function initialState(): OfficeState {
   return {
-    agents: {}, rooms: ROOMS, seats: SEATS, meetings: {}, conversations: {}, tasks: {},
+    agents: {}, rooms: ROOMS, seats: SEATS, meetings: {}, conversations: {}, tasks: {}, briefs: {},
     feed: [], selection: null, mode: 'animated', busy: false, error: null,
   };
 }
@@ -147,6 +149,8 @@ export function reduce(s: OfficeState, a: Action): [OfficeState, OfficeEvent[]] 
       if (who) agents[who.id] = { ...who, taskId: a.task.status === 'done' ? null : a.task.id };
       return [{ ...s, agents, tasks: { ...s.tasks, [a.task.id]: a.task } }, [{ type: 'task', taskId: a.task.id, status: a.task.status }]];
     }
+    case 'brief':
+      return [{ ...s, briefs: { ...s.briefs, [a.key]: a.response } }, []];
     case 'feed':
       return [{ ...s, feed: [a.event, ...s.feed].slice(0, 200) }, []];
     case 'select':

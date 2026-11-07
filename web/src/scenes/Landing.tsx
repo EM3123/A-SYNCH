@@ -1,20 +1,20 @@
-// Landing: the ocean is the interface. Ask the team and the angler casts; the lure sinks,
-// each person the backend selected swims up and is reeled in. Ask one person and your fish
-// swims to theirs. Hover a fish to meet them, click it to ask them directly.
-// The answer itself is text on the page: label, claims, sources, conflicts, next steps.
-import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { askPerson, askTeam, type AskResponse, type PersonProfile } from '../api';
+// Landing: the ocean is the interface, and every fish is a teammate's context agent.
+// - Ask the team: the angler casts, each person the backend consulted is reeled up and says
+//   why they were consulted, then the angler gives the answer in a bubble.
+// - Talk to one person: click their fish (or pick them in the list). It swims up to you and
+//   you talk by voice or text in its bubble.
+// The full brief and every source open in a drawer from the bubble.
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { askTeam, type AskResponse, type PersonProfile } from '../api';
 import { OceanScene } from '../scene/OceanScene';
 import ResultPanel from './ResultPanel';
-import PersonConversation from './PersonConversation';
+import { FishTalk, TeamBubbles } from './Bubbles';
 
-export type Mode = 'team' | 'person';
-
-// The guaranteed demo questions. Each one also sets who it goes to.
-const DEMO_QUESTIONS: Array<{ text: string; mode: Mode; personId?: string }> = [
-  { text: 'Can we ship Atlas today?', mode: 'team' },
-  { text: 'Would Priya support a 10% beta rollout today?', mode: 'person', personId: 'priya' },
-  { text: 'Approve the Atlas launch for me.', mode: 'person', personId: 'priya' },
+// The guaranteed demo questions. Person questions open that person's agent directly.
+const DEMO_QUESTIONS: Array<{ text: string; personId?: string }> = [
+  { text: 'Can we ship Atlas today?' },
+  { text: 'Would Priya support a 10% beta rollout today?', personId: 'priya' },
+  { text: 'Approve the Atlas launch for me.', personId: 'priya' },
 ];
 
 // The requester is the demo user from the backend (lib/agents/demo-context.ts).
@@ -50,96 +50,104 @@ function saveHistory(list: string[]) {
 
 export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion, onEnter, onResponse }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const sceneRef = useRef<OceanScene | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [scene, setScene] = useState<OceanScene | null>(null);
   const [query, setQuery] = useState('');
-  const [mode, setMode] = useState<Mode>('team');
-  const [pickedId, setPersonId] = useState<string>('priya');
-  // Priya is the demo default; fall back to the first teammate if she is not in the roster.
-  const personId = roster.some((p) => p.id === pickedId) ? pickedId : roster[0]?.id ?? pickedId;
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [response, setResponse] = useState<AskResponse | null>(null);
-  // History is read after mount so the server render (Next.js) matches the first client render.
+  const [team, setTeam] = useState<AskResponse | null>(null);
+  const [caughtId, setCaughtId] = useState<string | null>(null);
+  const [castDone, setCastDone] = useState(false);
+  const [talk, setTalk] = useState<{ id: string; first?: string } | null>(null);
+  const [drawer, setDrawer] = useState<AskResponse | null>(null);
   const [history, setHistory] = useState<string[]>([]);
   const [copied, setCopied] = useState('');
   const [hovered, setHovered] = useState<string | null>(null);
 
-  // The scene lives for the lifetime of the page.
+  // One scene for the lifetime of the page.
   useEffect(() => {
-    const scene = new OceanScene(canvasRef.current!, {
+    const s = new OceanScene(canvasRef.current!, {
       onHover: setHovered,
-      onPick: (id) => {
-        // Clicking a fish means "ask this person".
-        setMode('person');
-        setPersonId(id);
-        inputRef.current?.focus();
-      },
+      onPick: (id) => setTalk({ id }),
+      onCaught: (id) => setCaughtId(id),
+      onCastDone: () => { setCaughtId(null); setCastDone(true); },
     });
-    sceneRef.current = scene;
-    return () => scene.destroy();
+    const frame = window.requestAnimationFrame(() => setScene(s));
+    return () => {
+      window.cancelAnimationFrame(frame);
+      s.destroy();
+    };
   }, []);
 
+  // History is read after mount so the server render (Next.js) matches the first client render.
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => setHistory(loadHistory()));
     return () => window.cancelAnimationFrame(frame);
   }, []);
 
-  useEffect(() => { sceneRef.current?.setRoster(roster); }, [roster]);
-  useEffect(() => { sceneRef.current?.setReduced(reduceMotion); }, [reduceMotion]);
-  useEffect(() => { onResponse(response); }, [response, onResponse]);
+  useEffect(() => { scene?.setRoster(roster); }, [scene, roster]);
+  useEffect(() => { scene?.setReduced(reduceMotion); }, [scene, reduceMotion]);
 
-  // "/" focuses the question, Escape clears the result.
+  // "/" focuses the question, Escape closes whatever is open.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const typing = e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement;
       if (e.key === '/' && !typing) {
         e.preventDefault();
         inputRef.current?.focus();
-      } else if (e.key === 'Escape' && !typing) {
-        setResponse(null);
-        setError(null);
-        setQuery('');
+      } else if (e.key === 'Escape') {
+        if (drawer) setDrawer(null);
+        else if (talk) setTalk(null);
+        else if (team) setTeam(null);
       }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, []);
+  }, [drawer, talk, team]);
 
-  const submit = async (e: FormEvent) => {
-    e.preventDefault();
-    const q = query.trim();
+  const shareResponse = useCallback((r: AskResponse) => onResponse(r), [onResponse]);
+
+  const askTheTeam = async (q: string) => {
     if (!q || pending) return;
+    setTalk(null);
     setPending(true);
     setError(null);
     setCopied('');
-    if (mode === 'team') sceneRef.current?.search();
+    setTeam(null);
+    setCaughtId(null);
+    setCastDone(false);
+    scene?.search();
     try {
-      const r = mode === 'team' ? await askTeam(q, REQUESTER_ID) : await askPerson(personId, q, REQUESTER_ID);
-      setResponse(r);
-      if (r.mode === 'person') sceneRef.current?.playPerson(r.selectedPeople[0]?.id ?? personId);
-      else sceneRef.current?.playTeam(r.selectedPeople.map((p) => p.id));
+      const r = await askTeam(q, REQUESTER_ID);
+      setTeam(r);
+      onResponse(r);
+      scene?.playTeam(r.selectedPeople.map((p) => p.id));
       const h = [q, ...history.filter((x) => x !== q)].slice(0, 5);
       setHistory(h);
       saveHistory(h);
     } catch (err) {
-      sceneRef.current?.playTeam([]);
-      setResponse(null);
+      scene?.playTeam([]);
       setError(err instanceof Error ? err.message : 'Something went wrong.');
     } finally {
       setPending(false);
     }
   };
 
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    void askTheTeam(query.trim());
+  };
+
   const copy = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      setCopied('Copied.');
+      setCopied('Copied to clipboard.');
     } catch {
       setCopied('Copy did not work. Select the text and copy it by hand.');
     }
   };
 
+  const talkPerson = talk ? roster.find((p) => p.id === talk.id) : undefined;
   const hoveredPerson = hovered ? roster.find((p) => p.id === hovered) : undefined;
 
   return (
@@ -157,112 +165,134 @@ export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion
       </header>
 
       <section className="hero" aria-labelledby="hero-title">
-        <h1 id="hero-title" className="serif">Cast a question.<br />Catch the person who knows.</h1>
-        <p className="dim">Every fish is a teammate's context. Hover one to meet them, click to ask them.</p>
+        <h1 id="hero-title" className="serif">Cast a question.<br />Catch who knows.</h1>
+        <p className="dim">Each fish is a teammate's context agent. Click one to talk to it.</p>
       </section>
 
       <div className="side">
-      <form className="query" onSubmit={submit}>
-        <label htmlFor="query-input" className="sr-only">Ask a question</label>
-        <input
-          id="query-input"
-          ref={inputRef}
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder={mode === 'team' ? 'Ask the team a question…' : `Ask ${roster.find((p) => p.id === personId)?.name ?? 'them'}…`}
-          autoComplete="off"
-          maxLength={1000}
-          aria-describedby="query-help"
-        />
-        <p id="query-help" className="hint">Press / to focus, Escape to clear, Enter to ask.</p>
+        <form className="query" onSubmit={submit}>
+          <span className="eyebrow">Ask the team</span>
+          <label htmlFor="query-input" className="sr-only">Ask the team a question</label>
+          <input
+            id="query-input"
+            ref={inputRef}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Ask your team anything…"
+            autoComplete="off"
+            maxLength={1000}
+            aria-describedby="query-help"
+          />
+          <p id="query-help" className="hint">Press / to focus · Enter to cast · Escape to close</p>
+          <button type="submit" className="submit" disabled={pending || !query.trim()}>
+            {pending ? 'Casting…' : 'Cast'}
+          </button>
 
-        <div className="row">
-          <div className="modes" role="group" aria-label="Who to ask">
-            <button type="button" aria-pressed={mode === 'team'} onClick={() => setMode('team')}>Ask the team</button>
-            <button type="button" aria-pressed={mode === 'person'} onClick={() => setMode('person')}>Ask one person</button>
-          </div>
-          {mode === 'person' && (
-            <label className="field">
-              <span>Person</span>
-              <select value={personId} onChange={(e) => setPersonId(e.target.value)}>
-                {roster.map((p) => <option key={p.id} value={p.id}>{p.name}, {p.role}</option>)}
-              </select>
-            </label>
-          )}
-        </div>
-
-        <div className="row examples" aria-label="Example questions">
-          {DEMO_QUESTIONS.map((demo) => (
-            <button
-              key={demo.text}
-              type="button"
-              className="chip"
-              onClick={() => {
-                setQuery(demo.text);
-                setMode(demo.mode);
-                if (demo.personId) setPersonId(demo.personId);
-                inputRef.current?.focus();
-              }}
-            >
-              {demo.text}
-            </button>
-          ))}
-        </div>
-
-        {history.length > 0 && (
-          <div className="row history" aria-label="Recent questions">
-            <span className="dim">Recent</span>
-            {history.map((h) => (
-              <button key={h} type="button" className="chip" onClick={() => { setQuery(h); inputRef.current?.focus(); }}>{h}</button>
+          <div className="examples" aria-label="Example questions">
+            {DEMO_QUESTIONS.map((demo) => (
+              <button
+                key={demo.text}
+                type="button"
+                className="chip"
+                onClick={() => {
+                  if (demo.personId) {
+                    setTeam(null);
+                    setTalk({ id: demo.personId, first: demo.text });
+                  } else {
+                    setQuery(demo.text);
+                    void askTheTeam(demo.text);
+                  }
+                }}
+              >
+                {demo.text}
+              </button>
             ))}
           </div>
-        )}
 
-        <button type="submit" className="submit" disabled={pending || !query.trim()}>
-          {pending ? 'Casting…' : 'Cast'}
-        </button>
-        {copied && <p role="status" className="dim">{copied}</p>}
-      </form>
+          {history.length > 0 && (
+            <div className="row history" aria-label="Recent questions">
+              <span className="dim">Recent</span>
+              {history.map((h) => (
+                <button key={h} type="button" className="chip" onClick={() => { setQuery(h); inputRef.current?.focus(); }}>{h}</button>
+              ))}
+            </div>
+          )}
+          {copied && <p role="status" className="dim">{copied}</p>}
+        </form>
 
-      {error && (
-        <section className="answer" role="alert">
-          <h2 className="serif">Couldn't get an answer</h2>
-          <p>{error}</p>
+        {/* Keyboard and screen-reader way into each fish. */}
+        <section className="people" aria-labelledby="people-title">
+          <h2 id="people-title" className="eyebrow">Talk to someone's agent</h2>
+          <ul>
+            {roster.map((p) => (
+              <li key={p.id}>
+                <button
+                  type="button"
+                  aria-pressed={talk?.id === p.id}
+                  onClick={() => { setTeam(null); setTalk({ id: p.id }); }}
+                >
+                  <span className="dot" style={{ background: p.accent }} aria-hidden="true" />
+                  <span className="who">{p.name}</span>
+                  <span className="dim">{p.availabilityLabel}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
         </section>
+
+        {error && (
+          <section className="answer" role="alert">
+            <h2 className="serif">Couldn't get an answer</h2>
+            <p>{error}</p>
+          </section>
+        )}
+      </div>
+
+      {team && (
+        <TeamBubbles
+          scene={scene}
+          response={team}
+          roster={roster}
+          caughtId={caughtId}
+          done={castDone}
+          onOpenBrief={() => setDrawer(team)}
+          onCopy={copy}
+          onDismiss={() => setTeam(null)}
+        />
       )}
 
-      {response && response.mode === 'team' && (
-        <ResultPanel
-          response={response}
-          people={roster}
-          onAskAgain={() => { setResponse(null); setQuery(''); inputRef.current?.focus(); }}
+      {talkPerson && (
+        <FishTalk
+          key={talkPerson.id + (talk?.first ?? '')}
+          scene={scene}
+          person={talkPerson}
+          requesterId={REQUESTER_ID}
+          firstQuestion={talk?.first}
+          onClose={() => setTalk(null)}
+          onResponse={shareResponse}
+          onOpenSources={(r) => setDrawer(r)}
           onCopy={copy}
         />
       )}
 
-      {response && response.mode === 'person' && (() => {
-        const person = roster.find((candidate) => candidate.id === response.selectedPeople[0]?.id)
-          ?? response.selectedPeople[0];
-        return person ? (
-          <PersonConversation
-            key={response.requestId}
-            initialResponse={response}
-            person={person}
-            requesterId={REQUESTER_ID}
-            onClose={() => setResponse(null)}
-            onLatestResponse={onResponse}
+      {drawer && (
+        <aside className="drawer brief-drawer" aria-labelledby="answer-title">
+          <button type="button" className="close" onClick={() => setDrawer(null)} aria-label="Close brief">×</button>
+          <ResultPanel
+            response={drawer}
+            people={roster}
+            onAskAgain={() => { setDrawer(null); inputRef.current?.focus(); }}
             onCopy={copy}
           />
-        ) : null;
-      })()}
-      </div>
+        </aside>
+      )}
 
       <p className="sr-only" role="status">
         {pending
-          ? 'Searching the team.'
-          : response
-            ? `${response.brief.trust.decision}. ${response.brief.answer.split('\n')[0]}`
-            : error ?? (hoveredPerson ? `${hoveredPerson.name}, ${hoveredPerson.role}, ${hoveredPerson.availabilityLabel}` : '')}
+          ? 'Casting. Searching the team.'
+          : castDone && team
+            ? `${team.brief.trust.decision}. ${team.brief.answer}`
+            : error ?? (hoveredPerson ? `${hoveredPerson.name}, ${hoveredPerson.role}, ${hoveredPerson.availabilityLabel}. Click to talk.` : '')}
       </p>
     </main>
   );

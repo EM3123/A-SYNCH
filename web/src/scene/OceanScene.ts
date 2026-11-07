@@ -46,15 +46,18 @@ interface Bubble { x: number; y: number; r: number; vy: number; wob: number; lif
 interface Ripple { x: number; t0: number; strength: number }
 interface Mote { t: number; from: string; to: string }
 
-type CastStage = 'none' | 'flick' | 'flight' | 'sink' | 'search' | 'approach' | 'bite' | 'reel' | 'release';
+type CastStage = 'none' | 'flick' | 'flight' | 'sink' | 'search' | 'approach' | 'bite' | 'reel' | 'hold' | 'release';
 type TalkStage = 'none' | 'go' | 'talk' | 'back';
 
 export interface OceanOptions {
   onPick?: (personId: string) => void;
   onHover?: (personId: string | null) => void;
+  // A reeled-in fish is held at the surface: show its bubble now.
+  onCaught?: (personId: string) => void;
+  // Every selected person has been reeled in and released.
+  onCastDone?: () => void;
 }
 
-const SPACING = 14;
 // Three wave trains plus a travelling swell. Amplitude in px, wavelength in px, speed in rad/s.
 const WAVES = [
   { A: 6, L: 460, w: 0.9 },
@@ -111,6 +114,13 @@ export class OceanScene {
   private talkT = 0;
   private talkTo: Swimmer | null = null;
 
+  // Direct conversation: the chosen fish swims up to talk; speaking and listening are shown.
+  private focused: Swimmer | null = null;
+  private speakingId: string | null = null;
+  private listening = false;
+  private held: Swimmer | null = null;
+  private castWasActive = false;
+
   private canvas: HTMLCanvasElement;
 
   constructor(canvas: HTMLCanvasElement, opts: OceanOptions = {}) {
@@ -166,8 +176,18 @@ export class OceanScene {
   // Team answer: hook each selected person in turn.
   playTeam(ids: string[]) {
     this.searching = false;
+    this.focused = null;
     this.queue = ids.filter((id) => this.fish.some((f) => f.id === id)).slice(0, 3);
-    if (this.reduced) { this.queue = []; this.stage = 'none'; return; }
+    this.castWasActive = this.queue.length > 0;
+    if (this.reduced) {
+      // No choreography: report each catch and the end straight away.
+      this.queue.forEach((id) => this.opts.onCaught?.(id));
+      this.queue = [];
+      this.stage = 'none';
+      this.castWasActive = false;
+      this.opts.onCastDone?.();
+      return;
+    }
     if (this.stage === 'search' || this.stage === 'sink') this.nextTarget();
     else if (this.stage === 'none' && this.queue.length) this.beginCast(this.fishById(this.queue[0])?.x ?? this.W * 0.58);
   }
@@ -183,13 +203,56 @@ export class OceanScene {
     this.talkT = 0;
   }
 
+  // Call a fish up to talk. It leaves its coral, swims to the conversation spot and faces you;
+  // your fish comes alongside. Pass null to let it go home.
+  focus(id: string | null) {
+    this.focused = id ? this.fishById(id) ?? null : null;
+    if (this.focused) {
+      this.focused.wanderAt = 0;
+      this.searching = false;
+    }
+  }
+
+  // The fish whose agent is replying right now: its mouth works and it breathes out bubbles.
+  setSpeaking(id: string | null) {
+    this.speakingId = id;
+  }
+
+  // While the microphone is open, your fish's lantern brightens.
+  setListening(on: boolean) {
+    this.listening = on;
+  }
+
+  // Screen position for a fish ('you' is your fish, 'boat' is the angler) so the page can
+  // anchor speech bubbles to it.
+  screenPos(id: string): Vec | null {
+    if (id === 'boat') {
+      const bx = this.W * 0.26;
+      const s = this.surface(bx, this.time);
+      return { x: bx + 6, y: this.surfaceY + s.h - 62 };
+    }
+    if (id === 'you') return this.seeker ? { x: this.seeker.x, y: this.seeker.y } : null;
+    const f = this.fishById(id);
+    return f ? { x: f.x, y: f.y } : null;
+  }
+
+  // Where a called-up fish waits to talk: upper water, left of the question column.
+  private spot(): Vec {
+    return { x: this.openW() * 0.56, y: this.surfaceY + (this.seabedY - this.surfaceY) * 0.34 };
+  }
+
   // ---- Setup ----
+
+  // Width of open water to the left of the question column (the whole width on small screens).
+  private openW(): number {
+    return this.W > 760 ? this.W - Math.min(380, this.W * 0.34) - 40 : this.W;
+  }
 
   private homes(): Record<OutcropId, Vec> {
     return {
-      backend: { x: this.W * 0.2, y: this.seabedY - 70 },
-      quant: { x: this.W * 0.52, y: this.seabedY - 60 },
-      design: { x: this.W * 0.8, y: this.seabedY - 70 },
+      backend: { x: this.openW() * 0.16, y: this.seabedY - 70 },
+      quant: { x: this.openW() * 0.5, y: this.seabedY - 60 },
+      design: { x: this.openW() * 0.84, y: this.seabedY - 70 },
     };
   }
 
@@ -201,7 +264,8 @@ export class OceanScene {
     this.canvas.height = this.H * this.dpr;
     this.canvas.style.width = `${this.W}px`;
     this.canvas.style.height = `${this.H}px`;
-    this.surfaceY = this.H * 0.3;
+    // The waterline sits low enough that the headline above it never touches a wave.
+    this.surfaceY = Math.max(this.H * 0.34, 230);
     this.seabedY = this.H - 34;
     this.kelp = [
       makeStalk(this.W * 0.04, this.seabedY, 14, (this.H * 0.42) / 13, -1),
@@ -236,8 +300,8 @@ export class OceanScene {
       vy: 0,
       phase: Math.random() * 6,
     }));
-    this.jellies = [0.68, 0.86].map((fx, i) => {
-      const x = this.W * fx;
+    this.jellies = [0.7, 0.9].map((fx, i) => {
+      const x = this.openW() * fx;
       const y = this.surfaceY + 120 + i * 90;
       return {
         x, y, vy: 0, phase: i * 1.7, r: 20 - i * 4,
@@ -395,7 +459,20 @@ export class OceanScene {
     this.updateCast(dt);
     this.updateTalk(dt);
     for (const f of this.fish) this.updateFish(f, dt);
-    if (this.seeker && this.talk === 'none') this.updateSeekerIdle(this.seeker, dt);
+    if (this.seeker && this.focused) {
+      // Your fish comes alongside the one you are talking to.
+      const s = this.spot();
+      const me = this.seeker;
+      this.steer(me, s.x - 70, s.y + 6, 120, 2.4, dt);
+      this.integrate(me, dt);
+      if (Math.hypot(me.x - (s.x - 70), me.y - s.y - 6) < 24) {
+        me.heading = Math.atan2(this.focused.y - me.y, this.focused.x - me.x);
+      }
+      if (this.listening && Math.random() < dt * 8) {
+        // Your words travel to their fish as small motes.
+        this.motes.push({ t: 0, from: 'you', to: this.focused.id });
+      }
+    } else if (this.seeker && this.talk === 'none') this.updateSeekerIdle(this.seeker, dt);
     this.updateSchool(dt);
     this.updateJellies(dt);
     this.updateParticles(dt);
@@ -477,7 +554,22 @@ export class OceanScene {
       f.x = this.lure.x - Math.cos(f.heading) * f.len * 0.42;
       f.y = this.lure.y + 4;
       f.heading = Math.PI / 2 + Math.sin(k * 9) * 0.5;
-      if (u >= 1) { this.stage = 'release'; this.stageT = 0; }
+      if (u >= 1) {
+        // Hold the catch at the surface long enough to read what they contributed.
+        this.stage = 'hold';
+        this.stageT = 0;
+        this.held = f;
+        this.opts.onCaught?.(f.id);
+      }
+    } else if (this.stage === 'hold' && this.target) {
+      const f = this.target;
+      f.struggle = Math.max(0, f.struggle - dt);
+      f.x = rod.x - 40 + Math.sin(k * 2) * 4;
+      f.y = this.surfaceY + 44 + Math.sin(k * 3) * 3;
+      f.heading = Math.PI + Math.sin(k * 1.5) * 0.15;
+      this.lure.x = f.x + f.len * 0.42 * Math.cos(f.heading);
+      this.lure.y = f.y - 4;
+      if (k > 3.2) { this.stage = 'release'; this.stageT = 0; this.held = null; }
     } else if (this.stage === 'release') {
       if (this.target) {
         this.target.hooked = false;
@@ -493,7 +585,13 @@ export class OceanScene {
         const u = Math.min(1, k / 0.8);
         this.lure.x += (rod.x - this.lure.x) * u;
         this.lure.y += (rod.y - this.lure.y) * u;
-        if (u >= 1) this.stage = 'none';
+        if (u >= 1) {
+          this.stage = 'none';
+          if (this.castWasActive) {
+            this.castWasActive = false;
+            this.opts.onCastDone?.();
+          }
+        }
       }
     }
   }
@@ -574,6 +672,28 @@ export class OceanScene {
       this.integrate(f, dt);
       return;
     }
+    if (this.focused === f) {
+      // Called up to talk: swim to the spot, then hover there facing your fish.
+      const s = this.spot();
+      this.steer(f, s.x + 40, s.y, 110, 2.4, dt);
+      this.integrate(f, dt);
+      const me = this.seeker;
+      if (me && Math.hypot(f.x - s.x - 40, f.y - s.y) < 30) {
+        f.heading = Math.atan2(me.y - f.y, me.x - f.x);
+        f.vx *= 0.9;
+        f.vy *= 0.9;
+      }
+      if (this.speakingId === f.id) {
+        // Talking: quicker gill and fin motion, and small bubbles from the mouth.
+        f.phase += dt * 6;
+        if (Math.random() < dt * 5) {
+          const mx = f.x + Math.cos(f.heading) * f.len * 0.5;
+          const my = f.y + Math.sin(f.heading) * f.len * 0.5;
+          this.spawnBubble(mx, my, 1 + Math.random() * 1.5);
+        }
+      }
+      return;
+    }
     if (this.talkTo === f && this.talk !== 'none') {
       f.vx *= 0.92;
       f.vy *= 0.92;
@@ -645,7 +765,7 @@ export class OceanScene {
     f.vy *= 1 - dt * 0.6;
     this.integrate(f, dt);
     f.y = clamp(f.y, this.surfaceY + 40, this.seabedY - 16);
-    f.x = clamp(f.x, 30, this.W - 30);
+    f.x = clamp(f.x, 30, this.openW() - 30);
 
     // Look at the hovered spot: the hovered fish turns toward the cursor.
     if (this.hovered === f.id) {
@@ -780,7 +900,11 @@ export class OceanScene {
     const { ctx, W, H, dpr } = this;
     const t = this.time;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = NAVY;
+    // Night sky: slightly lighter toward the horizon, as real skies are.
+    const sky = ctx.createLinearGradient(0, 0, 0, this.surfaceY);
+    sky.addColorStop(0, '#01060B');
+    sky.addColorStop(1, '#0A1E2B');
+    ctx.fillStyle = sky;
     ctx.fillRect(0, 0, W, H);
 
     // Parallax from the pointer: far layers move less.
@@ -788,17 +912,21 @@ export class OceanScene {
     const py = this.pointer.inside ? (this.pointer.y / H - 0.5) : 0;
 
     this.drawSky(px);
+    this.drawWaterBody(t);
+    this.drawCaustics(t);
     this.drawRays(t, px);
     this.drawSnow(px, py, false);
     this.drawSchool(px);
     this.drawSeabed(t);
-    this.drawWaterDots(t);
+    this.drawPlankton(t);
+    this.drawBoatShadow(t);
     this.drawJellies(t);
     this.drawBubbles();
     this.drawMotes();
     for (const f of this.fish) this.drawSwimmer(f);
     if (this.seeker) this.drawSwimmer(this.seeker);
     this.drawSurface(t);
+    this.drawGlints(t);
     this.drawBoat(t);
     this.drawLine(t);
     this.drawSnow(px, py, true);
@@ -909,17 +1037,129 @@ export class OceanScene {
     for (const k of this.kelp) drawKelp(ctx, k, true);
   }
 
-  // The water column as a dot matrix. Each dot follows a wave orbit that shrinks with depth,
-  // is pushed by the cursor and by ripples, and dims with depth like light falling off.
-  private drawWaterDots(t: number) {
+  // Surface height (screen y) at x, including waves, swell and ripples. Used to shape the water.
+  private surfaceAt(x0: number, t: number): number {
+    let y = this.surfaceY;
+    for (const w of WAVES) {
+      const k = (2 * Math.PI) / w.L;
+      y -= w.A * Math.cos(k * x0 - w.w * t);
+    }
+    const env = Math.exp(-Math.pow((x0 - this.swellX) / 240, 2));
+    y -= 16 * env * Math.cos(((2 * Math.PI) / 300) * x0 + 1.6 * t);
+    return y;
+  }
+
+  // The water itself: lit from above, so it is lighter just under the surface and falls to
+  // near black at depth. The top edge follows the live surface, so troughs and crests show.
+  private drawWaterBody(t: number) {
+    const { ctx, W, H } = this;
+    const g = ctx.createLinearGradient(0, this.surfaceY - 20, 0, H);
+    g.addColorStop(0, '#0B2E40');
+    g.addColorStop(0.18, '#06202F');
+    g.addColorStop(0.6, '#03121C');
+    g.addColorStop(1, '#01070C');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.moveTo(-10, H);
+    for (let x = -10; x <= W + 10; x += 8) ctx.lineTo(x, this.surfaceAt(x, t));
+    ctx.lineTo(W + 10, H);
+    ctx.closePath();
+    ctx.fill();
+
+    // A bright sheen just under the surface, where light enters the water.
+    ctx.strokeStyle = 'rgba(160,210,230,0.10)';
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    for (let x = -10; x <= W + 10; x += 8) {
+      const y = this.surfaceAt(x, t) + 5;
+      if (x === -10) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  // Caustics: the moving net of light that wave lenses throw onto everything below.
+  // Drawn as interfering wavy lines near the surface and across the seabed.
+  private drawCaustics(t: number) {
     const { ctx, W } = this;
+    ctx.lineWidth = 1;
+    const band = (y0: number, height: number, alpha: number) => {
+      for (let j = 0; j < 7; j++) {
+        const yb = y0 + (j / 7) * height;
+        ctx.strokeStyle = `rgba(190,225,240,${alpha * (1 - j / 9)})`;
+        ctx.beginPath();
+        for (let x = 0; x <= W; x += 10) {
+          const y = yb
+            + Math.sin(x * 0.021 + t * 0.9 + j * 1.3) * 6
+            + Math.sin(x * 0.047 - t * 1.3 + j) * 3;
+          if (x === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+    };
+    band(this.surfaceY + 16, 90, 0.05);
+    band(this.seabedY - 46, 40, 0.06);
+  }
+
+  // The hull blocks light: a soft shadow column falls under the boat.
+  private drawBoatShadow(t: number) {
+    const { ctx } = this;
+    const bx = this.W * 0.26;
+    const top = this.surfaceAt(bx, t) + 6;
+    const g = ctx.createLinearGradient(0, top, 0, top + 240);
+    g.addColorStop(0, 'rgba(1,6,11,0.45)');
+    g.addColorStop(1, 'rgba(1,6,11,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.moveTo(bx - 60, top);
+    ctx.lineTo(bx + 60, top);
+    ctx.lineTo(bx + 110, top + 240);
+    ctx.lineTo(bx - 90, top + 240);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  // Specular glints: short bright flecks where crests catch the moon, plus a broken path of
+  // light on the water under the moon.
+  private drawGlints(t: number) {
+    const { ctx, W } = this;
+    const moonX = W * 0.6;
+    ctx.fillStyle = INK;
+    for (let x = 0; x < W; x += 11) {
+      const s = this.surface(x, t);
+      const near = Math.exp(-Math.pow((x - moonX) / 90, 2));
+      // Crests face up where the slope crosses zero going down.
+      const crest = Math.abs(s.slope) < 0.02 && s.h < -3;
+      const flick = 0.5 + 0.5 * Math.sin(t * 7 + x * 1.7);
+      const a = (crest ? 0.5 : 0) * flick + near * flick * 0.8;
+      if (a < 0.12) continue;
+      ctx.globalAlpha = Math.min(0.9, a);
+      ctx.fillRect(x, this.surfaceAt(x, t) - 1, 4 + near * 8, 1);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // Suspended particles in the water column. Each follows the wave orbit for its depth
+  // (shrinking as exp(-k*depth)), is pushed by the cursor and by ripples, and dims with depth.
+  // Positions are jittered per particle so the field reads as water, not a grid.
+  private drawPlankton(t: number) {
+    const { ctx, W } = this;
+    const step = 18;
     const top = this.surfaceY + 10;
     const bottom = this.seabedY - 10;
     const moonX = W * 0.6;
-    for (let y0 = top; y0 < bottom; y0 += SPACING) {
-      const depth = y0 - this.surfaceY;
-      const fall = Math.exp(-depth / 260);
-      for (let x0 = 0; x0 <= W; x0 += SPACING) {
+    for (let y0g = top; y0g < bottom; y0g += step) {
+      for (let x0g = 0; x0g <= W; x0g += step) {
+        // Stable per-particle jitter from a cheap hash of its grid cell.
+        const hsh = Math.sin(x0g * 12.9898 + y0g * 78.233) * 43758.5453;
+        const r1 = hsh - Math.floor(hsh);
+        const r2 = (r1 * 7.13) % 1;
+        if (r1 < 0.35) continue; // thin the field out
+        const x0 = x0g + (r1 - 0.5) * step;
+        const y0 = y0g + (r2 - 0.5) * step;
+        const depth = y0 - this.surfaceY;
+        const fall = Math.exp(-depth / 220);
         let x = x0;
         let y = y0;
         for (const w of WAVES) {
@@ -1197,11 +1437,12 @@ export class OceanScene {
 
   private drawMotes() {
     const { ctx } = this;
-    if (!this.seeker || !this.talkTo) return;
+    const at = (id: string) => (id === 'you' ? this.seeker : this.fishById(id)) ?? null;
     ctx.fillStyle = CYAN;
     for (const m of this.motes) {
-      const a = m.from === 'you' ? this.seeker : this.talkTo;
-      const b = m.to === 'you' ? this.seeker : this.talkTo;
+      const a = at(m.from);
+      const b = at(m.to);
+      if (!a || !b) continue;
       const x = a.x + (b.x - a.x) * m.t;
       const y = a.y + (b.y - a.y) * m.t - Math.sin(m.t * Math.PI) * 18;
       ctx.globalAlpha = Math.sin(m.t * Math.PI);
@@ -1213,12 +1454,38 @@ export class OceanScene {
   private drawSwimmer(f: Swimmer) {
     const { ctx } = this;
     const sp = Math.hypot(f.vx, f.vy);
+    // A called-up or reeled-in fish is awake and present, even if its person is away.
+    const engaged = f.hooked || this.focused === f || this.held === f;
     drawFishBody(ctx, {
       x: f.x, y: f.y, heading: f.heading, phase: f.phase, len: f.len, speed: sp, color: f.color,
-      kind: f.kind, asleep: f.status === 'away' && !f.hooked, blink: f.blink, struggle: f.struggle,
+      kind: f.kind, asleep: f.status === 'away' && !engaged, blink: f.blink, struggle: f.struggle,
     });
-    if (f.kind !== 'twin') return;
-    if (f.status === 'focus' && !f.hooked) {
+    if (f.kind === 'seeker') {
+      if (this.listening) {
+        // Listening: a slow cyan pulse around your fish.
+        const u = (this.time * 1.2) % 1;
+        ctx.strokeStyle = CYAN;
+        ctx.globalAlpha = 1 - u;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.len * (0.6 + u * 0.7), 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+      }
+      return;
+    }
+    if (this.focused === f) {
+      // The one you are talking to gets a quiet cyan halo.
+      ctx.strokeStyle = 'rgba(0,169,244,0.55)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([2, 5]);
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.len * 0.8, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      return;
+    }
+    if (f.status === 'focus' && !engaged) {
       // Do not disturb: a slow dashed octagon and a red dot. The twin answers instead.
       ctx.save();
       ctx.translate(f.x, f.y);
@@ -1242,7 +1509,7 @@ export class OceanScene {
       ctx.arc(f.x + f.len * 0.5, f.y - f.len * 0.5, 3.5, 0, Math.PI * 2);
       ctx.fill();
     }
-    if (f.status === 'away' && !f.hooked) {
+    if (f.status === 'away' && !engaged) {
       // Sleeping: small "z" marks drifting up.
       ctx.fillStyle = SLATE;
       ctx.font = '10px "JetBrains Mono", ui-monospace, monospace';

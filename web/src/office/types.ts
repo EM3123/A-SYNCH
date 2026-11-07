@@ -1,6 +1,7 @@
 // OfficeOS domain model. This is the "middle end": what the office knows, independent of how
 // it is drawn. The visual layer reads OfficeState and plays OfficeEvents; it never decides
 // that work happened. Only the backend (through the adapter) changes real state.
+import type { AskResponse } from '../api';
 
 export type RoomId = 'workspace' | 'conference' | 'common' | 'research' | 'operations' | 'break';
 
@@ -137,6 +138,9 @@ export interface OfficeState {
   meetings: Record<string, Meeting>;
   conversations: Record<string, Conversation>;
   tasks: Record<string, Task>;
+  // The backend's full answer for a meeting or conversation (brief, sources, security events),
+  // keyed by meeting id or conversation id. Panels render from this, never from the feed text.
+  briefs: Record<string, AskResponse>;
   feed: ActivityEvent[]; // newest first
   selection: { kind: 'agent' | 'room' | 'meeting' | 'conversation'; id: string } | null;
   mode: 'animated' | 'simplified';
