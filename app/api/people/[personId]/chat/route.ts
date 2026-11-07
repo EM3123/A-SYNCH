@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { askAsynch, AskValidationError } from "@/lib/backend";
+import { DEMO_REQUESTER_ID } from "@/lib/agents/demo-context";
+import { askPerspective, PerspectiveValidationError } from "@/lib/part-b";
 
 export const runtime = "nodejs";
 
@@ -12,17 +13,18 @@ export async function POST(
     const body = (await request.json()) as {
       question?: unknown;
       requesterId?: unknown;
+      history?: unknown;
     };
-    const result = await askAsynch({
+    const result = await askPerspective({
       question: typeof body.question === "string" ? body.question : "",
-      mode: "person",
       personId,
-      requesterId:
-        typeof body.requesterId === "string" ? body.requesterId : undefined,
+      history: body.history,
+      // Identity is server-resolved in demo mode. Ignore caller-supplied requesterId.
+      requesterId: DEMO_REQUESTER_ID,
     });
     return NextResponse.json(result);
   } catch (error) {
-    if (error instanceof AskValidationError) {
+    if (error instanceof PerspectiveValidationError) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
     console.error("[A-SYNCH] person chat failed", error);
