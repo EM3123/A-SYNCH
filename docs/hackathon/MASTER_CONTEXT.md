@@ -310,6 +310,18 @@ Own:
 
 Primary paths: `data/`, `lib/trust/`, `evals/`, `docs/security/`.
 
+### Part B contributor - Perspective voice agent
+
+Own:
+
+- Owner-confirmed perspective records
+- Multi-turn conversation history and retrieval
+- Deterministic Priya judgment dialogue
+- Browser speech recognition and generic spoken responses
+- Part B citations, authority boundary, and offline fallback
+
+Primary paths: `web/src/part-b/`, `lib/part-b/`, `data/atlas/perspectives.json`, `evals/part-b.test.ts`, and the person-chat route.
+
 Only Daksh changes `lib/contracts.ts` after contract lock. Everyone should avoid editing another stream's owned files unless coordinated.
 
 ## Integration sequence
