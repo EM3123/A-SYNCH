@@ -12,7 +12,7 @@ This file overrides older role assignments. The team switched Vedant and Edmund'
 
 ### Edmund
 
-> Fetch the latest A-SYNCH branches. Read AGENTS.md and docs/hackathon/ROLE_EDMUND_AI.md completely, then continue the frontend workstream on feature/web-shell, preserving commit eca2718 and any newer teammate work. Judge the interface against the acceptance criteria; the metaphor is optional and clarity wins. Do not change backend contracts or data/safety files. Push the branch and report the commit SHA, screenshots, and test results.
+> Fetch the latest A-SYNCH branches. Read AGENTS.md and docs/hackathon/ROLE_EDMUND_AI.md completely, then continue the frontend workstream on feature/web-shell, preserving commit eca2718 and any newer teammate work. Part B voice is P0: direct entry from Priya's profile, push-to-talk browser speech recognition, transcript, context-agent response, spoken playback, clear call states, interrupt/stop controls, privacy-safe permission handling, and typed fallback. Judge the interface against every acceptance criterion; the metaphor is optional and clarity wins. Do not change backend contracts or data/safety files. Push the branch and report the commit SHA, screenshots, voice-browser test results, and general test results.
 
 ### Vedant
 

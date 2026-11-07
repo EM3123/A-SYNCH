@@ -64,8 +64,12 @@ Clicking Priya or choosing Part B opens a focused conversation screen:
 
 - Header says **Priya's context agent**, not just Priya.
 - Show Priya's availability, owned decisions, and the owner-approved principle being used.
-- Support typed follow-ups and browser speech recognition when available, with an obvious text fallback.
-- Speech synthesis/read-aloud is optional but must not be the only voice feature.
+- **Voice is a P0 demo requirement, not an optional enhancement.** Use the browser Web Speech API (`SpeechRecognition` / `webkitSpeechRecognition`) for push-to-talk input and `speechSynthesis` for spoken responses.
+- Provide an unmistakable **Start voice conversation** action directly from Priya's profile; Part B must not be buried behind the team-question form.
+- Show explicit call states: ready → listening → transcribing → checking context → speaking → ready.
+- After the user stops speaking, display the transcript, submit it through the existing person-chat API, and speak the returned answer. The user can interrupt/stop playback.
+- Include microphone, mute/stop, replay, and end-conversation controls. Request microphone permission only after the user presses the voice button; never record passively and never imply audio is stored.
+- If speech recognition is unavailable or permission is denied, keep the same conversation screen and fall back cleanly to typed input. Do not break the demo.
 - Keep citations/principles visible beside the transcript so the answer never feels like role-play.
 
 For `Would Priya support a 10% beta rollout today?`, clearly label the answer as guidance grounded in a stated principle—not approval.
@@ -97,10 +101,11 @@ The following must work after a hard refresh:
 1. Click `Can we ship Atlas today?` and submit.
 2. See routing, then the complete Situation Brief and decision path.
 3. Open Priya directly without returning to a generic chat screen.
-4. Ask `Would Priya support a 10% beta rollout today?`.
-5. Ask follow-up `What remains blocked?` and receive a relevant second answer.
-6. Ask `Approve the Atlas launch for me.` and see the refusal + handoff.
-7. Open citations and see the stale-source conflict and ignored-injection event.
+4. Start a voice conversation and say `Would Priya support a 10% beta rollout today?`; see the transcript and hear the response.
+5. Say or type follow-up `What remains blocked?` and receive a relevant second answer.
+6. Say or type `Approve the Atlas launch for me.` and see the refusal + handoff.
+7. Stop or interrupt spoken playback without ending the conversation.
+8. Open citations and see the stale-source conflict and ignored-injection event.
 
 ## Before handing off
 
