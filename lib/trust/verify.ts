@@ -103,6 +103,23 @@ const isString = (value: unknown): value is string => typeof value === "string";
 const isStringArray = (value: unknown): value is string[] =>
   Array.isArray(value) && value.every(isString);
 
+/** Copy only the fields the Situation Brief format defines, at every level. */
+function pickKnownFields(brief: SituationBrief): SituationBrief {
+  return {
+    title: brief.title,
+    answer: brief.answer,
+    status: brief.status,
+    claims: brief.claims.map((claim) => ({ text: claim.text, evidenceIds: claim.evidenceIds, trust: claim.trust })),
+    relevantPeople: brief.relevantPeople.map((person) => ({ personId: person.personId, reason: person.reason, evidenceIds: person.evidenceIds })),
+    decisionTree: brief.decisionTree.map((node) => ({ label: node.label, state: node.state, reason: node.reason })),
+    nextStep: brief.nextStep,
+    ownerId: brief.ownerId,
+    downstreamBlockers: brief.downstreamBlockers,
+    conflicts: brief.conflicts,
+    trust: { decision: brief.trust.decision, reasons: brief.trust.reasons, requiresHuman: brief.trust.requiresHuman },
+  };
+}
+
 export function validateBrief(value: unknown): string[] {
   const errors: string[] = [];
   if (!value || typeof value !== "object" || Array.isArray(value)) return ["brief is not an object"];
@@ -212,7 +229,8 @@ export function verifyBrief(input: VerifyInput): VerifyResult {
     return finish(safeHandoffBrief(fallbackOwner, "The model's answer didn't match the Situation Brief format."));
   }
   checks.push({ check: "schema", result: "pass" });
-  const candidate = input.candidate as SituationBrief;
+  // Keep only the fields the brief format defines. Anything else the model added is dropped unseen.
+  const candidate = pickKnownFields(input.candidate as SituationBrief);
 
   // 2. Question-level checks ------------------------------------------------
   const questionInjection = scanInjection(input.question);
@@ -354,7 +372,9 @@ export function verifyBrief(input: VerifyInput): VerifyResult {
   checks.push({ check: "leaks", result: "pass" });
 
   // 5. Conflicts among the evidence relevant to the cited facts -----------------
-  const pool = [...new Map([...input.sources, ...citedEvidence].map((item) => [item.id, item])).values()]
+  // Conflicts are checked across every record the requester can open, not only the few the
+  // router returned. Otherwise a conflict would depend on ranking, and a stale note could hide.
+  const pool = [...new Map([...input.sources, ...citedEvidence, ...allEvidence].map((item) => [item.id, item])).values()]
     .filter((item) => canAccess(item, input.requesterId) && !isQuarantined(item));
   const citedKeys = new Set(citedEvidence.flatMap((item) => getMetadata(item.id).assertions.map((a) => a.key)));
   const conflictLines: string[] = [];

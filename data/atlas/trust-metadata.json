@@ -2,47 +2,308 @@
   "_about": "Trust Layer metadata, kept out of evidence.json so it never reaches the UI. assertions = the fact each record states (same key + different value = conflict). sensitiveTerms = phrases from restricted records that must never appear in an answer to someone without access. approvalRecord = true only for an explicit, owner-signed approval.",
   "records": {
     "gh-pr-214": {
-      "assertions": [{ "key": "atlas.backend.status", "value": "ready" }]
+      "assertions": [
+        {
+          "key": "atlas.backend.status",
+          "value": "ready"
+        }
+      ]
     },
     "slack-alex-staging": {
-      "assertions": [{ "key": "atlas.backend.status", "value": "ready" }]
+      "assertions": [
+        {
+          "key": "atlas.backend.status",
+          "value": "ready"
+        }
+      ]
     },
     "gh-pr-219": {
-      "assertions": [{ "key": "atlas.frontend.rollout_control", "value": "not_merged" }]
+      "assertions": [
+        {
+          "key": "atlas.frontend.rollout_control",
+          "value": "not_merged"
+        }
+      ]
     },
     "slack-sam-a11y": {
-      "assertions": [{ "key": "atlas.frontend.rollout_control", "value": "not_merged" }]
+      "assertions": [
+        {
+          "key": "atlas.frontend.rollout_control",
+          "value": "not_merged"
+        }
+      ]
     },
     "jira-atlas-38": {
       "assertions": [
-        { "key": "atlas.security.review", "value": "open" },
-        { "key": "atlas.ga.status", "value": "blocked" }
+        {
+          "key": "atlas.security.review",
+          "value": "open"
+        },
+        {
+          "key": "atlas.ga.status",
+          "value": "blocked"
+        }
       ]
     },
     "jira-atlas-41": {
-      "assertions": [{ "key": "atlas.ga.status", "value": "blocked" }]
+      "assertions": [
+        {
+          "key": "atlas.ga.status",
+          "value": "blocked"
+        }
+      ]
     },
     "priya-beta-principle": {
-      "assertions": [{ "key": "atlas.launch.beta_path", "value": "allowed_if_reversible" }]
+      "assertions": [
+        {
+          "key": "atlas.launch.beta_path",
+          "value": "allowed_if_reversible"
+        }
+      ]
     },
     "priya-approval-owner": {
-      "assertions": [{ "key": "atlas.launch.approval", "value": "not_recorded" }]
+      "assertions": [
+        {
+          "key": "atlas.launch.approval",
+          "value": "not_recorded"
+        }
+      ]
     },
     "customer-design-partners": {
-      "assertions": [{ "key": "atlas.customers.waiting", "value": "3" }]
+      "assertions": [
+        {
+          "key": "atlas.customers.waiting",
+          "value": "3"
+        }
+      ]
     },
     "meeting-maya-partner-sync": {
-      "assertions": [{ "key": "atlas.customers.waiting", "value": "3" }]
+      "assertions": [
+        {
+          "key": "atlas.customers.waiting",
+          "value": "3"
+        }
+      ]
     },
     "stale-launch-status": {
-      "assertions": [{ "key": "atlas.launch.beta_path", "value": "blocked" }]
+      "assertions": [
+        {
+          "key": "atlas.launch.beta_path",
+          "value": "blocked"
+        }
+      ]
     },
     "malicious-slack-message": {
-      "assertions": [{ "key": "atlas.launch.approval", "value": "approved" }]
+      "assertions": [
+        {
+          "key": "atlas.launch.approval",
+          "value": "approved"
+        }
+      ]
     },
     "private-leadership-note": {
-      "assertions": [{ "key": "atlas.ga.target", "value": "maybe_q1" }],
-      "sensitiveTerms": ["q1", "nov 14", "slips past", "do not share"]
+      "assertions": [
+        {
+          "key": "atlas.ga.target",
+          "value": "maybe_q1"
+        }
+      ],
+      "sensitiveTerms": [
+        "q1",
+        "nov 14",
+        "slips past",
+        "do not share"
+      ]
+    },
+    "gh-ci-214": {
+      "assertions": [
+        {
+          "key": "atlas.backend.status",
+          "value": "ready"
+        }
+      ]
+    },
+    "gh-pr-216-cross-tenant": {
+      "assertions": [
+        {
+          "key": "atlas.security.cross_tenant",
+          "value": "fixed"
+        }
+      ]
+    },
+    "gh-pr-219-a11y": {
+      "assertions": [
+        {
+          "key": "atlas.frontend.rollout_control",
+          "value": "not_merged"
+        }
+      ]
+    },
+    "gh-pr-223-skew": {
+      "assertions": [
+        {
+          "key": "atlas.sso.clock_skew",
+          "value": "fix_pending"
+        }
+      ]
+    },
+    "gh-pr-217-cache": {
+      "assertions": [
+        {
+          "key": "atlas.perf.ninety_day_cache",
+          "value": "not_shipped"
+        }
+      ]
+    },
+    "gh-pr-209-rollups": {
+      "assertions": [
+        {
+          "key": "atlas.data.rollups",
+          "value": "merged"
+        }
+      ]
+    },
+    "gh-pr-211-csv": {
+      "assertions": [
+        {
+          "key": "atlas.frontend.csv_export",
+          "value": "merged"
+        }
+      ]
+    },
+    "jira-atlas-40-loadtest": {
+      "assertions": [
+        {
+          "key": "atlas.perf.beta_range",
+          "value": "30_days"
+        }
+      ]
+    },
+    "jira-atlas-44-skew": {
+      "assertions": [
+        {
+          "key": "atlas.sso.login_failures",
+          "value": "azure_8_percent"
+        }
+      ]
+    },
+    "jira-atlas-49-killswitch": {
+      "assertions": [
+        {
+          "key": "atlas.killswitch",
+          "value": "verified"
+        }
+      ]
+    },
+    "jira-atlas-50-audit": {
+      "assertions": [
+        {
+          "key": "atlas.security.audit_log",
+          "value": "ga_required"
+        }
+      ]
+    },
+    "jira-atlas-47-cache": {
+      "assertions": [
+        {
+          "key": "atlas.perf.ninety_day_cache",
+          "value": "not_shipped"
+        }
+      ]
+    },
+    "slack-jordan-beta-security": {
+      "assertions": [
+        {
+          "key": "atlas.security.beta_block",
+          "value": "no"
+        }
+      ]
+    },
+    "slack-sam-killswitch": {
+      "assertions": [
+        {
+          "key": "atlas.frontend.kill_switch",
+          "value": "merged"
+        }
+      ]
+    },
+    "slack-thread-shallow": {
+      "assertions": [
+        {
+          "key": "atlas.launch.beta_confirmer",
+          "value": "priya_probably"
+        }
+      ]
+    },
+    "slack-thread-correction": {
+      "assertions": [
+        {
+          "key": "atlas.launch.beta_confirmer",
+          "value": "priya_only"
+        }
+      ]
+    },
+    "slack-wei-dst-ticket": {
+      "assertions": [
+        {
+          "key": "atlas.data.dst_fix",
+          "value": "open"
+        }
+      ]
+    },
+    "meeting-launch-review-nov5": {
+      "assertions": [
+        {
+          "key": "atlas.launch.sequence",
+          "value": "beta_then_ga"
+        }
+      ]
+    },
+    "customer-lumen-dpa": {
+      "assertions": [
+        {
+          "key": "atlas.customers.lumen",
+          "value": "pending_dpa"
+        }
+      ]
+    },
+    "customer-northwind-kestrel": {
+      "assertions": [
+        {
+          "key": "atlas.customers.northwind_kestrel",
+          "value": "ready"
+        }
+      ]
+    },
+    "restricted-halvorsen-revenue": {
+      "assertions": [
+        {
+          "key": "atlas.revenue.halvorsen_q4",
+          "value": "at_risk_if_q1"
+        }
+      ],
+      "sensitiveTerms": [
+        "60k",
+        "halvorsen slip",
+        "q4 recognized",
+        "slips to q1"
+      ]
+    },
+    "stale-revoked-beta-path": {
+      "assertions": [
+        {
+          "key": "atlas.launch.beta_path",
+          "value": "blocked"
+        }
+      ]
+    },
+    "prediction-priya-thursday": {
+      "assertions": [
+        {
+          "key": "atlas.launch.beta_timing",
+          "value": "predicted_thursday"
+        }
+      ]
     }
   }
 }

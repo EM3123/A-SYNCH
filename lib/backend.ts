@@ -71,7 +71,10 @@ export async function askAsynch(
   }));
   routeEvents.forEach((event) => options.onEvent?.(event));
 
-  const requesterId = input.requesterId || DEMO_REQUESTER_ID;
+  // Demo mode: identity is always the server-side demo requester. A caller-supplied
+  // requesterId is ignored, so a request cannot claim to be Priya to see her private notes.
+  // Real identity (Slack OAuth) replaces this before the pilot. See docs/security/DEMO_SAFETY.md.
+  const requesterId = DEMO_REQUESTER_ID;
   const contributions = await gatherContributions({
     people: selectedPeople,
     question,

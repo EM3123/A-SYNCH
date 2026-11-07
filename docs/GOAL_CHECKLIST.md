@@ -29,6 +29,7 @@ Last run: **Nov 7, 2026**, branch `main`. 24/24 evals passing, typecheck clean, 
 | T4 | Same permissions as the source | ✅ | `canAccess` in router + verify; leak scan on all output text | eval 7, injection-in-question test | Vedant |
 | T5 | Hands off to the human when context is missing | ✅ | `needs-human` + `requiresHuman`; `safeHandoffBrief` names the owner | evals 5, 6, 10; stale-only case | Vedant |
 | T6 | Answers include status, next step and what's blocked downstream | 🟡 | Fields required by `validateBrief`; content comes from synthesizer | eval 1 checks all three for the demo prompt. Not enforced as non-empty for every brief | Daksh |
+| T8 | Adversarial coverage: indirect and obfuscated injection, approval synonyms, status-question exemption, restricted paraphrase, revoked stale notes, predictions, conflicts, unexpected fields | ✅ | `evals/adversarial.test.ts` (test-first: each failed before its rule) | evals A–P | Vedant |
 | T7 | Owner visibility: owners see what's asked about their work | 🟡 | `audit.ownerIds` + hashed question in the audit trace | audit test. **No owner-facing view yet** | Edmund (UI), Daksh (API) |
 
 ## 2. What we won't do (doc: "What we won't do")
@@ -110,7 +111,7 @@ Tracked in `docs/hackathon/WORKSTREAM_SAFETY_PRIVACY.md` (items 4–6).
 
 ## Known limitations (said plainly)
 
-- **Requester identity is taken from the request body**, so a caller can claim to be someone else. Fix tracked as P0 in `docs/hackathon/WORKSTREAM_SAFETY_PRIVACY.md`.
+- **Demo identity is fixed server-side** (`DEMO_REQUESTER_ID`); caller-supplied `requesterId` is ignored. Real login (Slack OAuth) is still required before the pilot. See `docs/security/DEMO_SAFETY.md`.
 
 - Checks are pattern- and word-overlap based. They catch the demo cases and common rewordings; a determined adversary could phrase around them. The safe direction holds: labels only go down, so a miss means a weaker label is not applied, never a stronger one is invented.
 - `lib/agents/synthesizer.ts` has an approval pattern that also matches status questions like "Has Priya approved?". The Trust Layer does not flag those, but the synthesizer's fallback may still route them to the approval brief. Daksh's call.
