@@ -1,20 +1,21 @@
 // Landing: a dot-matrix wave crashes into the boat. Ask the team and the line dives to hook the
-// people the backend selected, one at a time. Ask one person and your twin swims to their coral.
+// people the backend selected, one at a time. Ask one person and the seeker swims to their coral.
 // The answer itself is text on the page: label, claims, sources, conflicts, next steps.
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { askPerson, askTeam, availabilityToStatus, type AskResponse, type PersonProfile } from '../api';
-import { outcropFor } from '../data';
+import { homeOffsetFor, outcropFor } from '../data';
 import { WATER, reefHomes, type Fish, type Vec } from '../sim/world';
 import { drawBoat, drawHookAndLine, drawFish, drawCoral, INK, CYAN } from '../sim/draw';
 import ResultPanel from './ResultPanel';
+import PersonConversation from './PersonConversation';
 
 export type Mode = 'team' | 'person';
 
 // Prompts from the teammate's handoff doc. They are the guaranteed demo questions.
-export const DEMO_QUESTIONS = [
-  'Can we ship Atlas today?',
-  'Would Priya support a 10% beta rollout today?',
-  'Approve the Atlas launch for me.',
+const DEMO_QUESTIONS: Array<{ text: string; mode: Mode; personId?: string }> = [
+  { text: 'Can we ship Atlas today?', mode: 'team' },
+  { text: 'Would Priya support a 10% beta rollout today?', mode: 'person', personId: 'priya' },
+  { text: 'Approve the Atlas launch for me.', mode: 'person', personId: 'priya' },
 ];
 
 // The requester is the demo user from the backend (lib/agents/demo-context.ts).
@@ -63,11 +64,11 @@ export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState('');
   const [mode, setMode] = useState<Mode>('team');
-  const [personId, setPersonId] = useState<string>('');
+  const [personId, setPersonId] = useState<string>('priya');
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [response, setResponse] = useState<AskResponse | null>(null);
-  const [history, setHistory] = useState<string[]>(loadHistory);
+  const [history, setHistory] = useState<string[]>([]);
   const [copied, setCopied] = useState('');
   const motionRef = useRef(reduceMotion);
   const rosterRef = useRef(roster);
@@ -76,8 +77,9 @@ export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion
   useEffect(() => { motionRef.current = reduceMotion; }, [reduceMotion]);
   useEffect(() => { rosterRef.current = roster; }, [roster]);
   useEffect(() => {
-    if (!personId && roster.length) setPersonId(roster[0].id);
-  }, [roster, personId]);
+    const frame = window.requestAnimationFrame(() => setHistory(loadHistory()));
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
   useEffect(() => { onResponse(response); }, [response, onResponse]);
 
   // "/" focuses the question, Escape clears the result.
@@ -124,10 +126,11 @@ export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion
       corals = homes as unknown as Record<string, Vec>;
       const m = new Map<string, Fish>();
       rosterRef.current.forEach((p, i) => {
-        const home = homes[outcropFor(p.id)];
+        const outcrop = homes[outcropFor(p.id)];
+        const home = { x: outcrop.x + homeOffsetFor(p.id), y: outcrop.y - 58 };
         m.set(p.id, {
           id: p.id, name: p.name, role: p.role, color: p.accent, status: availabilityToStatus(p.availability),
-          kind: 'twin', home: { ...home }, pos: { x: home.x + (i % 3) * 40 - 40, y: home.y - 50 - (i % 2) * 24 },
+          kind: 'agent', home: { ...home }, pos: { ...home },
           vel: { x: i % 2 ? 6 : -6, y: 0 }, phase: i, hooked: false,
         });
       });
@@ -278,7 +281,7 @@ export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion
         }
       }
 
-      // Drift resting twins a little
+      // Drift resting context agents a little
       sprites.forEach((f) => {
         if (!f.hooked && !(active && active.kind === 'swim' && f.id === active.id)) {
           f.pos.x = f.home.x + Math.sin(t * 0.3 + f.phase) * 6;
@@ -371,7 +374,7 @@ export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion
   }, [roster]);
 
   // Queue the animation for a finished answer. Team mode hooks the selected people one by one.
-  // Person mode swims your twin to that person's coral.
+  // Person mode swims the seeker to that person's coral.
   const queueFor = (r: AskResponse): Step[] => {
     if (r.mode === 'person') {
       const id = r.selectedPeople[0]?.id ?? personId;
@@ -420,7 +423,7 @@ export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion
       <canvas ref={canvasRef} className="ocean" aria-hidden="true" />
 
       <header className="chrome">
-        <div className="brand">A-SYNCH</div>
+        <div className="brand">A-SYNCH <span>/ SEEDED DEMO</span></div>
         <div className="chrome-right">
           <button type="button" aria-pressed={motionOn} onClick={onToggleMotion}>
             Motion {motionOn ? 'on' : 'off'}
@@ -459,8 +462,20 @@ export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion
         </div>
 
         <div className="row examples" aria-label="Example questions">
-          {DEMO_QUESTIONS.map((q) => (
-            <button key={q} type="button" className="chip" onClick={() => { setQuery(q); inputRef.current?.focus(); }}>{q}</button>
+          {DEMO_QUESTIONS.map((demo) => (
+            <button
+              key={demo.text}
+              type="button"
+              className="chip"
+              onClick={() => {
+                setQuery(demo.text);
+                setMode(demo.mode);
+                if (demo.personId) setPersonId(demo.personId);
+                inputRef.current?.focus();
+              }}
+            >
+              {demo.text}
+            </button>
           ))}
         </div>
 
@@ -486,7 +501,7 @@ export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion
         </section>
       )}
 
-      {response && (
+      {response && response.mode === 'team' && (
         <ResultPanel
           response={response}
           people={roster}
@@ -494,6 +509,22 @@ export default function Landing({ roster, reduceMotion, motionOn, onToggleMotion
           onCopy={copy}
         />
       )}
+
+      {response && response.mode === 'person' && (() => {
+        const person = roster.find((candidate) => candidate.id === response.selectedPeople[0]?.id)
+          ?? response.selectedPeople[0];
+        return person ? (
+          <PersonConversation
+            key={response.requestId}
+            initialResponse={response}
+            person={person}
+            requesterId={REQUESTER_ID}
+            onClose={() => setResponse(null)}
+            onLatestResponse={onResponse}
+            onCopy={copy}
+          />
+        ) : null;
+      })()}
 
       <p className="sr-only" role="status">
         {pending ? 'Searching the team.' : response ? `${response.brief.trust.decision}. ${response.brief.answer.split('\n')[0]}` : error ?? ''}

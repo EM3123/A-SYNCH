@@ -89,7 +89,7 @@ export interface Fish {
   role: string;
   color: string;
   status: Status;
-  kind: 'twin' | 'seeker';
+  kind: 'agent' | 'seeker';
   home: Vec;
   pos: Vec;
   vel: Vec;
@@ -137,7 +137,7 @@ export function stepFish(f: Fish, flock: Fish[], t: number, dt: number, W: numbe
       let cy = 0;
       let n = 0;
       for (const o of flock) {
-        if (o === f || o.kind !== 'twin' || o.hooked || o.status !== 'available') continue;
+        if (o === f || o.kind !== 'agent' || o.hooked || o.status !== 'available') continue;
         const dx = f.pos.x - o.pos.x;
         const dy = f.pos.y - o.pos.y;
         const d = Math.hypot(dx, dy);

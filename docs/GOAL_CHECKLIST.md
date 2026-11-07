@@ -14,7 +14,7 @@ Then read down the table. Any row whose test fails, or whose "Where" no longer m
 
 Status key: ✅ enforced in code and tested · 🟡 partly there · ❌ not built yet · 📝 lives outside the repo (deck, pitch, process)
 
-Last run: **Nov 7, 2026**, branch `trust-layer`. 24/24 evals passing, typecheck clean, smoke passing.
+Last run: **Nov 7, 2026**, branch `main`. 24/24 evals passing, typecheck clean, smoke passing, production UI build clean.
 
 ---
 
@@ -55,7 +55,7 @@ Last run: **Nov 7, 2026**, branch `trust-layer`. 24/24 evals passing, typecheck 
 |---|---|---|---|---|
 | F1 | Collect from GitHub, Jira, Slack, notes | 🟡 | `data/atlas/*.json` (demo data, all four sources) | Real connectors not built; fixed demo data is fine for Nov 7 |
 | F2 | Index: "who knows what" map | ✅ | `data/atlas/expertise.json` → `getExpertise` in router | Data test |
-| F3 | Ask in Slack (Mode A) or by voice (Mode B) | ❌ | Web API only (`/api/ask`, `/api/people/[id]/chat`) | Slack app and voice are open work |
+| F3 | Ask in Slack (Mode A) or by voice (Mode B) | 🟡 | Web team flow plus direct person conversation, follow-ups, and read-aloud (`/api/ask`, `/api/people/[id]/chat`) | Slack app and microphone input remain outside demo scope |
 | F4 | Route to the 2–3 most relevant agents | ✅ | `lib/agents/router.ts` | eval 1 |
 | F5 | Agents return cited evidence, not prose | ✅ | `queryContextAgent` returns `Evidence[]` | Code review |
 | F6 | One brief; conflicts shown with dates, not guessed | ✅ | conflict check in `verify.ts` | eval 8 |

@@ -24,6 +24,18 @@ OPENROUTER_MODEL=...
 
 Never commit `.env.local`.
 
+Open `http://localhost:3000` for the complete demo. The interface and API ship
+as one Next.js deployment from the repository root, so no second frontend
+project or cross-origin configuration is required.
+
+## Demo scope
+
+The hackathon build intentionally uses seeded Project Atlas records shaped like
+GitHub, Jira, Slack, meeting, and customer context. It demonstrates the full
+question-routing, evidence, trust, direct-conversation, and human-handoff flow;
+live workplace connectors, production authentication, and passive data capture
+are not part of this demo.
+
 ## Backend API
 
 ### List people
@@ -66,9 +78,9 @@ Both question endpoints return the same `AskResponse` contract from
 ## Verification
 
 ```bash
-pnpm typecheck
-pnpm smoke:backend
+pnpm typecheck && pnpm eval && pnpm smoke:backend
 pnpm build
+npm run build --prefix web
 ```
 
 The smoke script covers the team question, direct Priya conversation, and the
