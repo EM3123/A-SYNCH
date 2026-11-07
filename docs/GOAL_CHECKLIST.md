@@ -22,20 +22,20 @@ Last run: **Nov 7, 2026**, branch `main`. 24/24 evals passing, typecheck clean, 
 
 | # | Promise | Status | Where | Proved by | Owner |
 |---|---|---|---|---|---|
-| T1 | Evidence first: every claim links to its source, with a timestamp | ✅ | `lib/trust/verify.ts` citation check; conflicts print dates | evals 1, 6, 8 | Edmund |
-| T2 | No invented opinions: only stated or confirmed reasoning | ✅ | support-ratio check, persona check, prediction relabel | "Goal: claims not backed…", "predictions…", "no inferred feelings" | Edmund |
-| T3 | Never decides or commits for the person | ✅ | `detectAuthorityRequest` (question), `findApprovalClaims` (answer), approval needs `approvalRecord` | evals 5, 9; "approval, action and impersonation requests" | Edmund |
-| T3b | Always identifies as AI, never speaks as the person | ✅ | `findPersonaViolations` → safe hand-off brief | "Goal: the agent never speaks as the person" | Edmund |
-| T4 | Same permissions as the source | ✅ | `canAccess` in router + verify; leak scan on all output text | eval 7, injection-in-question test | Edmund |
-| T5 | Hands off to the human when context is missing | ✅ | `needs-human` + `requiresHuman`; `safeHandoffBrief` names the owner | evals 5, 6, 10; stale-only case | Edmund |
+| T1 | Evidence first: every claim links to its source, with a timestamp | ✅ | `lib/trust/verify.ts` citation check; conflicts print dates | evals 1, 6, 8 | Vedant |
+| T2 | No invented opinions: only stated or confirmed reasoning | ✅ | support-ratio check, persona check, prediction relabel | "Goal: claims not backed…", "predictions…", "no inferred feelings" | Vedant |
+| T3 | Never decides or commits for the person | ✅ | `detectAuthorityRequest` (question), `findApprovalClaims` (answer), approval needs `approvalRecord` | evals 5, 9; "approval, action and impersonation requests" | Vedant |
+| T3b | Always identifies as AI, never speaks as the person | ✅ | `findPersonaViolations` → safe hand-off brief | "Goal: the agent never speaks as the person" | Vedant |
+| T4 | Same permissions as the source | ✅ | `canAccess` in router + verify; leak scan on all output text | eval 7, injection-in-question test | Vedant |
+| T5 | Hands off to the human when context is missing | ✅ | `needs-human` + `requiresHuman`; `safeHandoffBrief` names the owner | evals 5, 6, 10; stale-only case | Vedant |
 | T6 | Answers include status, next step and what's blocked downstream | 🟡 | Fields required by `validateBrief`; content comes from synthesizer | eval 1 checks all three for the demo prompt. Not enforced as non-empty for every brief | Daksh |
-| T7 | Owner visibility: owners see what's asked about their work | 🟡 | `audit.ownerIds` + hashed question in the audit trace | audit test. **No owner-facing view yet** | Vedant (UI), Daksh (API) |
+| T7 | Owner visibility: owners see what's asked about their work | 🟡 | `audit.ownerIds` + hashed question in the audit trace | audit test. **No owner-facing view yet** | Edmund (UI), Daksh (API) |
 
 ## 2. What we won't do (doc: "What we won't do")
 
 | # | Promise | Status | Where | Proved by | Owner |
 |---|---|---|---|---|---|
-| W1 | No emotion inference | ✅ | `infers-feelings` / `infers-risk-appetite` rules | "Goal: no inferred feelings" | Edmund |
+| W1 | No emotion inference | ✅ | `infers-feelings` / `infers-risk-appetite` rules | "Goal: no inferred feelings" | Vedant |
 | W2 | No passive screen or audio recording | ✅ | Nothing in the repo records; context is fixed JSON from GitHub/Jira/Slack/meeting notes | Code review: no capture code exists | All |
 | W3 | No training on company data | ✅ | Model is only called with retrieved evidence at answer time (`lib/openrouter.ts`) | Code review | Daksh |
 | W4 | No "replica" / "clone" language; call them context agents | ✅ | Repo copy says "context agent" | "all three demo prompts" test greps briefs for clone/twin/replica | All |
@@ -77,7 +77,7 @@ Last run: **Nov 7, 2026**, branch `main`. 24/24 evals passing, typecheck clean, 
 |---|---|---|---|
 | D1 | Evidence, not imitation | ✅ | T1 + T3b |
 | D2 | A stand-in, not a decision-maker | ✅ | T3 |
-| D3 | The decision tree is the demo | 🟡 | Data is there; UI must make it the centerpiece (Vedant) |
+| D3 | The decision tree is the demo | 🟡 | Data is there; UI must make it the centerpiece (Edmund) |
 | D4 | Answers that unblock | 🟡 | T6 |
 | D5 | Engineering-native and voice-first | 🟡 | Engineering-native ✅; voice ❌ (Mode B) |
 | D6 | Easy to approve | ✅ | W2, W3, audit trace with no secret text |
@@ -103,8 +103,8 @@ Tracked in `docs/hackathon/WORKSTREAM_SAFETY_PRIVACY.md` (items 4–6).
 
 | # | Item | Status | Owner |
 |---|---|---|---|
-| X1 | Deck and pitch use "context agent", never clone/twin | 📝 check before each pitch | Vedant |
-| X2 | Re-check competitor products before a comparison slide | 📝 | Vedant |
+| X1 | Deck and pitch use "context agent" language consistently | 📝 check before each pitch | Edmund |
+| X2 | Re-check competitor products before a comparison slide | 📝 | Edmund |
 
 ---
 

@@ -288,7 +288,7 @@ Own:
 
 Primary paths: `app/api/`, `lib/agents/`, `lib/openrouter.ts`, `lib/contracts.ts`.
 
-### Vedant - Experience and story
+### Edmund - Frontend experience and demo UX
 
 Own:
 
@@ -297,9 +297,9 @@ Own:
 - Motion, visual identity, and responsive presentation view
 - Slide deck and five-minute story
 
-Primary paths: `app/`, `components/`, `public/`, `docs/pitch/`.
+Primary paths: `web/src/`, `app/page.tsx`, `app/layout.tsx`, frontend assets.
 
-### Edmund - Context, trust, and evaluation
+### Vedant - Realistic context, trust, and evaluation
 
 Own:
 
@@ -315,8 +315,8 @@ Only Daksh changes `lib/contracts.ts` after contract lock. Everyone should avoid
 ## Integration sequence
 
 1. Agree on `Evidence` and `SituationBrief` and freeze them.
-2. Vedant renders the complete demo from a fallback fixture.
-3. Edmund supplies all person context and Trust Layer fixtures.
+2. Edmund renders the complete demo from deterministic responses.
+3. Vedant supplies realistic person context and Trust Layer fixtures.
 4. Daksh connects live OpenRouter agent calls to the same contract.
 5. Merge and run the exact presentation path.
 6. Freeze features early enough to polish, record a backup demo, and rehearse.
