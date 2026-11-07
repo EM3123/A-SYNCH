@@ -1,0 +1,210 @@
+[
+  {
+    "repo": "corvidlabs/atlas",
+    "number": 207,
+    "title": "Cursor pagination for API v1",
+    "author": "alex",
+    "state": "merged",
+    "opened": "2026-10-26T17:00:00-04:00",
+    "lastUpdated": "2026-10-27T16:02:00-04:00",
+    "reviewers": [
+      "kwame"
+    ],
+    "checks": "green",
+    "description": "Cursor-based pagination, max 500. Docs ticket DOC-77.",
+    "linked": [
+      "ATLAS-37"
+    ]
+  },
+  {
+    "repo": "corvidlabs/atlas",
+    "number": 209,
+    "title": "Hourly and daily rollup tables",
+    "author": "wei",
+    "state": "merged",
+    "opened": "2026-10-27T12:00:00-04:00",
+    "lastUpdated": "2026-10-28T17:20:00-04:00",
+    "reviewers": [
+      "alex",
+      "lucas"
+    ],
+    "checks": "green",
+    "description": "Per-workspace rollups. Staging backfill finished.",
+    "linked": [
+      "ATLAS-37"
+    ]
+  },
+  {
+    "repo": "corvidlabs/atlas",
+    "number": 211,
+    "title": "CSV export UI",
+    "author": "nadia",
+    "state": "merged",
+    "opened": "2026-10-29T11:00:00-04:00",
+    "lastUpdated": "2026-10-30T16:30:00-04:00",
+    "reviewers": [
+      "sam"
+    ],
+    "checks": "green",
+    "description": "Timestamps use workspace timezone.",
+    "linked": [
+      "ATLAS-34"
+    ]
+  },
+  {
+    "repo": "corvidlabs/atlas",
+    "number": 212,
+    "title": "Kill switch and rollout flags",
+    "author": "sam",
+    "state": "merged",
+    "opened": "2026-10-28T14:00:00-04:00",
+    "lastUpdated": "2026-10-29T13:05:00-04:00",
+    "reviewers": [
+      "devon"
+    ],
+    "checks": "green",
+    "description": "atlas.enabled and atlas.rollout_pct in LaunchDarkly, default off.",
+    "linked": [
+      "ATLAS-36"
+    ]
+  },
+  {
+    "repo": "corvidlabs/atlas",
+    "number": 214,
+    "title": "Atlas API v1",
+    "author": "alex",
+    "state": "merged",
+    "opened": "2026-10-29T17:44:00-04:00",
+    "lastUpdated": "2026-11-06T11:42:00-05:00",
+    "reviewers": [
+      "wei",
+      "grace",
+      "kwame"
+    ],
+    "checks": "green (184/184)",
+    "description": "Workspaces, usage, dashboards, exports. Large PR; fixes from #216 and #222 included.",
+    "linked": [
+      "ATLAS-37"
+    ]
+  },
+  {
+    "repo": "corvidlabs/atlas",
+    "number": 216,
+    "title": "Ownership check on export fetch + cross-tenant tests",
+    "author": "alex",
+    "state": "merged",
+    "opened": "2026-11-03T09:30:00-05:00",
+    "lastUpdated": "2026-11-04T16:12:00-05:00",
+    "reviewers": [
+      "jordan",
+      "marcus"
+    ],
+    "checks": "green (14 endpoints)",
+    "description": "Fixes SEC-112.",
+    "linked": [
+      "SEC-112"
+    ]
+  },
+  {
+    "repo": "corvidlabs/atlas",
+    "number": 217,
+    "title": "Query cache for 90-day ranges",
+    "author": "alex",
+    "state": "draft",
+    "opened": "2026-11-04T11:00:00-05:00",
+    "lastUpdated": "2026-11-05T17:06:00-05:00",
+    "reviewers": [],
+    "checks": "pending",
+    "description": "Draft. Pairing with Grace. Not part of beta.",
+    "linked": [
+      "ATLAS-47"
+    ]
+  },
+  {
+    "repo": "corvidlabs/atlas",
+    "number": 219,
+    "title": "Percentage rollout control UI",
+    "author": "sam",
+    "state": "open",
+    "opened": "2026-10-27T10:00:00-04:00",
+    "lastUpdated": "2026-11-06T13:31:00-05:00",
+    "reviewers": [
+      "leo",
+      "chloe"
+    ],
+    "checks": "failing: axe focus-order check",
+    "description": "Slider, allowlist table, typed-confirm kill switch. Fix pushed for keyboard focus order. Leo re-reviewing.",
+    "linked": [
+      "ATLAS-36"
+    ]
+  },
+  {
+    "repo": "corvidlabs/atlas",
+    "number": 221,
+    "title": "Dedupe usage events on event_id",
+    "author": "wei",
+    "state": "merged",
+    "opened": "2026-11-02T14:00:00-05:00",
+    "lastUpdated": "2026-11-04T13:35:00-05:00",
+    "reviewers": [
+      "lucas",
+      "alex"
+    ],
+    "checks": "green",
+    "description": "Fixes INC-2291.",
+    "linked": [
+      "INC-2291"
+    ]
+  },
+  {
+    "repo": "corvidlabs/atlas",
+    "number": 222,
+    "title": "CI: reject non-concurrent index on big tables",
+    "author": "devon",
+    "state": "merged",
+    "opened": "2026-11-04T10:30:00-05:00",
+    "lastUpdated": "2026-11-05T14:00:00-05:00",
+    "reviewers": [
+      "alex"
+    ],
+    "checks": "green",
+    "description": "Migrations locking tables over 1M rows fail CI.",
+    "linked": [
+      "INC-2294"
+    ]
+  },
+  {
+    "repo": "corvidlabs/atlas",
+    "number": 223,
+    "title": "SAML clock-skew tolerance (90 s)",
+    "author": "ingrid",
+    "state": "open",
+    "opened": "2026-11-05T09:00:00-05:00",
+    "lastUpdated": "2026-11-06T10:01:00-05:00",
+    "reviewers": [
+      "jordan"
+    ],
+    "checks": "green",
+    "description": "Fixes ATLAS-44. Needed before Nov 10 verification.",
+    "linked": [
+      "ATLAS-44"
+    ]
+  },
+  {
+    "repo": "corvidlabs/atlas",
+    "number": 225,
+    "title": "Request ids in API error responses",
+    "author": "grace",
+    "state": "merged",
+    "opened": "2026-11-03T13:50:00-05:00",
+    "lastUpdated": "2026-11-04T15:30:00-05:00",
+    "reviewers": [
+      "alex"
+    ],
+    "checks": "green",
+    "description": "Grace's first PR.",
+    "linked": [
+      "ATLAS-37"
+    ]
+  }
+]

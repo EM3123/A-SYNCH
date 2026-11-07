@@ -1,0 +1,35 @@
+[
+  {
+    "thread": "T017",
+    "ts": "2026-10-30T11:02:00-04:00",
+    "author": "ryan",
+    "authorName": "Ryan O'Connor",
+    "isExternal": false,
+    "text": "Halvorsen Freight update: procurement (Erik) wants a GA date with SSO in writing before they sign. $240k ARR, close target Dec 15. Who can give me a date?",
+    "reactions": {},
+    "channel": "sales-enterprise",
+    "channelId": "C11SAL"
+  },
+  {
+    "thread": "T017",
+    "ts": "2026-10-30T11:30:00-04:00",
+    "author": "elena",
+    "authorName": "Elena Vasquez",
+    "isExternal": false,
+    "text": "Priya owns the Atlas date. Don't commit anything in writing until you have it from her.",
+    "reactions": {},
+    "channel": "sales-enterprise",
+    "channelId": "C11SAL"
+  },
+  {
+    "thread": "T017",
+    "ts": "2026-10-30T11:31:00-04:00",
+    "author": "ryan",
+    "authorName": "Ryan O'Connor",
+    "isExternal": false,
+    "text": "Copy. I'll tell them 'targeting December' for now.",
+    "reactions": {},
+    "channel": "sales-enterprise",
+    "channelId": "C11SAL"
+  }
+]

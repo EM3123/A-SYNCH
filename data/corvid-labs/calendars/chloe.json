@@ -1,0 +1,191 @@
+{
+  "personId": "chloe",
+  "name": "Chloe Martin",
+  "timezone": "America/New_York",
+  "events": [
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-02T12:00:00-05:00",
+      "end": "2026-11-02T12:45:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Design & Research standup",
+      "type": "standing",
+      "start": "2026-11-02T11:00:00-05:00",
+      "end": "2026-11-02T11:15:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-03T12:00:00-05:00",
+      "end": "2026-11-03T12:45:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Design & Research standup",
+      "type": "standing",
+      "start": "2026-11-03T11:00:00-05:00",
+      "end": "2026-11-03T11:15:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "1:1 with Priya Shah",
+      "type": "1:1",
+      "start": "2026-11-03T14:00:00-05:00",
+      "end": "2026-11-03T14:30:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-04T12:00:00-05:00",
+      "end": "2026-11-04T12:45:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Design & Research standup",
+      "type": "standing",
+      "start": "2026-11-04T11:00:00-05:00",
+      "end": "2026-11-04T11:15:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-05T12:00:00-05:00",
+      "end": "2026-11-05T12:45:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Design & Research standup",
+      "type": "standing",
+      "start": "2026-11-05T11:00:00-05:00",
+      "end": "2026-11-05T11:15:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-06T12:00:00-05:00",
+      "end": "2026-11-06T12:45:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Design & Research standup",
+      "type": "standing",
+      "start": "2026-11-06T11:00:00-05:00",
+      "end": "2026-11-06T11:15:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Design partner check-in",
+      "type": "meeting",
+      "start": "2026-11-06T11:30:00-05:00",
+      "end": "2026-11-06T12:00:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-09T12:00:00-05:00",
+      "end": "2026-11-09T12:45:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Design & Research standup",
+      "type": "standing",
+      "start": "2026-11-09T11:00:00-05:00",
+      "end": "2026-11-09T11:15:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-10T12:00:00-05:00",
+      "end": "2026-11-10T12:45:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Design & Research standup",
+      "type": "standing",
+      "start": "2026-11-10T11:00:00-05:00",
+      "end": "2026-11-10T11:15:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "1:1 with Priya Shah",
+      "type": "1:1",
+      "start": "2026-11-10T14:00:00-05:00",
+      "end": "2026-11-10T14:30:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-11T12:00:00-05:00",
+      "end": "2026-11-11T12:45:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Design & Research standup",
+      "type": "standing",
+      "start": "2026-11-11T11:00:00-05:00",
+      "end": "2026-11-11T11:15:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-12T12:00:00-05:00",
+      "end": "2026-11-12T12:45:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Design & Research standup",
+      "type": "standing",
+      "start": "2026-11-12T11:00:00-05:00",
+      "end": "2026-11-12T11:15:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Lunch",
+      "type": "focus",
+      "start": "2026-11-13T12:00:00-05:00",
+      "end": "2026-11-13T12:45:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    },
+    {
+      "title": "Design & Research standup",
+      "type": "standing",
+      "start": "2026-11-13T11:00:00-05:00",
+      "end": "2026-11-13T11:15:00-05:00",
+      "tz": "America/New_York",
+      "visibility": "public"
+    }
+  ]
+}

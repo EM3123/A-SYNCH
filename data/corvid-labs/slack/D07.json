@@ -1,0 +1,35 @@
+[
+  {
+    "thread": "T049",
+    "ts": "2026-11-05T16:20:00-05:00",
+    "author": "jasmine",
+    "authorName": "Jasmine Taylor",
+    "isExternal": false,
+    "text": "Two options for launch comms: (A) email all customers Monday, (B) quiet beta, only the 3 partners, public announcement at GA. Which do you want?",
+    "reactions": {},
+    "channel": "D07",
+    "channelId": "D07"
+  },
+  {
+    "thread": "T049",
+    "ts": "2026-11-05T17:05:00-05:00",
+    "author": "priya",
+    "authorName": "Priya Shah",
+    "isExternal": false,
+    "text": "B. Beta is design partners only. No public announcement or all-customer email until GA. Release notes can mention 'Atlas beta for design partners' in one line.",
+    "reactions": {},
+    "channel": "D07",
+    "channelId": "D07"
+  },
+  {
+    "thread": "T049",
+    "ts": "2026-11-05T17:06:00-05:00",
+    "author": "jasmine",
+    "authorName": "Jasmine Taylor",
+    "isExternal": false,
+    "text": "Got it, going with B.",
+    "reactions": {},
+    "channel": "D07",
+    "channelId": "D07"
+  }
+]

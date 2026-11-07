@@ -1,0 +1,24 @@
+[
+  {
+    "thread": "T053",
+    "ts": "2026-11-02T16:30:00-05:00",
+    "author": "kwame",
+    "authorName": "Kwame Asante",
+    "isExternal": false,
+    "text": "How's day 1? Your first week goals: run Atlas locally, ship one small PR, pair with Alex on the cache. No pressure on Go.",
+    "reactions": {},
+    "channel": "D11",
+    "channelId": "D11"
+  },
+  {
+    "thread": "T053",
+    "ts": "2026-11-02T16:35:00-05:00",
+    "author": "grace",
+    "authorName": "Grace Kim",
+    "isExternal": false,
+    "text": "Good! Running locally already. Will grab a small ticket tomorrow.",
+    "reactions": {},
+    "channel": "D11",
+    "channelId": "D11"
+  }
+]

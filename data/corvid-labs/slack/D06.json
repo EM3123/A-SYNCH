@@ -1,0 +1,24 @@
+[
+  {
+    "thread": "T048",
+    "ts": "2026-11-05T09:40:00-05:00",
+    "author": "jordan",
+    "authorName": "Jordan Okafor",
+    "isExternal": false,
+    "text": "If PR #223 doesn't land before Nov 10, can we still run the Azure AD verification?",
+    "reactions": {},
+    "channel": "D06",
+    "channelId": "D06"
+  },
+  {
+    "thread": "T048",
+    "ts": "2026-11-05T09:46:00-05:00",
+    "author": "ingrid",
+    "authorName": "Ingrid Larsen",
+    "isExternal": false,
+    "text": "We'd see ~8% login failures, so it would fail verification. I'll make sure it lands Monday at the latest.",
+    "reactions": {},
+    "channel": "D06",
+    "channelId": "D06"
+  }
+]

@@ -1,0 +1,24 @@
+[
+  {
+    "thread": "T051",
+    "ts": "2026-11-04T15:00:00-05:00",
+    "author": "hana",
+    "authorName": "Hana Sato",
+    "isExternal": false,
+    "text": "Reminder I'm on PTO from tomorrow through Nov 13. The Atlas SLO dashboard is in Grafana under Atlas/Beta. Alerts route to #eng-oncall.",
+    "reactions": {},
+    "channel": "D09",
+    "channelId": "D09"
+  },
+  {
+    "thread": "T051",
+    "ts": "2026-11-04T15:03:00-05:00",
+    "author": "devon",
+    "authorName": "Devon Price",
+    "isExternal": false,
+    "text": "Thanks Hana, enjoy! I've got it.",
+    "reactions": {},
+    "channel": "D09",
+    "channelId": "D09"
+  }
+]

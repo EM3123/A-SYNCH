@@ -1,0 +1,24 @@
+[
+  {
+    "thread": "T055",
+    "ts": "2026-10-19T09:00:00-04:00",
+    "author": "olivia",
+    "authorName": "Olivia Grant",
+    "isExternal": false,
+    "text": "Tomás's parental leave started today, returns Jan 11. Kwame has his handoff doc; Wei is backup for the metering consumer.",
+    "reactions": {},
+    "channel": "people-ops-private",
+    "channelId": "C16PPL"
+  },
+  {
+    "thread": "T055",
+    "ts": "2026-10-19T09:12:00-04:00",
+    "author": "kwame",
+    "authorName": "Kwame Asante",
+    "isExternal": false,
+    "text": "Thanks Olivia. I've moved his tickets to Wei.",
+    "reactions": {},
+    "channel": "people-ops-private",
+    "channelId": "C16PPL"
+  }
+]

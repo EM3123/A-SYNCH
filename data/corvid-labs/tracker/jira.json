@@ -1,0 +1,361 @@
+[
+  {
+    "key": "ATLAS-30",
+    "title": "Beta release: design partner rollout (epic)",
+    "type": "Epic",
+    "priority": "High",
+    "status": "In Progress",
+    "assignee": "priya",
+    "reporter": "jasmine",
+    "created": "2026-10-20T10:00:00-04:00",
+    "updated": "2026-11-06T12:20:00-05:00",
+    "epic": "-",
+    "description": "Umbrella for the design-partner beta. Checklist: 7 of 9 done. Open: PR #219 merged, Priya go/no-go.",
+    "labels": [
+      "beta"
+    ]
+  },
+  {
+    "key": "ATLAS-34",
+    "title": "CSV export of usage",
+    "type": "Story",
+    "priority": "Medium",
+    "status": "Done",
+    "assignee": "nadia",
+    "reporter": "kwame",
+    "created": "2026-10-08T09:00:00-04:00",
+    "updated": "2026-10-30T16:30:00-04:00",
+    "epic": "ATLAS-30",
+    "description": "Export usage as CSV with workspace timezone timestamps.",
+    "labels": [
+      "frontend"
+    ]
+  },
+  {
+    "key": "ATLAS-36",
+    "title": "Rollout control UI (percentage slider, allowlist, kill switch)",
+    "type": "Story",
+    "priority": "High",
+    "status": "In Review",
+    "assignee": "sam",
+    "reporter": "kwame",
+    "created": "2026-10-20T09:00:00-04:00",
+    "updated": "2026-11-06T13:31:00-05:00",
+    "epic": "ATLAS-30",
+    "description": "Slider snaps to 1/5/10/25/50/100. Default 0% plus allowlist. aria-valuetext required.",
+    "labels": [
+      "frontend",
+      "rollout"
+    ]
+  },
+  {
+    "key": "ATLAS-37",
+    "title": "API v1 endpoints",
+    "type": "Story",
+    "priority": "High",
+    "status": "Done",
+    "assignee": "alex",
+    "reporter": "kwame",
+    "created": "2026-10-12T09:00:00-04:00",
+    "updated": "2026-11-06T11:42:00-05:00",
+    "epic": "ATLAS-30",
+    "description": "Workspaces, usage, dashboards, exports. Cursor pagination, max page size 500.",
+    "labels": [
+      "backend"
+    ]
+  },
+  {
+    "key": "ATLAS-38",
+    "title": "Security review for Atlas",
+    "type": "Task",
+    "priority": "Critical",
+    "status": "In Progress",
+    "assignee": "jordan",
+    "reporter": "priya",
+    "created": "2026-10-14T09:00:00-04:00",
+    "updated": "2026-11-05T10:32:00-05:00",
+    "epic": "ATLAS-30",
+    "description": "Threat model and pen test. Beta: no security blocker. GA: export audit log (ATLAS-50) and SSO verification (ATLAS-41) still open.",
+    "labels": [
+      "security"
+    ]
+  },
+  {
+    "key": "ATLAS-40",
+    "title": "Load test: dashboard queries at 200 concurrent users",
+    "type": "Task",
+    "priority": "High",
+    "status": "Done",
+    "assignee": "ben",
+    "reporter": "alex",
+    "created": "2026-10-22T09:00:00-04:00",
+    "updated": "2026-10-30T12:40:00-04:00",
+    "epic": "ATLAS-30",
+    "description": "Results: 30-day p99 420 ms, 90-day p99 1.4 s (target 800 ms). Decision: beta caps ranges at 30 days.",
+    "labels": [
+      "perf"
+    ]
+  },
+  {
+    "key": "ATLAS-41",
+    "title": "Enterprise SSO verification",
+    "type": "Task",
+    "priority": "High",
+    "status": "To Do",
+    "assignee": "ingrid",
+    "reporter": "jordan",
+    "created": "2026-10-14T10:00:00-04:00",
+    "updated": "2026-11-05T09:10:00-05:00",
+    "epic": "ATLAS-38",
+    "description": "Verification with Northwind (Okta) and Kestrel (Azure AD) on Nov 10. GA only; not required for flag-gated beta.",
+    "labels": [
+      "sso"
+    ]
+  },
+  {
+    "key": "ATLAS-44",
+    "title": "Azure AD SAML NotBefore failures",
+    "type": "Bug",
+    "priority": "Critical",
+    "status": "In Progress",
+    "assignee": "ingrid",
+    "reporter": "ingrid",
+    "created": "2026-11-04T14:00:00-05:00",
+    "updated": "2026-11-06T10:01:00-05:00",
+    "epic": "ATLAS-41",
+    "description": "About 8% of Azure AD logins fail; Azure clock runs ahead and we allow zero skew. Fix: 90-second tolerance (PR #223).",
+    "labels": [
+      "sso",
+      "bug"
+    ]
+  },
+  {
+    "key": "ATLAS-47",
+    "title": "Query cache for 90-day ranges",
+    "type": "Story",
+    "priority": "Medium",
+    "status": "To Do",
+    "assignee": "alex",
+    "reporter": "alex",
+    "created": "2026-10-30T12:52:00-04:00",
+    "updated": "2026-11-05T17:06:00-05:00",
+    "epic": "ATLAS-40",
+    "description": "Cache 90-day dashboard ranges. Target GA. PR #217 is the draft.",
+    "labels": [
+      "perf"
+    ]
+  },
+  {
+    "key": "ATLAS-49",
+    "title": "Verify kill switch end to end on staging",
+    "type": "Task",
+    "priority": "High",
+    "status": "Done",
+    "assignee": "devon",
+    "reporter": "sam",
+    "created": "2026-10-29T13:20:00-04:00",
+    "updated": "2026-11-05T16:40:00-05:00",
+    "epic": "ATLAS-30",
+    "description": "Turning atlas.enabled off returns 404 across pods within 9 s. Runbook updated.",
+    "labels": [
+      "ops",
+      "rollout"
+    ]
+  },
+  {
+    "key": "ATLAS-50",
+    "title": "Export audit log",
+    "type": "Story",
+    "priority": "High",
+    "status": "To Do",
+    "assignee": "jordan",
+    "reporter": "jordan",
+    "created": "2026-11-05T10:32:00-05:00",
+    "updated": "2026-11-05T10:32:00-05:00",
+    "epic": "ATLAS-38",
+    "description": "Required for GA. Not required for flag-gated design-partner beta.",
+    "labels": [
+      "security",
+      "ga"
+    ]
+  },
+  {
+    "key": "ATLAS-52",
+    "title": "Empty states for dashboards and date picker",
+    "type": "Story",
+    "priority": "Low",
+    "status": "In Progress",
+    "assignee": "nadia",
+    "reporter": "chloe",
+    "created": "2026-11-02T10:00:00-05:00",
+    "updated": "2026-11-06T10:05:00-05:00",
+    "epic": "ATLAS-30",
+    "description": "Copy from Chloe pending. Date picker capped at 30 days behind the flag.",
+    "labels": [
+      "frontend"
+    ]
+  },
+  {
+    "key": "SEC-112",
+    "title": "Cross-tenant access on GET /v1/exports/{id}",
+    "type": "Bug",
+    "priority": "Critical",
+    "status": "Done",
+    "assignee": "alex",
+    "reporter": "jordan",
+    "created": "2026-11-03T08:41:00-05:00",
+    "updated": "2026-11-05T10:32:00-05:00",
+    "epic": "ATLAS-38",
+    "description": "Fetch did not check workspace ownership. Fixed in #216; cross-tenant tests cover 14 endpoints. Retested on staging.",
+    "labels": [
+      "security",
+      "bug"
+    ]
+  },
+  {
+    "key": "INC-2291",
+    "title": "Duplicate usage events after DST fallback (Sev2)",
+    "type": "Incident",
+    "priority": "High",
+    "status": "Done",
+    "assignee": "wei",
+    "reporter": "wei",
+    "created": "2026-11-02T10:11:00-05:00",
+    "updated": "2026-11-05T10:30:00-05:00",
+    "epic": "-",
+    "description": "Hourly buckets keyed on local time double-counted 1-2 AM on Nov 1 for 41 workspaces. Fixed in #221; backfill and billing recompute done.",
+    "labels": [
+      "incident",
+      "data-correctness"
+    ]
+  },
+  {
+    "key": "INC-2294",
+    "title": "Staging deploy blocked by table lock",
+    "type": "Incident",
+    "priority": "Low",
+    "status": "Done",
+    "assignee": "devon",
+    "reporter": "devon",
+    "created": "2026-11-04T09:15:00-05:00",
+    "updated": "2026-11-05T14:00:00-05:00",
+    "epic": "-",
+    "description": "Non-concurrent index on usage_rollups locked the table for 41 minutes. CI check added (#222).",
+    "labels": [
+      "incident",
+      "ci"
+    ]
+  },
+  {
+    "key": "SUP-1180",
+    "title": "Northwind usage dashboard shows double usage",
+    "type": "Support",
+    "priority": "High",
+    "status": "Done",
+    "assignee": "mateo",
+    "reporter": "laura",
+    "created": "2026-11-02T09:48:00-05:00",
+    "updated": "2026-11-05T11:00:00-05:00",
+    "epic": "-",
+    "description": "Caused by INC-2291. Corrected report sent to Northwind. No duplicate charges.",
+    "labels": [
+      "support"
+    ]
+  },
+  {
+    "key": "PLAT-412",
+    "title": "Grafana SLO panels for Atlas beta",
+    "type": "Task",
+    "priority": "Medium",
+    "status": "In Progress",
+    "assignee": "hana",
+    "reporter": "hana",
+    "created": "2026-10-28T10:00:00-04:00",
+    "updated": "2026-11-04T15:00:00-05:00",
+    "epic": "ATLAS-30",
+    "description": "Panels under Atlas/Beta. Alerts route to #eng-oncall. On PTO Nov 5-13.",
+    "labels": [
+      "observability"
+    ]
+  },
+  {
+    "key": "BILL-209",
+    "title": "Recompute billing aggregates for Nov 1",
+    "type": "Task",
+    "priority": "High",
+    "status": "Done",
+    "assignee": "lucas",
+    "reporter": "wei",
+    "created": "2026-11-02T11:05:00-05:00",
+    "updated": "2026-11-05T10:15:00-05:00",
+    "epic": "INC-2291",
+    "description": "Aggregates recomputed for 41 workspaces; totals match raw events.",
+    "labels": [
+      "billing"
+    ]
+  },
+  {
+    "key": "DOC-77",
+    "title": "Atlas API guide: pagination and errors",
+    "type": "Task",
+    "priority": "Medium",
+    "status": "In Review",
+    "assignee": "isabel",
+    "reporter": "alex",
+    "created": "2026-10-27T16:10:00-04:00",
+    "updated": "2026-11-03T09:00:00-05:00",
+    "epic": "ATLAS-37",
+    "description": "Document cursor pagination and request ids (#225).",
+    "labels": [
+      "docs"
+    ]
+  },
+  {
+    "key": "LEGAL-31",
+    "title": "Lumen Health beta DPA addendum",
+    "type": "Task",
+    "priority": "High",
+    "status": "In Progress",
+    "assignee": "rebecca",
+    "reporter": "maya",
+    "created": "2026-10-29T09:40:00-04:00",
+    "updated": "2026-11-06T10:45:00-05:00",
+    "epic": "ATLAS-30",
+    "description": "30-day retention accepted; 72h deletion; 14-day sub-processor notice. Countersignature expected Monday Nov 9.",
+    "labels": [
+      "legal"
+    ]
+  },
+  {
+    "key": "HIRE-58",
+    "title": "Backend hire: Grace Kim",
+    "type": "Task",
+    "priority": "Low",
+    "status": "Done",
+    "assignee": "olivia",
+    "reporter": "kwame",
+    "created": "2026-09-20T10:00:00-04:00",
+    "updated": "2026-11-02T09:05:00-05:00",
+    "epic": "-",
+    "description": "Started Nov 2.",
+    "labels": [
+      "people"
+    ]
+  },
+  {
+    "key": "ATLAS-54",
+    "title": "Usage-based billing: metering topic schema v2",
+    "type": "Story",
+    "priority": "Medium",
+    "status": "To Do",
+    "assignee": "lucas",
+    "reporter": "ethan",
+    "created": "2026-11-03T10:00:00-05:00",
+    "updated": "2026-11-03T10:00:00-05:00",
+    "epic": "-",
+    "description": "Schema for usage events used by Atlas dashboards. Post-GA.",
+    "labels": [
+      "billing"
+    ]
+  }
+]

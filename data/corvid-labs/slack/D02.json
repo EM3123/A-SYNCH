@@ -1,0 +1,35 @@
+[
+  {
+    "thread": "T044",
+    "ts": "2026-11-04T17:30:00-05:00",
+    "author": "kwame",
+    "authorName": "Kwame Asante",
+    "isExternal": false,
+    "text": "If #219 lands Friday and Jordan's clear, do you want to do the go/no-go Friday or Monday?",
+    "reactions": {},
+    "channel": "D02",
+    "channelId": "D02"
+  },
+  {
+    "thread": "T044",
+    "ts": "2026-11-04T17:41:00-05:00",
+    "author": "priya",
+    "authorName": "Priya Shah",
+    "isExternal": false,
+    "text": "Friday after QBR if everything's green. I'll decide then. Please don't turn anything on for customers before I say go.",
+    "reactions": {},
+    "channel": "D02",
+    "channelId": "D02"
+  },
+  {
+    "thread": "T044",
+    "ts": "2026-11-06T12:30:00-05:00",
+    "author": "kwame",
+    "authorName": "Kwame Asante",
+    "isExternal": false,
+    "text": "Status for your go/no-go: #214 merged, kill switch verified, security clear for beta, Lumen DPA pending. Only #219 left.",
+    "reactions": {},
+    "channel": "D02",
+    "channelId": "D02"
+  }
+]

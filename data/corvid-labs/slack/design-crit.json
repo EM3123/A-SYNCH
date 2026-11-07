@@ -1,0 +1,74 @@
+[
+  {
+    "thread": "T005",
+    "ts": "2026-10-27T11:00:00-04:00",
+    "author": "chloe",
+    "authorName": "Chloe Martin",
+    "isExternal": false,
+    "text": "Rollout control v1 for Atlas in Figma: slider from 0–100% of eligible workspaces + allowlist + big red kill switch. Main question: should the slider snap to 1/5/10/25/50/100?",
+    "reactions": {
+      "art": 4
+    },
+    "channel": "design-crit",
+    "channelId": "C12DES"
+  },
+  {
+    "thread": "T005",
+    "ts": "2026-10-27T11:20:00-04:00",
+    "author": "leo",
+    "authorName": "Leo Brooks",
+    "isExternal": false,
+    "text": "Snapping is good for a11y too; arbitrary values on a slider are miserable with a keyboard. Please make sure the kill switch isn't next to the slider in tab order.",
+    "reactions": {},
+    "channel": "design-crit",
+    "channelId": "C12DES"
+  },
+  {
+    "thread": "T005",
+    "ts": "2026-10-27T11:35:00-04:00",
+    "author": "priya",
+    "authorName": "Priya Shah",
+    "isExternal": false,
+    "text": "Snap points yes. And I want the default state to be 0% + allowlist only. Widening should always be a deliberate act.",
+    "reactions": {
+      "thumbsup": 5
+    },
+    "channel": "design-crit",
+    "channelId": "C12DES"
+  },
+  {
+    "thread": "T005",
+    "ts": "2026-10-27T12:10:00-04:00",
+    "author": "omar",
+    "authorName": "Omar Haddad",
+    "isExternal": false,
+    "text": "From the design partner interviews: Northwind's ops leads said 'I need to know who has it on'. Showing the allowlist of workspaces right in the control would help.",
+    "reactions": {},
+    "channel": "design-crit",
+    "channelId": "C12DES"
+  },
+  {
+    "thread": "T032",
+    "ts": "2026-11-05T15:00:00-05:00",
+    "author": "chloe",
+    "authorName": "Chloe Martin",
+    "isExternal": false,
+    "text": "Final rollout control: snap points 1/5/10/25/50/100, allowlist table with workspace names, kill switch in its own section with a typed confirmation. Sam is building it in #219.",
+    "reactions": {
+      "fire": 6
+    },
+    "channel": "design-crit",
+    "channelId": "C12DES"
+  },
+  {
+    "thread": "T032",
+    "ts": "2026-11-05T15:12:00-05:00",
+    "author": "leo",
+    "authorName": "Leo Brooks",
+    "isExternal": false,
+    "text": "One more: the slider needs `aria-valuetext` like '10 percent of eligible workspaces', not just '10'.",
+    "reactions": {},
+    "channel": "design-crit",
+    "channelId": "C12DES"
+  }
+]

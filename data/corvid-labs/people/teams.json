@@ -1,0 +1,19 @@
+{
+  "leadership": "Leadership",
+  "atlas-backend": "Atlas Backend",
+  "atlas-frontend": "Atlas Frontend",
+  "platform": "Platform & SRE",
+  "security": "Security",
+  "qa": "Quality",
+  "design": "Design & Research",
+  "data": "Data Engineering",
+  "billing": "Billing & Metering",
+  "product": "Product",
+  "customer-success": "Customer Success & Support",
+  "sales": "Sales",
+  "legal": "Legal & Compliance",
+  "marketing": "Marketing",
+  "people": "People Ops",
+  "finance": "Finance",
+  "docs": "Docs"
+}

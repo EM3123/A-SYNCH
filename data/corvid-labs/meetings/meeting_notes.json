@@ -1,0 +1,72 @@
+[
+  {
+    "id": "MTG-1105",
+    "title": "Launch review: beta sequence",
+    "start": "2026-11-05T11:00:00-05:00",
+    "organizer": "priya",
+    "attendees": [
+      "priya",
+      "kwame",
+      "maya",
+      "jordan",
+      "fatima",
+      "devon",
+      "sam",
+      "alex"
+    ],
+    "notes": "Decisions:\n- Beta goes to Northwind and Kestrel first, by allowlist. Lumen waits for its countersigned DPA.\n- Beta caps date ranges at 30 days (ATLAS-40).\n- Security: no objection to flag-gated beta. GA still needs ATLAS-41 and ATLAS-50.\n- General availability is decided only after the Nov 10 SSO verification.\nOpen: Azure AD clock skew (ATLAS-44) must land before Nov 10.\nRecorded principle (owner-confirmed): internal or design-partner beta may ship before enterprise SSO if the rollout is reversible. GA may not."
+  },
+  {
+    "id": "MTG-1106",
+    "title": "Incident review: INC-2291 and INC-2294",
+    "start": "2026-11-06T13:00:00-05:00",
+    "organizer": "jordan",
+    "attendees": [
+      "jordan",
+      "wei",
+      "devon",
+      "aisha",
+      "ethan"
+    ],
+    "notes": "Reviewed the DST duplicate incident and the staging lock. Action items: postmortem Monday Nov 9 (Wei). Add concurrent-index CI check (done, #222). Confirm billing recompute (done, BILL-209)."
+  },
+  {
+    "id": "MTG-1103",
+    "title": "Design partner check-in: Northwind, Kestrel, Lumen",
+    "start": "2026-11-06T11:30:00-05:00",
+    "organizer": "maya",
+    "attendees": [
+      "maya",
+      "diego",
+      "chloe",
+      "omar"
+    ],
+    "notes": "Northwind and Kestrel: ready, agreements signed. Lumen: DPA countersignature expected Monday. All three accepted beta limits: no enterprise SSO, 30-day ranges, reversible rollout. Ops leads want to see who has access right now (allowlist table)."
+  },
+  {
+    "id": "MTG-1031",
+    "title": "Q4 planning: Atlas headcount",
+    "start": "2026-10-22T14:00:00-04:00",
+    "organizer": "elena",
+    "attendees": [
+      "elena",
+      "marcus",
+      "priya",
+      "sanjay"
+    ],
+    "notes": "Two backend hires and one SRE approved, contingent on GA forecast. Forecast assumes GA by Dec 15 with Halvorsen signed; a slip to Q1 moves about $60k out of Q4 recognized revenue."
+  },
+  {
+    "id": "MTG-1028",
+    "title": "Design partner interview synthesis",
+    "start": "2026-10-28T16:00:00-04:00",
+    "organizer": "omar",
+    "attendees": [
+      "omar",
+      "chloe",
+      "priya",
+      "maya"
+    ],
+    "notes": "Six interviews. Top needs: know who has access, pause a rollout instantly, see raw events behind numbers. Allowlist and kill switch are in the design."
+  }
+]
